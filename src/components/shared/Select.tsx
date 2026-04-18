@@ -77,12 +77,13 @@ export function Select<V extends string>({
   const selected = options.find((o) => o.value === value)
   const triggerLabel = selected?.label ?? placeholder
 
-  // Keep highlight synced with the current value whenever we open.
-  useEffect(() => {
-    if (!open) return
+  // Open the menu and seed highlight with the current selection in one go,
+  // so we don't need a setState-in-effect to keep them synced.
+  const openMenu = useCallback(() => {
     const idx = options.findIndex((o) => o.value === value)
     setHighlight(idx >= 0 ? idx : 0)
-  }, [open, options, value])
+    setOpen(true)
+  }, [options, value])
 
   // Close on outside click and on Escape
   useEffect(() => {
@@ -148,7 +149,7 @@ export function Select<V extends string>({
     if (e.key === "ArrowDown" || e.key === "ArrowUp") {
       e.preventDefault()
       if (!open) {
-        setOpen(true)
+        openMenu()
         return
       }
       moveHighlight(e.key === "ArrowDown" ? 1 : -1)
@@ -159,7 +160,7 @@ export function Select<V extends string>({
         if (opt && !opt.disabled) commit(opt.value)
       } else {
         e.preventDefault()
-        setOpen(true)
+        openMenu()
       }
     } else if (e.key === "Home") {
       if (open) {
@@ -185,7 +186,7 @@ export function Select<V extends string>({
         aria-expanded={open}
         aria-controls={listId}
         aria-label={ariaLabel}
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => (open ? setOpen(false) : openMenu())}
         onKeyDown={handleTriggerKey}
         className={cn(
           "w-full inline-flex items-center gap-2 border cursor-pointer transition-all",

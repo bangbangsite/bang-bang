@@ -19,15 +19,15 @@ Roteiro passo-a-passo pra subir produção. Cada fase tem dependência da anteri
 
 ---
 
-## Fase 0 — Pré-flight (local, 30 min)
+## Fase 0 — Pré-flight (local, 30 min) ✅
 
 Garantir que o build local tá saudável antes de mandar pra cloud.
 
-- [ ] `npm run build` roda sem erro
-- [ ] `npm run lint` limpo
-- [ ] `npm run pdvs:validate` passa
-- [ ] Remover imports não-usados, dead code, `console.log` de debug
-- [ ] Confirmar que `package.json` tem só deps necessárias (sem lixo de experimentação)
+- [x] `npm run build` roda sem erro
+- [x] `npm run lint` limpo (corrigido setState-in-effect em `Select.tsx`)
+- [x] `npm run pdvs:validate` passa (1424 PDVs / 18 UFs)
+- [x] Remover imports não-usados, dead code, `console.log` de debug
+- [x] Confirmar que `package.json` tem só deps necessárias (sem lixo de experimentação)
 
 ---
 
@@ -55,34 +55,30 @@ página "em construção", Pedro acessa o site completo via link único com toke
 - Pra **lançar**: basta remover a var `PREVIEW_TOKEN` do Vercel. Middleware
   deixa tudo passar sem redeploy
 
-### 1.2 — Preparar repo
+### 1.2 — Preparar repo ✅
 
-- [ ] Criar conta GitHub (se ainda não)
-- [ ] Criar repo **privado** `bangbang-site`
-- [ ] `git init` local (se ainda não) + primeiro commit
-- [ ] `git remote add origin git@github.com:<user>/bangbang-site.git`
-- [ ] `git push -u origin main`
+- [x] Criar conta GitHub
+- [x] Criar repo **privado** `bangbang-site`
+- [x] `git init` local + primeiro commit
+- [x] `git remote add origin` + `git push -u origin main`
 
-### 1.3 — Deploy Vercel
+### 1.3 — Deploy Vercel ✅
 
-- [ ] Importar repo na Vercel
-- [ ] Framework detection → Next.js (automático)
-- [ ] Build command padrão: `npm run build`
-- [ ] Node.js version: 20.x
-- [ ] **Environment Variables** (Production + Preview):
-  - `PREVIEW_TOKEN` → gerar token forte (ex: `node -e "console.log(require('crypto').randomBytes(24).toString('hex'))"`)
-- [ ] Deploy inicial → validar URL `.vercel.app`
-- [ ] Testar em `.vercel.app`:
-  - URL raiz → redireciona pra `/coming-soon` (gate funcionando)
-  - `.vercel.app/?access=TOKEN` → cookie setado, site real aparece
-  - Abrir aba anônima → gate volta
+- [x] Importar repo na Vercel
+- [x] Framework detection → Next.js (automático)
+- [x] Build command padrão: `npm run build`
+- [x] Node.js version: 20.x
+- [x] **Environment Variables** (Production + Preview):
+  - `PREVIEW_TOKEN` setado
+  - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` setados
+- [x] Deploy inicial validado em `.vercel.app`
+- [x] Gate funcionando: root → `/coming-soon`, `?access=TOKEN` → site real, aba anônima → gate volta
 
-### 1.4 — Apontar domínio
+### 1.4 — Apontar domínio ✅
 
-- [ ] Vercel → Domains → adicionar domínio comprado
-- [ ] Ajustar DNS (A record ou CNAME conforme Vercel instrui)
-- [ ] Aguardar propagação + HTTPS automático
-- [ ] Salvar o link mágico `https://bebabangbang.com.br/?access=TOKEN`
+- [x] Vercel → Domains → domínio adicionado
+- [x] DNS ajustado + HTTPS automático
+- [x] Link mágico em mãos
 
 **Saída da fase:** domínio real no ar exibindo `/coming-soon` pra público.
 Pedro + convidados acessam o site completo via link com token. Zero DB
@@ -92,25 +88,27 @@ ainda — toda a funcionalidade roda em localStorage como hoje.
 
 ## Fase 2 — Supabase (projeto + schema, 2-3h)
 
-- [ ] Criar projeto Supabase (região São Paulo pra latência BR)
-- [ ] Copiar URL + anon key + service_role key
-- [ ] Adicionar vars no Vercel: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] Instalar `@supabase/ssr` e `@supabase/supabase-js`
-- [ ] Criar helpers em `src/lib/supabase/`:
+- [x] Criar projeto Supabase (região São Paulo pra latência BR)
+- [x] Copiar URL + publishable key + secret key (novo formato `sb_publishable_*` / `sb_secret_*`)
+- [x] Adicionar vars no Vercel: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`
+- [x] Instalar `@supabase/ssr` e `@supabase/supabase-js`
+- [x] Criar helpers em `src/lib/supabase/`:
   - `client.ts` — browser client
   - `server.ts` — server client (cookies)
-  - `middleware.ts` — session refresh
-- [ ] Middleware raiz em `src/middleware.ts` pra refresh de sessão em toda request
-- [ ] Migrations iniciais (SQL, roda no Supabase Studio ou via CLI):
-  - `click_events` (analytics de CTAs)
-  - `click_monthly_snapshots` (agregados fechados)
-  - `wishlist_requests` (pedidos de cidade)
-  - `contact_channels` (WhatsApp por categoria)
-  - `events` (agenda pública)
-  - `bangers` (lista interna)
-  - `faq_items`
-  - `pdv_overrides` (correções em cima do xlsx)
-- [ ] RLS (Row Level Security) ativado em TODAS — policies por tabela na Fase 4
+  - `middleware.ts` — session refresh (wired no `src/middleware.ts`)
+- [x] Wirear `updateSupabaseSession` no `src/middleware.ts` raiz (degrada graceful se env vars ausentes ou se a chamada falhar)
+- [x] Migrations iniciais em `supabase/migrations/` rodadas via `npx supabase db push`:
+  - `20260418000000_initial_schema.sql` — 9 tabelas + triggers
+  - `20260418000001_seed_initial_data.sql` — singletons + 6 FAQs default
+  - Tabelas criadas: `profiles`, `contact_channels`, `wishlist_requests`, `events`, `bangers`, `faq_items`, `pdv_overrides`, `click_events`, `click_monthly_snapshots`
+- [x] RLS (Row Level Security) ativado em TODAS — sem policies = default-deny (policies entram na Fase 4)
+
+**TODO Next 16:** o framework deprecou `middleware.ts` em favor de `proxy.ts`. Migrar é só renomear o arquivo + ajuste cosmético. Não bloqueia, fazer junto com o início da Fase 3.
+
+**Nota sobre chaves (atualizado 2026-04-18):** Supabase mudou o formato das
+keys. Usamos o novo padrão `sb_publishable_*` (pública, client) e `sb_secret_*`
+(server-only, equivalente ao antigo service_role). O nome da env var pública
+é `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (não mais `ANON_KEY`).
 
 **Saída da fase:** Supabase conectado, schema pronto, nenhuma feature ainda usa.
 
