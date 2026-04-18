@@ -1,0 +1,434 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================
+   BANG BANG — Design Tokens (Tailwind v4 @theme)
+   ============================================ */
+
+@theme inline {
+  /* === shadcn/ui base tokens === */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+
+  /* === Border radius === */
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* === BANG BANG BRAND COLORS === */
+  --color-bb-orange:       #E87A1E;
+  --color-bb-orange-dark:  #C4650F;
+  --color-bb-brown-dark:   #2D1810;
+  --color-bb-brown:        #4A2C1A;
+  --color-bb-cream:        #F5E6D0;
+  --color-bb-black:        #1A1A1A;
+  --color-bb-white:        #FAFAF8;
+
+  /* === Caipi Vodka 3 Limões === */
+  --color-bb-caipi-primary:   #4CAF50;
+  --color-bb-caipi-secondary: #C8A94E;
+  --color-bb-caipi-bg:        #E8F5E9;
+
+  /* === Moscow Mule === */
+  --color-bb-mule-primary:    #8B5E3C;
+  --color-bb-mule-secondary:  #A0522D;
+  --color-bb-mule-bg:         #F5E6D0;
+
+  /* === 40+3 Spritz === */
+  --color-bb-spritz-primary:   #C49A6C;
+  --color-bb-spritz-secondary: #D4A574;
+  --color-bb-spritz-bg:        #FFF8F0;
+
+  /* === Whisky + Energy (Bang) === */
+  --color-bb-bang-primary:    #E85D10;
+  --color-bb-bang-secondary:  #3E1A0A;
+  --color-bb-bang-bg:         #FFF0E6;
+
+  /* === Functional === */
+  --color-bb-success:      #4CAF50;
+  --color-bb-error:        #D32F2F;
+  --color-bb-cta-b2b:      #E87A1E;
+  --color-bb-cta-b2c:      #4CAF50;
+  --color-bb-cta-whatsapp: #25D366;
+
+  /* === TYPOGRAPHY === */
+  --font-sans:    var(--font-body);
+  --font-mono:    var(--font-geist-mono);
+  --font-heading: var(--font-heading-var);
+  --font-body:    var(--font-body);
+  --font-accent:  var(--font-accent-var);
+
+  /* === Text sizes === */
+  --text-hero: clamp(3.5rem, 8vw, 7rem);
+  --text-h1:   clamp(2.5rem, 5vw, 4rem);
+  --text-h2:   clamp(1.75rem, 3vw, 2.5rem);
+  --text-h3:   clamp(1.25rem, 2vw, 1.75rem);
+
+  /* === Box shadows === */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,0.12);
+  --shadow-md:   0 4px 12px rgba(0,0,0,0.15);
+  --shadow-lg:   0 8px 30px rgba(0,0,0,0.2);
+  --shadow-card: 0 4px 20px rgba(232,122,30,0.15);
+
+  /* === Animations === */
+  --animate-float:            float 3s ease-in-out infinite;
+  --animate-marquee:          marquee 30s linear infinite;
+  --animate-marquee-reverse:  marquee-reverse 30s linear infinite;
+  --animate-marquee-slow:     marquee 60s linear infinite;
+  --animate-fade-in-up:       fadeInUp 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-left:     fadeInLeft 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-fade-in-scale:    fadeInScale 600ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-pulse-soft:       pulseSoft 3s ease-in-out infinite;
+
+  /* === Keyframes === */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-20px); }
+  }
+
+  @keyframes marquee {
+    0%   { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+
+  @keyframes marquee-reverse {
+    0%   { transform: translateX(-50%); }
+    100% { transform: translateX(0%); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-32px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.9); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+
+  @keyframes pulseSoft {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.03); }
+  }
+
+  @keyframes fade-slide-down {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (for JS usage + compat)
+   ============================================ */
+
+:root {
+  /* shadcn/ui base */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Bang Bang brand tokens */
+  --bb-orange:        #E87A1E;
+  --bb-orange-dark:   #C4650F;
+  --bb-brown-dark:    #2D1810;
+  --bb-brown:         #4A2C1A;
+  --bb-cream:         #F5E6D0;
+  --bb-black:         #1A1A1A;
+  --bb-white:         #FAFAF8;
+
+  --bb-caipi-primary:   #4CAF50;
+  --bb-caipi-secondary: #C8A94E;
+  --bb-caipi-bg:        #E8F5E9;
+
+  --bb-mule-primary:    #8B5E3C;
+  --bb-mule-secondary:  #A0522D;
+  --bb-mule-bg:         #F5E6D0;
+
+  --bb-spritz-primary:   #C49A6C;
+  --bb-spritz-secondary: #D4A574;
+  --bb-spritz-bg:        #FFF8F0;
+
+  --bb-bang-primary:    #E85D10;
+  --bb-bang-secondary:  #3E1A0A;
+  --bb-bang-bg:         #FFF0E6;
+
+  --bb-success:       #4CAF50;
+  --bb-error:         #D32F2F;
+  --bb-cta-b2b:       #E87A1E;
+  --bb-cta-b2c:       #4CAF50;
+  --bb-cta-whatsapp:  #25D366;
+
+  /* Typography */
+  --text-hero:    clamp(3.5rem, 8vw, 7rem);
+  --text-h1:      clamp(2.5rem, 5vw, 4rem);
+  --text-h2:      clamp(1.75rem, 3vw, 2.5rem);
+  --text-h3:      clamp(1.25rem, 2vw, 1.75rem);
+  --text-body:    1rem;
+  --text-body-lg: 1.125rem;
+  --text-small:   0.875rem;
+  --text-caption: 0.75rem;
+
+  /* Spacing */
+  --section-py:    clamp(4rem, 8vw, 8rem);
+  --section-px:    clamp(1rem, 5vw, 6rem);
+  --container-max: 1280px;
+
+  /* Transitions */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+  --transition-bounce: 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Marquee speed */
+  --marquee-speed: 30s;
+
+  /* Breakpoints (JS reference only) */
+  --bp-mobile:    480px;
+  --bp-tablet:    768px;
+  --bp-desktop:   1024px;
+  --bp-wide:      1280px;
+  --bp-ultrawide: 1536px;
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+    color: var(--bb-black);
+    background-color: var(--bb-white);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading-var);
+    font-weight: 900;
+  }
+
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    /* Offset anchor targets so fixed header (h-16 mobile / h-20 desktop) doesn't cover them */
+    scroll-padding-top: 5rem;
+  }
+}
+
+/* Reduced motion: disable smooth scroll */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+@layer utilities {
+  .section-padding {
+    padding-top: var(--section-py);
+    padding-bottom: var(--section-py);
+    padding-left: var(--section-px);
+    padding-right: var(--section-px);
+  }
+
+  .container-bb {
+    max-width: var(--container-max);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--section-px);
+    padding-right: var(--section-px);
+  }
+
+  /* Pause marquee on hover */
+  .marquee-container:hover .marquee-track {
+    animation-play-state: paused;
+  }
+}
+
+/* ============================================
+   HERO — Animated banner (desktop only, opt-in via JS)
+   ============================================ */
+
+@keyframes hero-spark-drift {
+  0%   { transform: translate(0, 0) scale(1);   opacity: 0; }
+  10%  { opacity: .9; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0.4); opacity: 0; }
+}
+
+@keyframes hero-can-bob {
+  0%, 100% {
+    transform: translateY(calc(var(--hero-float-amp) * -0.5))
+               rotate(calc(var(--hero-base-rot) * -0.15));
+  }
+  50% {
+    transform: translateY(calc(var(--hero-float-amp) * 0.5))
+               rotate(calc(var(--hero-base-rot) * 0.15));
+  }
+}
+
+@keyframes hero-shadow-pulse {
+  0%, 100% { transform: scale(1.05, 1); opacity: 0.65; }
+  50%      { transform: scale(0.85, 1); opacity: 0.4; }
+}
+
+/* Cursor is hidden inside hero once the pointer enters it */
+.hero--cursor-active { cursor: none; }
+.hero--cursor-active a,
+.hero--cursor-active button { cursor: none; }
+
+/* Custom cursor visibility keyed off the hover state on the hero */
+.hero--cursor-active .hero-cursor,
+.hero--cursor-active .hero-cursor-ring { opacity: 1; }
+
+.hero-cursor--big.hero-cursor {
+  width: 38px; height: 38px;
+  background: rgba(255, 220, 120, 0.7);
+  mix-blend-mode: screen;
+}
+.hero-cursor--big.hero-cursor-ring { width: 70px; height: 70px; }
+
+/* ============================================
+   BANGER — Seja um Banger page animations
+   ============================================ */
+
+@keyframes bangerStarFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50%      { transform: translateY(-14px) scale(1.25); }
+}
+
+@keyframes bangerFloatSlow {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+@keyframes bangerRedeIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes eventPinPulse {
+  0%   { transform: scale(0.7); opacity: 0.75; }
+  70%  { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

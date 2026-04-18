@@ -1,0 +1,111 @@
+{
+  "total": 1424,
+  "byUF": [
+    {
+      "uf": "AM",
+      "count": 1
+    },
+    {
+      "uf": "BA",
+      "count": 6
+    },
+    {
+      "uf": "DF",
+      "count": 7
+    },
+    {
+      "uf": "ES",
+      "count": 5
+    },
+    {
+      "uf": "GO",
+      "count": 8
+    },
+    {
+      "uf": "MA",
+      "count": 3
+    },
+    {
+      "uf": "MG",
+      "count": 1321
+    },
+    {
+      "uf": "MS",
+      "count": 3
+    },
+    {
+      "uf": "MT",
+      "count": 3
+    },
+    {
+      "uf": "PA",
+      "count": 2
+    },
+    {
+      "uf": "PB",
+      "count": 2
+    },
+    {
+      "uf": "PE",
+      "count": 1
+    },
+    {
+      "uf": "PR",
+      "count": 3
+    },
+    {
+      "uf": "RJ",
+      "count": 20
+    },
+    {
+      "uf": "RS",
+      "count": 4
+    },
+    {
+      "uf": "SC",
+      "count": 3
+    },
+    {
+      "uf": "SP",
+      "count": 31
+    },
+    {
+      "uf": "TO",
+      "count": 1
+    }
+  ],
+  "byTier": [
+    {
+      "tier": "A",
+      "count": 294
+    },
+    {
+      "tier": "B",
+      "count": 1099
+    },
+    {
+      "tier": "C",
+      "count": 31
+    }
+  ],
+  "byTipo": [
+    {
+      "tipo": "Outros",
+      "count": 1424
+    }
+  ],
+  "generatedAt": "2026-04-17T15:59:06.066Z",
+  "source": {
+    "file": "data\\pdvs_bang_bang.xlsx",
+    "sheet": "PDVs",
+    "rawRows": 1424,
+    "activeRows": 1424,
+    "skipped": 0
+  },
+  "enrichment": {
+    "viacepHits": 1039,
+    "viacepMisses": 60,
+    "geocodeHits": 0,
+    "geocodeMisses": 1424
+  }
+}

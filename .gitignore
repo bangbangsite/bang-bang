@@ -1,0 +1,44 @@
+# deps
+node_modules
+.pnp
+.pnp.js
+
+# next.js
+.next/
+/out/
+/build
+next-env.d.ts
+tsconfig.tsbuildinfo
+
+# storybook
+*storybook.log
+storybook-static
+
+# testing
+/coverage
+
+# env
+.env
+.env*.local
+
+# editor / IDE
+.vscode/
+.idea/
+
+# os
+.DS_Store
+Thumbs.db
+
+# claude local (ephemeral state)
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+
+# caches
+.eslintcache
+debug-storybook.log
+
+# excel lock files
+data/.~lock.*
+
+# local working material (design refs — not part of the codebase)
+Imagens de Referências/

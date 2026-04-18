@@ -1,0 +1,878 @@
+{
+  "rua antônio fernandes, 573, recreio do tijuco (melo viana), esmeraldas, mg, brasil": {
+    "lat": -19.7326307,
+    "lng": -44.1656555,
+    "source": "nominatim",
+    "_ts": 1776441209882
+  },
+  "rua geralda cirino flor de maio, 339, santa monica, belo horizonte, mg, brasil": {
+    "lat": -19.8294985,
+    "lng": -43.970102,
+    "source": "nominatim",
+    "_ts": 1776441209923
+  },
+  "rua são paulo, 390, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9172539,
+    "lng": -43.9395103,
+    "source": "nominatim",
+    "_ts": 1776441209977
+  },
+  "rua pitangui, 168, sao cristovao, belo horizonte, mg, brasil": {
+    "lat": -19.9025123,
+    "lng": -43.9419455,
+    "source": "nominatim",
+    "_ts": 1776441210024
+  },
+  "rua joão gualberto costa, 474, serrano, belo horizonte, mg, brasil": {
+    "lat": -19.8750202,
+    "lng": -44.0168192,
+    "source": "nominatim",
+    "_ts": 1776441210223
+  },
+  "rua dorival machado, 759, santa monica, belo horizonte, mg, brasil": {
+    "lat": -19.8274831,
+    "lng": -43.9722178,
+    "source": "nominatim",
+    "_ts": 1776441210266
+  },
+  "rua afonso pena, 861, centro, curvelo, mg, brasil": {
+    "lat": -18.7560215,
+    "lng": -44.4302861,
+    "source": "nominatim",
+    "_ts": 1776441210275
+  },
+  "rua mário filho, 348, aparecida, belo horizonte, mg, brasil": {
+    "lat": -19.8924412,
+    "lng": -43.9555326,
+    "source": "nominatim",
+    "_ts": 1776441210372
+  },
+  "rua dos tupinambás, 192, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9188101,
+    "lng": -43.9345824,
+    "source": "nominatim",
+    "_ts": 1776441249756
+  },
+  "rua dos tupis, 495, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9202847,
+    "lng": -43.9444642,
+    "source": "nominatim",
+    "_ts": 1776441251138
+  },
+  "rua são pedro do avaí, 73, santa branca, belo horizonte, mg, brasil": {
+    "lat": -19.8298537,
+    "lng": -43.9632306,
+    "source": "nominatim",
+    "_ts": 1776441252254
+  },
+  "rua antônio mariano de abreu, 40, acaiaca, belo horizonte, mg, brasil": {
+    "lat": -19.842541,
+    "lng": -43.8956741,
+    "source": "nominatim",
+    "_ts": 1776441252260
+  },
+  "santo antônio, caeté, mg, brasil": {
+    "lat": -19.8872011,
+    "lng": -43.6647885,
+    "source": "nominatim",
+    "_ts": 1776441252267
+  },
+  "rua waldomiro lobo, 133, aarao reis, belo horizonte, mg, brasil": {
+    "lat": -19.8444932,
+    "lng": -43.9231461,
+    "source": "nominatim",
+    "_ts": 1776441252278
+  },
+  "rua doutor guilherme, 91, centro, itabirito, mg, brasil": {
+    "lat": -20.2559096,
+    "lng": -43.8020102,
+    "source": "nominatim",
+    "_ts": 1776441252311
+  },
+  "rua sergipe, 1211, savassi, belo horizonte, mg, brasil": {
+    "lat": -19.9370906,
+    "lng": -43.9378834,
+    "source": "nominatim",
+    "_ts": 1776441252329
+  },
+  "alameda oscar niemeyer, 1369, vila da serra, nova lima, mg, brasil": {
+    "lat": -19.9820694,
+    "lng": -43.9448785,
+    "source": "nominatim",
+    "_ts": 1776441252360
+  },
+  "avenida padre leonardo senne, 209, altinopolis, governador valadares, mg, brasil": {
+    "lat": -18.8582458,
+    "lng": -41.9632787,
+    "source": "nominatim",
+    "_ts": 1776441252379
+  },
+  "rua rubens caporali ribeiro, 804, buritis, belo horizonte, mg, brasil": {
+    "lat": -19.9813042,
+    "lng": -43.9764901,
+    "source": "nominatim",
+    "_ts": 1776441252382
+  },
+  "rua dos guajajaras, 2151, barro preto, belo horizonte, mg, brasil": {
+    "lat": -19.9214483,
+    "lng": -43.955848,
+    "source": "nominatim",
+    "_ts": 1776441252382
+  },
+  "rua lindaura magalhães alkimin, 20, jaqueline, belo horizonte, mg, brasil": {
+    "lat": -19.8042243,
+    "lng": -43.9414828,
+    "source": "nominatim",
+    "_ts": 1776441252393
+  },
+  "rua engenho do sol, 982, engenho nogueira, belo horizonte, mg, brasil": {
+    "lat": -19.8940576,
+    "lng": -43.9837089,
+    "source": "nominatim",
+    "_ts": 1776441252394
+  },
+  "rua casuarinas, 158, cidade jardim eldorado, contagem, mg, brasil": {
+    "lat": -19.9395323,
+    "lng": -44.0445985,
+    "source": "nominatim",
+    "_ts": 1776441252410
+  },
+  "rua augusto dos anjos, 745, rio branco, belo horizonte, mg, brasil": {
+    "lat": -19.8192239,
+    "lng": -43.9801314,
+    "source": "nominatim",
+    "_ts": 1776441252425
+  },
+  "rua pouso alegre, 625, colegio batista, belo horizonte, mg, brasil": {
+    "lat": -19.9117402,
+    "lng": -43.9391392,
+    "source": "nominatim",
+    "_ts": 1776441252442
+  },
+  "avenida sinfrônio brochado, 612, barreiro, belo horizonte, mg, brasil": {
+    "lat": -19.9755032,
+    "lng": -44.0132999,
+    "source": "nominatim",
+    "_ts": 1776441252456
+  },
+  "avenida olegário maciel, 561, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9149324,
+    "lng": -43.9430861,
+    "source": "nominatim",
+    "_ts": 1776441252458
+  },
+  "rua getúlio vargas, 175, centro, são joão del rei, mg, brasil": {
+    "lat": -21.1335679,
+    "lng": -44.2608829,
+    "source": "nominatim",
+    "_ts": 1776441252469
+  },
+  "avenida dos engenheiros, 1095, castelo, belo horizonte, mg, brasil": {
+    "lat": -19.8895208,
+    "lng": -44.0015122,
+    "source": "nominatim",
+    "_ts": 1776441252475
+  },
+  "avenida afonso pena, 522, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9222111,
+    "lng": -43.9367759,
+    "source": "nominatim",
+    "_ts": 1776441252482
+  },
+  "rua conde de prados, 472, padre eustaquio, belo horizonte, mg, brasil": {
+    "lat": -19.9186732,
+    "lng": -43.9703781,
+    "source": "nominatim",
+    "_ts": 1776441252484
+  },
+  "travessa nove de janeiro, 262, umarizal, belém, pa, brasil": {
+    "lat": -1.4399587,
+    "lng": -48.4762059,
+    "source": "nominatim",
+    "_ts": 1776441252484
+  },
+  "avenida pedro olímpio da fonseca, 130, santa cruz industrial, contagem, mg, brasil": {
+    "lat": -19.9433005,
+    "lng": -44.0534369,
+    "source": "nominatim",
+    "_ts": 1776441252534
+  },
+  "avenida prudente de morais, 1159, santo antonio, belo horizonte, mg, brasil": {
+    "lat": -19.9437028,
+    "lng": -43.9483505,
+    "source": "nominatim",
+    "_ts": 1776441252537
+  },
+  "avenida petrolina, 883, sagrada familia, belo horizonte, mg, brasil": {
+    "lat": -19.9036442,
+    "lng": -43.9188757,
+    "source": "nominatim",
+    "_ts": 1776441252539
+  },
+  "avenida augusto de lima, 685, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9238875,
+    "lng": -43.9406313,
+    "source": "nominatim",
+    "_ts": 1776441252539
+  },
+  "avenida sinfrônio brochado, 625, barreiro, belo horizonte, mg, brasil": {
+    "lat": -19.9755032,
+    "lng": -44.0132999,
+    "source": "nominatim",
+    "_ts": 1776441252546
+  },
+  "rua mombaça, 493, são gabriel, belo horizonte, mg, brasil": {
+    "lat": -19.8519534,
+    "lng": -43.912707,
+    "source": "nominatim",
+    "_ts": 1776441252552
+  },
+  "rua desembargador canedo, 243, centro, muriaé, mg, brasil": {
+    "lat": -21.1334259,
+    "lng": -42.3658378,
+    "source": "nominatim",
+    "_ts": 1776441252561
+  },
+  "rua serra negra, 737, santo andre, belo horizonte, mg, brasil": {
+    "lat": -19.9014323,
+    "lng": -43.9538009,
+    "source": "nominatim",
+    "_ts": 1776441252573
+  },
+  "rua jardim, 9, honorio bicalho, nova lima, mg, brasil": {
+    "lat": -20.0212178,
+    "lng": -43.8256316,
+    "source": "nominatim",
+    "_ts": 1776441252590
+  },
+  "rua monsenhor barreto, 1025, sion, conselheiro lafaiete, mg, brasil": {
+    "lat": -20.6791624,
+    "lng": -43.7759197,
+    "source": "nominatim",
+    "_ts": 1776441252597
+  },
+  "avenida silva lobo, 770, nova suissa, belo horizonte, mg, brasil": {
+    "lat": -19.9330936,
+    "lng": -43.971803,
+    "source": "nominatim",
+    "_ts": 1776441252600
+  },
+  "rua genoveva de souza, 1915, horto, belo horizonte, mg, brasil": {
+    "lat": -19.9067324,
+    "lng": -43.922093,
+    "source": "nominatim",
+    "_ts": 1776441252600
+  },
+  "avenida amazonas, 151, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9225371,
+    "lng": -43.9444136,
+    "source": "nominatim",
+    "_ts": 1776441252605
+  },
+  "avenida paraná, 536, centro, belo horizonte, mg, brasil": {
+    "lat": -19.918853,
+    "lng": -43.9422914,
+    "source": "nominatim",
+    "_ts": 1776441252612
+  },
+  "rua bernardo guimarães, 83, funcionarios, belo horizonte, mg, brasil": {
+    "lat": -19.9329011,
+    "lng": -43.9249568,
+    "source": "nominatim",
+    "_ts": 1776441252625
+  },
+  "rodovia br-040, 527, vila paris, contagem, mg, brasil": {
+    "lat": -19.9184293,
+    "lng": -44.0291201,
+    "source": "nominatim",
+    "_ts": 1776441252629
+  },
+  "rua jacuí, 3745, ipiranga, belo horizonte, mg, brasil": {
+    "lat": -19.8777482,
+    "lng": -43.9292979,
+    "source": "nominatim",
+    "_ts": 1776441252642
+  },
+  "rodovia deputado lúcio de souza cruz, sn, tropeiros, esmeraldas, mg, brasil": {
+    "lat": -19.7979714,
+    "lng": -44.2952478,
+    "source": "nominatim",
+    "_ts": 1776441252642
+  },
+  "rua são romão, 452, santo antonio, belo horizonte, mg, brasil": {
+    "lat": -19.9450728,
+    "lng": -43.9402223,
+    "source": "nominatim",
+    "_ts": 1776441252648
+  },
+  "rua margarida assis fonseca, 7, california, belo horizonte, mg, brasil": {
+    "lat": -19.9269243,
+    "lng": -44.0077246,
+    "source": "nominatim",
+    "_ts": 1776441252664
+  },
+  "avenida barão homem de melo, 2681, estoril, belo horizonte, mg, brasil": {
+    "lat": -19.96199,
+    "lng": -43.9640542,
+    "source": "nominatim",
+    "_ts": 1776441252664
+  },
+  "rua júlio ribeiro, 85, tupi b, belo horizonte, mg, brasil": {
+    "lat": -19.8358582,
+    "lng": -43.9131318,
+    "source": "nominatim",
+    "_ts": 1776441252664
+  },
+  "brasilia, 2571, sao benedito, santa luzia, mg, brasil": {
+    "lat": -19.7973905,
+    "lng": -43.9423837,
+    "source": "nominatim",
+    "_ts": 1776441252664
+  },
+  "avenida doutor joão augusto fonseca e silva, 1033, novo eldorado, contagem, mg, brasil": {
+    "lat": -19.9363276,
+    "lng": -44.051282,
+    "source": "nominatim",
+    "_ts": 1776441252691
+  },
+  "rua josé cleto, 1060, palmares, belo horizonte, mg, brasil": {
+    "lat": -19.8765417,
+    "lng": -43.931516,
+    "source": "nominatim",
+    "_ts": 1776441252691
+  },
+  "avenida princesa isabel, 170, são joaquim, contagem, mg, brasil": {
+    "lat": -19.8744333,
+    "lng": -44.0264262,
+    "source": "nominatim",
+    "_ts": 1776441252696
+  },
+  "avenida mário ypiranga, 315, adrianópolis, manaus, am, brasil": {
+    "lat": -3.1039831,
+    "lng": -60.0133273,
+    "source": "nominatim",
+    "_ts": 1776441252705
+  },
+  "avenida getúlio vargas, 533, padre eustaquio, igarapé, mg, brasil": {
+    "lat": -20.0607535,
+    "lng": -44.3085943,
+    "source": "nominatim",
+    "_ts": 1776441252716
+  },
+  "rua dos guaranis, 600, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9150366,
+    "lng": -43.9420377,
+    "source": "nominatim",
+    "_ts": 1776441252726
+  },
+  "rua israel pinheiro, 963, sao pedro, governador valadares, mg, brasil": {
+    "lat": -18.8480182,
+    "lng": -41.932384,
+    "source": "nominatim",
+    "_ts": 1776441252732
+  },
+  "avenida prudente de morais, 44, cidade jardim, belo horizonte, mg, brasil": {
+    "lat": -19.937306,
+    "lng": -43.9472329,
+    "source": "nominatim",
+    "_ts": 1776441252732
+  },
+  "rua mármore, 418, santa tereza, belo horizonte, mg, brasil": {
+    "lat": -19.9162948,
+    "lng": -43.9182816,
+    "source": "nominatim",
+    "_ts": 1776441252740
+  },
+  "rua bonfim, 269, bonfim, belo horizonte, mg, brasil": {
+    "lat": -19.9101045,
+    "lng": -43.9485308,
+    "source": "nominatim",
+    "_ts": 1776441252774
+  },
+  "avenida guarapari, 1430, santa amelia, belo horizonte, mg, brasil": {
+    "lat": -19.8341323,
+    "lng": -43.9740179,
+    "source": "nominatim",
+    "_ts": 1776441252779
+  },
+  "rua israel pinheiro, 456, são pedro, governador valadares, mg, brasil": {
+    "lat": -18.8473868,
+    "lng": -41.9311363,
+    "source": "nominatim",
+    "_ts": 1776441252781
+  },
+  "avenida professor mário werneck, 597, estoril, belo horizonte, mg, brasil": {
+    "lat": -19.9670814,
+    "lng": -43.9616132,
+    "source": "nominatim",
+    "_ts": 1776441252790
+  },
+  "rua santa rosa, 110, parque jardim santanense, itaúna, mg, brasil": {
+    "lat": -20.0894618,
+    "lng": -44.6087414,
+    "source": "nominatim",
+    "_ts": 1776441252791
+  },
+  "rua itajubá, 992, sagrada familia, belo horizonte, mg, brasil": {
+    "lat": -19.90808,
+    "lng": -43.928715,
+    "source": "nominatim",
+    "_ts": 1776441252791
+  },
+  "avenida senador levindo coelho, 1928, tirol (barreiro), belo horizonte, mg, brasil": {
+    "lat": -19.9886847,
+    "lng": -44.0351625,
+    "source": "nominatim",
+    "_ts": 1776441252795
+  },
+  "rua josé clemente pereira, 25, ipiranga, belo horizonte, mg, brasil": {
+    "lat": -19.8841851,
+    "lng": -43.9327295,
+    "source": "nominatim",
+    "_ts": 1776441252799
+  },
+  "rodovia anel rodoviário celso mello azevedo, 20300, maria virginia, belo horizonte, mg, brasil": {
+    "lat": -19.86836,
+    "lng": -43.9376358,
+    "source": "nominatim",
+    "_ts": 1776441252803
+  },
+  "rua vinte e dois de maio, 80, santa rita, itabirito, mg, brasil": {
+    "lat": -20.2574693,
+    "lng": -43.817672,
+    "source": "nominatim",
+    "_ts": 1776441252804
+  },
+  "rua dos caetés, 409, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9151789,
+    "lng": -43.9440917,
+    "source": "nominatim",
+    "_ts": 1776441252810
+  },
+  "rua joão fernandes, 12, liberdade, belo horizonte, mg, brasil": {
+    "lat": -19.8610659,
+    "lng": -43.9571715,
+    "source": "nominatim",
+    "_ts": 1776441252818
+  },
+  "avenida abílio machado, 1740, alipio de melo, belo horizonte, mg, brasil": {
+    "lat": -19.897303,
+    "lng": -44.0074512,
+    "source": "nominatim",
+    "_ts": 1776441252829
+  },
+  "avenida cristiano machado, 2312, cidade nova, belo horizonte, mg, brasil": {
+    "lat": -19.8908875,
+    "lng": -43.9285665,
+    "source": "nominatim",
+    "_ts": 1776441252835
+  },
+  "rua alfredo elias mafuz, 950, santa matilde, conselheiro lafaiete, mg, brasil": {
+    "lat": -20.685391,
+    "lng": -43.7911428,
+    "source": "nominatim",
+    "_ts": 1776441252962
+  },
+  "avenida américo vespúcio, 1144, aparecida setima secao, belo horizonte, mg, brasil": {
+    "lat": -19.8947225,
+    "lng": -43.9602169,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "avenida portugal, 2324, jardim atlantico, belo horizonte, mg, brasil": {
+    "lat": -19.8432936,
+    "lng": -43.9709108,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "rua henrique gorceix, 2181, jardim montanhês, belo horizonte, mg, brasil": {
+    "lat": -19.9078542,
+    "lng": -43.9794523,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "avenida américo vespúcio, 1933, parque riachuelo, belo horizonte, mg, brasil": {
+    "lat": -19.8886481,
+    "lng": -43.9553238,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "avenida luíz paulo franco, 961, belvedere, belo horizonte, mg, brasil": {
+    "lat": -19.972979,
+    "lng": -43.9373734,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "dr. eurico rodrigues, 94, centro, itabirito, mg, brasil": {
+    "lat": -20.248692,
+    "lng": -43.8036356,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "rua érico veríssimo, 2325, santa monica, belo horizonte, mg, brasil": {
+    "lat": -19.8257595,
+    "lng": -43.9801709,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "centro, teixeiras, mg, brasil": {
+    "lat": -20.6528442,
+    "lng": -42.8557348,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "avenida general david sarnoff, 2391, cidade industrial, contagem, mg, brasil": {
+    "lat": -19.9553481,
+    "lng": -44.0172565,
+    "source": "nominatim",
+    "_ts": 1776441253006
+  },
+  "avenida dos bandeirantes, 1606, comiteco, belo horizonte, mg, brasil": {
+    "lat": -19.9500496,
+    "lng": -43.9218887,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "rua dos guajajaras, 1722, barro preto, belo horizonte, mg, brasil": {
+    "lat": -19.9227122,
+    "lng": -43.9506308,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "rua mármore, 30, santa tereza, belo horizonte, mg, brasil": {
+    "lat": -19.9162948,
+    "lng": -43.9182816,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "avenida olinto meireles, 2196, santa helena, belo horizonte, mg, brasil": {
+    "lat": -19.9786594,
+    "lng": -44.0113777,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "avenida brasília, 1000, duquesa i (sao benedito), santa luzia, mg, brasil": {
+    "lat": -19.7775552,
+    "lng": -43.90479,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "rua dos guajajaras, 762, centro, belo horizonte, mg, brasil": {
+    "lat": -19.9246291,
+    "lng": -43.9427902,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "rua gentil portugal do brasil, 55, camargos, belo horizonte, mg, brasil": {
+    "lat": -19.933796,
+    "lng": -44.0210017,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "rua doutor álvaro camargos, 2650, santa monica, belo horizonte, mg, brasil": {
+    "lat": -19.8271418,
+    "lng": -43.9681457,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "rua campos sales, 638, calafate, belo horizonte, mg, brasil": {
+    "lat": -19.9274167,
+    "lng": -43.9771468,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "avenida fleming, 240, ouro preto, belo horizonte, mg, brasil": {
+    "lat": -19.8721234,
+    "lng": -43.986918,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "avenida augusto de lima, 1400, barro preto, belo horizonte, mg, brasil": {
+    "lat": -19.9220472,
+    "lng": -43.9476699,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "do carmo, 77, sao bartolomeu, ouro preto, mg, brasil": {
+    "lat": -20.3192034,
+    "lng": -43.5838903,
+    "source": "nominatim",
+    "_ts": 1776441253042
+  },
+  "avenida amazonas, 4649, nova suissa, belo horizonte, mg, brasil": {
+    "lat": -19.9297695,
+    "lng": -43.9779451,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "rocas novas, caeté, mg, brasil": {
+    "lat": -19.7581567,
+    "lng": -43.6490784,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "avenida joão inácio peixoto, 213, granjaria, cataguases, mg, brasil": {
+    "lat": -21.3824352,
+    "lng": -42.7056818,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "avenida das américas, 15511, recreio dos bandeirantes, rio de janeiro, rj, brasil": {
+    "lat": -23.0146388,
+    "lng": -43.4650116,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "avenida dos engenheiros, 1438, castelo, belo horizonte, mg, brasil": {
+    "lat": -19.8895208,
+    "lng": -44.0015122,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "jardim, diamantina, mg, brasil": {
+    "lat": -18.2534317,
+    "lng": -43.6209798,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "avenida padre joaquim martins, 350, alvorada, contagem, mg, brasil": {
+    "lat": -19.9018824,
+    "lng": -44.0811557,
+    "source": "nominatim",
+    "_ts": 1776441253043
+  },
+  "praça méxico, 166, concordia, belo horizonte, mg, brasil": {
+    "lat": -19.9020498,
+    "lng": -43.9358187,
+    "source": "nominatim",
+    "_ts": 1776441253057
+  },
+  "avenida francisco sá, 820, prado, belo horizonte, mg, brasil": {
+    "lat": -19.924344,
+    "lng": -43.9592689,
+    "source": "nominatim",
+    "_ts": 1776441253057
+  },
+  "rua joão mendes de carvalho, 755, são pedro, pará de minas, mg, brasil": {
+    "lat": -19.8356708,
+    "lng": -44.6182178,
+    "source": "nominatim",
+    "_ts": 1776441253057
+  },
+  "avenida tereza cristina, 10202, jardim industrial, contagem, mg, brasil": {
+    "lat": -19.9705621,
+    "lng": -44.0190802,
+    "source": "nominatim",
+    "_ts": 1776441253057
+  },
+  "rua vale formoso, 240, jardim perola, governador valadares, mg, brasil": {
+    "lat": -18.8726519,
+    "lng": -41.9683883,
+    "source": "nominatim",
+    "_ts": 1776441253057
+  },
+  "avenida são sebastião, 306, campinho, lagoa santa, mg, brasil": {
+    "lat": -19.578915,
+    "lng": -43.9178321,
+    "source": "nominatim",
+    "_ts": 1776441253058
+  },
+  "rua treze de maio, 290, vista alegre, belo horizonte, mg, brasil": {
+    "lat": -19.9543725,
+    "lng": -43.9950019,
+    "source": "nominatim",
+    "_ts": 1776441253062
+  },
+  "avenida guarapari, 1166, santa amelia, belo horizonte, mg, brasil": {
+    "lat": -19.8341323,
+    "lng": -43.9740179,
+    "source": "nominatim",
+    "_ts": 1776441253062
+  },
+  "avenida professor mário werneck, 1550, buritis, belo horizonte, mg, brasil": {
+    "lat": -19.971869,
+    "lng": -43.9663321,
+    "source": "nominatim",
+    "_ts": 1776441253062
+  },
+  "doutor neiva, 641, centro, pedro leopoldo, mg, brasil": {
+    "lat": -19.6252556,
+    "lng": -44.0380773,
+    "source": "nominatim",
+    "_ts": 1776441253090
+  },
+  "rua presidente ranieri mazilli, sn, cristo redentor, joão pessoa, pb, brasil": {
+    "lat": -7.1679984,
+    "lng": -34.8656075,
+    "source": "nominatim",
+    "_ts": 1776441253106
+  },
+  "rodovia br-040, 3565 b, morada nova, contagem, mg, brasil": {
+    "lat": -19.9208262,
+    "lng": -44.0372333,
+    "source": "nominatim",
+    "_ts": 1776441253122
+  },
+  "rua padre pedro pinto, 882, venda nova, belo horizonte, mg, brasil": {
+    "lat": -19.8148332,
+    "lng": -43.9592314,
+    "source": "nominatim",
+    "_ts": 1776441253128
+  },
+  "rua nova lima, 360, carlos prates, belo horizonte, mg, brasil": {
+    "lat": -19.9124237,
+    "lng": -43.957075,
+    "source": "nominatim",
+    "_ts": 1776441253266
+  },
+  "rua satélite, 328, caiçara-adelaide, belo horizonte, mg, brasil": {
+    "lat": -19.9041761,
+    "lng": -43.9739554,
+    "source": "nominatim",
+    "_ts": 1776441253508
+  },
+  "avenida sebastião de brito, 713, dona clara, belo horizonte, mg, brasil": {
+    "lat": -19.8614782,
+    "lng": -43.9421712,
+    "source": "nominatim",
+    "_ts": 1776441253312
+  },
+  "rodovia anel rodoviário celso mello azevedo, 20491, universitario, belo horizonte, mg, brasil": {
+    "lat": -19.867683,
+    "lng": -43.9358144,
+    "source": "nominatim",
+    "_ts": 1776441253512
+  },
+  "rua kepler, 375, santa lucia, belo horizonte, mg, brasil": {
+    "lat": -19.9654386,
+    "lng": -43.9500096,
+    "source": "nominatim",
+    "_ts": 1776441253532
+  },
+  "rua treze de maio, 847, sao paulo, governador valadares, mg, brasil": {
+    "lat": -18.8766998,
+    "lng": -41.9598344,
+    "source": "nominatim",
+    "_ts": 1776441253532
+  },
+  "rua josé vieira brandão, 290, sao joao batista, belo horizonte, mg, brasil": {
+    "lat": -19.8191296,
+    "lng": -43.9710897,
+    "source": "nominatim",
+    "_ts": 1776441253532
+  },
+  "rua são felipe, 11, sagrada familia, belo horizonte, mg, brasil": {
+    "lat": -19.9064654,
+    "lng": -43.9177325,
+    "source": "nominatim",
+    "_ts": 1776441253546
+  },
+  "rua sete de setembro, 863, centro, sorocaba, sp, brasil": {
+    "lat": -23.5000705,
+    "lng": -47.4625,
+    "source": "nominatim",
+    "_ts": 1776441253665
+  },
+  "rua flor da redenção, 42, jardim alvorada, belo horizonte, mg, brasil": {
+    "lat": -19.9009874,
+    "lng": -43.9870694,
+    "source": "nominatim",
+    "_ts": 1776441253730
+  },
+  "avenida mem de sá, 1332, santa efigenia, belo horizonte, mg, brasil": {
+    "lat": -19.9242242,
+    "lng": -43.9088369,
+    "source": "nominatim",
+    "_ts": 1776441253737
+  },
+  "avenida paes de barros, 1627, mooca, são paulo, sp, brasil": {
+    "lat": -23.5667533,
+    "lng": -46.5918594,
+    "source": "nominatim",
+    "_ts": 1776441253737
+  },
+  "avenida silviano brandão, 685, sagrada familia, belo horizonte, mg, brasil": {
+    "lat": -19.9075227,
+    "lng": -43.9293974,
+    "source": "nominatim",
+    "_ts": 1776441253845
+  },
+  "rua doutor cristiano rezende, 1566, bonsucesso (barreiro), belo horizonte, mg, brasil": {
+    "lat": -19.9865324,
+    "lng": -43.9885272,
+    "source": "nominatim",
+    "_ts": 1776441253867
+  },
+  "avenida rio bahia, 2315, vila isa, governador valadares, mg, brasil": {
+    "lat": -18.8893578,
+    "lng": -41.9460789,
+    "source": "nominatim",
+    "_ts": 1776441253871
+  },
+  "rua leopoldino de oliveira, 70, aparecida, belo horizonte, mg, brasil": {
+    "lat": -19.897581,
+    "lng": -43.9573627,
+    "source": "nominatim",
+    "_ts": 1776441253874
+  },
+  "rua flor d'água, 387, jardim alvorada, belo horizonte, mg, brasil": {
+    "lat": -19.8962354,
+    "lng": -43.9904687,
+    "source": "nominatim",
+    "_ts": 1776441253874
+  },
+  "rua cândido portinari, 539, cidade nobre, ipatinga, mg, brasil": {
+    "lat": -19.4628921,
+    "lng": -42.5635197,
+    "source": "nominatim",
+    "_ts": 1776441253882
+  },
+  "rodovia nilo máximo, 398, jardim colônia, jacareí, sp, brasil": {
+    "lat": -23.3142122,
+    "lng": -45.9249218,
+    "source": "nominatim",
+    "_ts": 1776441253884
+  },
+  "avenida portugal, 4407, itapoa, belo horizonte, mg, brasil": {
+    "lat": -19.843947,
+    "lng": -43.9581377,
+    "source": "nominatim",
+    "_ts": 1776441253901
+  },
+  "avenida joão césar de oliveira, 1055, eldorado, contagem, mg, brasil": {
+    "lat": -19.9412912,
+    "lng": -44.042782,
+    "source": "nominatim",
+    "_ts": 1776441254038
+  },
+  "rua rio de janeiro, 1411, lourdes, belo horizonte, mg, brasil": {
+    "lat": -19.925814,
+    "lng": -43.9404836,
+    "source": "nominatim",
+    "_ts": 1776441254038
+  },
+  "avenida joão césar de oliveira, 2660, eldorado, contagem, mg, brasil": {
+    "lat": -19.9431473,
+    "lng": -44.036568,
+    "source": "nominatim",
+    "_ts": 1776441254042
+  },
+  "rua joel josé de carvalho, 472, novo das indústrias (barreiro), belo horizonte, mg, brasil": {
+    "lat": -19.973794,
+    "lng": -43.9963395,
+    "source": "nominatim",
+    "_ts": 1776441254089
+  },
+  "avenida severino ballesteros rodrigues, 1243, ressaca, contagem, mg, brasil": {
+    "lat": -19.8975701,
+    "lng": -44.0435182,
+    "source": "nominatim",
+    "_ts": 1776441254126
+  },
+  "avenida rio bahia, 1230, vila isa, governador valadares, mg, brasil": {
+    "lat": -18.8893578,
+    "lng": -41.9460789,
+    "source": "nominatim",
+    "_ts": 1776441254323
+  }
+}

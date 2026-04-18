@@ -1,0 +1,459 @@
+================================================================================
+BRIEFING DE PROJETO — SITE BANG BANG
+Accellera — Central de Inteligência Organizacional
+Para uso no Claude Code | Versão 2.0
+================================================================================
+
+Versão 2.0 — Atualizada após cruzamento com:
+- Dossiê Estratégico Bang Bang v2.0
+- Apresentação de Reposicionamento 2º Trimestre 2026 (Maria/Accellera)
+- Ata da Reunião de Alinhamento Estratégico — 13/04/2026
+- Análise visual do site atual (descartável)
+
+
+════════════════════════════════════════════════════════════════════════════════
+CONTEXTO GERAL
+════════════════════════════════════════════════════════════════════════════════
+
+Sou CEO da Accellera, uma agência de inteligência organizacional. Estamos
+reformulando o site de um dos nossos clientes: a Bang Bang, uma marca de
+bebidas RTD (Ready-to-Drink) alcoólicas.
+
+O site atual está cru e desalinhado com o posicionamento da marca — será
+uma reformulação total, do zero. Não há nada do site atual que deva ser
+preservado visualmente. A referência de identidade vem das latas do
+produto, do dossiê estratégico e da apresentação de reposicionamento 2026.
+
+Não sou desenvolvedor — tenho uma noção superficial de código. Preciso de
+orientação clara em cada passo, sem assumir que sei o que está acontecendo
+por baixo do capô.
+
+DECISÃO REGISTRADA EM REUNIÃO (13/04/2026):
+"Site será refeito como projeto estruturado (SEO, integração Google,
+canal de compra) — briefing a ser definido."
+Responsáveis do lado do cliente: Elder (design), Maria (social media),
+Renata e Cláudio.
+
+
+════════════════════════════════════════════════════════════════════════════════
+STACK TÉCNICA PRETENDIDA
+════════════════════════════════════════════════════════════════════════════════
+
+- Claude Code (ambiente de desenvolvimento principal)
+- Git (versionamento)
+- Node.js
+- Next.js (framework — mesmo padrão usado em outro projeto da agência)
+- Storybook (documentação visual de componentes)
+- shadcn/ui (biblioteca de componentes base)
+- Tailwind CSS (estilização)
+- O que mais você julgar necessário para um site escalável e bem estruturado
+
+
+════════════════════════════════════════════════════════════════════════════════
+OBJETIVO IMEDIATO — ENTREGA FASE 1
+════════════════════════════════════════════════════════════════════════════════
+
+Entregar uma única página bem feita: a HOME.
+
+Mas com DESIGN SYSTEM COMPLETO e ESTRUTURADO, com MAPEAMENTO de todos os
+componentes úteis para o escalonamento do projeto em médio prazo.
+
+O objetivo AGORA é a entrega bem feita de uma única página, a HOME —
+rodando LOCALMENTE, com a arquitetura preparada para crescer (páginas
+de sabor, landing pages B2B, blog, etc.).
+
+ESCOPO DESTA FASE:
+→ Design system completo + Home funcional rodando local
+→ SEM deploy, SEM configuração de domínio
+→ SEM integração com Mercado Livre (futuro)
+→ SEM Google Analytics/Tag Manager/Pixel (configurar quando for ao ar)
+→ Apenas estrutura semântica de SEO (meta tags, schema, URLs limpas)
+  para facilitar a configuração futura quando sair do local
+
+
+════════════════════════════════════════════════════════════════════════════════
+POSICIONAMENTO 2026 (APROVADO EM REUNIÃO)
+════════════════════════════════════════════════════════════════════════════════
+
+DECLARAÇÃO CENTRAL:
+"A bebida do Brasil que está sendo conquistado e do dia a dia que não
+precisa de motivo."
+
+QUEM SOMOS: A marca de bebida pronta que tem rosto, tem história e está
+conquistando o Brasil cidade por cidade.
+
+PARA QUEM: Para os Bangers de 18 a 30 anos que não precisam de ocasião
+especial para brindar. Todo dia tem um motivo.
+
+O QUE ENTREGAMOS: Bebida pronta com personalidade real, sabores distintos
+e um ritual próprio que transforma qualquer momento comum.
+
+COMO SOMOS DIFERENTES: Enquanto todos vendem festa, a Bang Bang vende
+presença. No dia a dia, no Brasil inteiro, na vida de quem não espera.
+
+LINGUAGEM PROPRIETÁRIA:
+→ "Bangers" — nome da comunidade (ATENÇÃO: naming em validação linguística
+  antes de publicação; não cravar no site como definitivo até aprovação)
+→ "Todo dia é dia de Bang" — manifesto anti-sazonalidade
+→ "Chegamos em [cidade]" — ritual de expansão; operação comercial vira narrativa
+→ "Abre o seu" — gatilho de consumo imediato
+
+RICARDO: Rosto autêntico da marca / fundador. O site pode incorporar
+sua presença como elemento de autenticidade — ele não é influencer,
+é o dono que vive a marca.
+
+
+════════════════════════════════════════════════════════════════════════════════
+PÚBLICO-ALVO DA HOME — SEGMENTAÇÃO DEFINIDA EM REUNIÃO
+════════════════════════════════════════════════════════════════════════════════
+
+A reunião de 13/04 definiu separação clara de B2B e B2C com trilhas,
+CTAs e fluxos distintos por público. O site precisa respeitar isso.
+
+───────────────────────────────────────
+PÚBLICO PRIMÁRIO: B2B (peso majoritário da home)
+───────────────────────────────────────
+
+São 3 perfis B2B distintos (não tratar como bloco único):
+
+1. REVENDEDOR / BAR / RESTAURANTE
+   → Quer saber: giro de estoque, demanda do público, praticidade do RTD
+   → CTA: "Quero revender" → WhatsApp ou formulário segmentado
+   → Argumento: produto prático (sem preparo, sem perda), margem boa,
+     público jovem já busca
+
+2. DISTRIBUIDOR
+   → Quer saber: volume, logística, cobertura territorial, condições
+   → CTA: "Seja um distribuidor" → contato comercial direto
+   → Argumento: marca em expansão, presença em eventos, demanda crescente
+
+3. EVENTOS / ATIVAÇÕES
+   → Quer saber: kit de cenografia, suporte da marca, experiência no PDV
+   → CTA: "Leve a Bang Bang pro seu evento" → briefing ou contato
+   → Argumento: identidade visual forte, kit reutilizável, experiência
+     comprovada em rodeios, festas e ativações
+
+───────────────────────────────────────
+PÚBLICO SECUNDÁRIO: B2C (1 seção dedicada)
+───────────────────────────────────────
+
+→ 18-30 anos, urbano, socialmente ativo
+→ Objetivo na home: gerar desejo, reconhecimento de marca, conexão
+  com o universo Bang Bang
+→ CTA: Direcionamento para Instagram e/ou Mercado Livre (canal de
+  venda online definido em reunião)
+→ Tom: ousado, provocativo, lifestyle — storytelling invisível
+→ NOTA: esta parte ainda está em desenvolvimento interno, não é o
+  foco principal da home, mas precisa existir e ter identidade
+
+DECISÃO DA REUNIÃO: Mercado Livre como canal de vendas online inicial,
+integrado ao site. Considerar na arquitetura.
+
+
+════════════════════════════════════════════════════════════════════════════════
+4 SABORES — 4 PERSONAS (da apresentação de reposicionamento)
+════════════════════════════════════════════════════════════════════════════════
+
+Cada sabor tem persona, cenário, classe e faixa etária próprios.
+Se houver seção de produtos no site, respeitar essa segmentação.
+
+O VERDE — Caipi Vodka 3 Limões
+→ Paleta: verde vibrante + amarelo/dourado
+→ Persona: 22-32, ABC, Ipanema/RJ — "qualquer hora"
+→ Cenário: praia, comprou no ambulante, sem pretensão
+→ Elemento: o sabor mais brasileiro da linha
+
+O MULE — Moscow Mule
+→ Paleta: marrom/cobre + terracota escuro
+→ Persona: 25-35, AB, Savassi/BH — "noite sofisticada"
+→ Cenário: restaurante fixo, mesmo grupo, garçom já sabe
+→ Elemento: sofisticado sem esforço
+
+O SPRITZ — 40+3 Spritz Baunilha + Citrus
+→ Paleta: bege/areia + cobre/dourado
+→ Persona: 28-35, AB, Vila da Serra/BH — "dia com estilo"
+→ Cenário: piscina, home office acabou, momento próprio
+→ Elemento: declaração de estilo
+
+O BANG — Whisky + Energy
+→ Paleta: laranja intenso + marrom escuro
+→ Persona: 18-28, CD, Barreiro/BH — "noite sem limite"
+→ Cenário: esquenta que virou a festa, caixa de Bang, ninguém quis sair
+→ Elemento: energia pura, sem concessão
+
+
+════════════════════════════════════════════════════════════════════════════════
+MATERIAIS QUE VOU FORNECER JUNTO DESTE PROMPT
+════════════════════════════════════════════════════════════════════════════════
+
+1. DOSSIÊ ESTRATÉGICO DA BANG BANG (arquivo TXT)
+   → Documento-mestre: identidade, tom de voz, pilares, sabores, público,
+     funil, diagnósticos estratégicos
+   → Toda decisão de design e conteúdo deve ser cruzada com ele
+
+2. APRESENTAÇÃO DE REPOSICIONAMENTO 2º TRIMESTRE 2026 (PDF)
+   → Novo posicionamento, personas por sabor, 4 editorias, linguagem
+     proprietária, diagnóstico, planejamento de quinzena
+   → Direcionamento visual: paleta de cores por editoria, layout de cards
+   → Cruzar com o dossiê para extrair as decisões de identidade
+
+3. ATA DA REUNIÃO DE 13/04/2026 (PDF/TXT)
+   → Decisões aprovadas pela diretoria que impactam o site:
+     segmentação B2B, Mercado Livre, SEO, identidade visual, naming
+   → Próximos passos com responsáveis e prazos
+
+4. PRINTS/PDF DO SITE ATUAL
+   → Para referência do que NÃO repetir (ver seção de anti-padrões abaixo)
+   → O visual é descartável — reformulação total
+
+5. PRINTS E LINKS DE SITES DE REFERÊNCIA
+   → 5 referências visuais de sites de bebidas analisadas
+   → Elementos extraídos de cada uma estão documentados abaixo
+
+════════════════════════════════════════════════════════════════════════════════
+ANÁLISE DE REFERÊNCIAS VISUAIS — O QUE EXTRAIR DE CADA UMA
+════════════════════════════════════════════════════════════════════════════════
+
+As 5 referências foram analisadas e cruzadas com o briefing da Bang Bang.
+Abaixo, o que casa com o projeto e o que descartar:
+
+REFERÊNCIA 1 — IZZE (rosa/vermelho, layout criativo)
+→ PEGAR: Cards de produto com fundo colorido por sabor — perfeito para
+  a lógica de paleta individual por sabor da Bang Bang.
+  Seção de "Hot Products" com carrossel e CTA individual por produto.
+  Tipografia bold de impacto no hero. Faixa de texto em marquee
+  (rolling text) para destaque de benefícios — adaptável para B2B
+  ("alto giro / margem real / sem preparo").
+  Seção de lifestyle com imagens reais de consumo.
+→ DESCARTAR: Tom pastel/rosa — não combina com a energia da Bang Bang.
+  Estrutura de e-commerce com preço — Bang Bang não vende direto na home.
+
+REFERÊNCIA 2 — COOLS/SPARKLING ICE (azul escuro, latas grandes)
+→ PEGAR: Hero com latas em tamanho grande e tipografia massiva — produto
+  como protagonista absoluto, exatamente o que o dossiê pede.
+  Elementos flutuantes (frutas, gelo) em torno do produto — cria energia.
+  Contraste escuro/vibrante — combina com o fundo forte da Bang Bang.
+→ DESCARTAR: Paleta azul/teal — substituir pela paleta da Bang Bang.
+  Card de compra rápida no hero — não é o objetivo desta home.
+
+REFERÊNCIA 3 — LIQUID IV (verde, layout longo)
+→ PEGAR: Seção de FAQ com acordeão limpo — perfeito para FAQ B2B.
+  Seção de produto em destaque com fundo colorido e CTA.
+  Footer robusto com telefone, endereço e links organizados.
+  Seção "Let's Talk" como CTA de fechamento — adaptável para
+  "Quer revender? Fale com a gente".
+→ DESCARTAR: Estética de suplemento/saúde — não combina.
+  Banner de promo com desconto — Bang Bang não opera assim.
+
+REFERÊNCIA 4 — INDRINK (verde neon, lifestyle)
+→ PEGAR: Seção de sabores com tipografia grande listando os nomes
+  dos sabores — efeito visual forte, adaptável para os 4 sabores BB.
+  Carrossel de depoimentos com rating — adaptável para depoimentos
+  de revendedores/parceiros B2B.
+  Newsletter com a marca grande no fundo — impacto visual de fechamento.
+  Cards de produto com descrição curta e CTA colorido individual.
+→ DESCARTAR: Fotos de pessoas genéricas — Bang Bang precisa de fotos
+  reais ou do Ricardo. Paleta verde neon — substituir.
+
+REFERÊNCIA 5 — RIDGED (verde escuro, editorial)
+→ PEGAR: Seção de números/credibilidade ("150K clientes / 99% qualidade")
+  — perfeito para números B2B da Bang Bang (cidades presentes, pallets,
+  eventos, PDVs). Layout editorial com produto flutuante e tipografia
+  grande em background — efeito "marca como textura" que a Bang Bang
+  pode usar com o logotipo BOOM.
+  Seção de depoimento individual com aspas — para parceiro B2B em destaque.
+→ DESCARTAR: Tom de saúde/wellness. Paleta monocromática verde.
+
+SÍNTESE — COMPONENTES A CONSTRUIR COM BASE NAS REFERÊNCIAS:
+1. Hero com tipografia massiva + latas como protagonistas (ref 2)
+2. Cards de produto com fundo por sabor e CTA individual (ref 1, 4)
+3. Marquee/faixa de texto rolling com benefícios B2B (ref 1)
+4. Seção de números/credibilidade com dados reais (ref 5)
+5. Carrossel de depoimentos de parceiros B2B (ref 4)
+6. Seção de sabores com tipografia grande listando nomes (ref 4)
+7. FAQ B2B com acordeão limpo (ref 3)
+8. CTA de fechamento "Fale com a gente" / "Quero revender" (ref 3)
+9. Footer robusto com contatos segmentados (ref 3, 4)
+10. Elementos flutuantes/decorativos (frutas, gelo, chapéu) (ref 2)
+
+
+════════════════════════════════════════════════════════════════════════════════
+IDENTIDADE VISUAL — DIRETRIZES CONSOLIDADAS
+════════════════════════════════════════════════════════════════════════════════
+
+ESTILO GERAL: Cartoon bold / western urbano reinterpretado.
+Não é sertanejo. É atitude de fronteira com estética contemporânea.
+
+PALETA PRIORITÁRIA (confirmada em reunião):
+→ Amarelo/Laranja intenso — cor dominante da marca
+→ Verde vibrante — segundo tom de energia
+→ Marrom escuro / terracota — base quente, profundidade
+→ Preto — fundos de impacto, contraste
+
+ELEMENTOS CONSTANTES:
+→ Logotipo BANG BANG: tipografia bold, branca, com outline
+→ BOOM com estrela de impacto
+→ Selo "BEBA BANG BANG TRINCANDO"
+→ Chapéu de cowboy — elemento unificador
+→ Alta saturação — feito para se destacar
+
+REGRAS VISUAIS:
+→ Fundo forte — nunca competir com o produto
+→ Composição simples, sem poluição visual
+→ Impacto imediato — menos informação, mais força visual
+→ Nunca cara de marca genérica de bebida
+→ Consistência estética absoluta
+→ Cada sabor tem paleta própria — respeitar nas seções de produto
+
+
+════════════════════════════════════════════════════════════════════════════════
+ANTI-PADRÕES — O QUE O SITE ATUAL FAZ E NÃO DEVE SER REPETIDO
+════════════════════════════════════════════════════════════════════════════════
+
+Análise do site atual para o Claude Code saber exatamente o que evitar:
+
+1. HERO MISTURADO: tom B2B no título ("Leve para suas prateleiras") com
+   modelo feminina B2C → público não sabe para quem é a página
+
+2. TEXTO INSTITUCIONAL LONGO E EXPLICATIVO: seção "O tiro certo para o
+   seu negócio" com parágrafos densos → contradiz o tom da marca (curto,
+   direto, sugestivo). O dossiê diz: "pouco explicativa, mais sugestiva"
+
+3. CTA GENÉRICO: "Comprar agora" serve para B2B e B2C ao mesmo tempo
+   → sem segmentação, sem direcionamento claro
+
+4. MASCOTE 3D COMPETINDO COM O PRODUTO: cowboy ocupa mais espaço visual
+   que as latas → produto deve ser protagonista
+
+5. SEÇÃO DE PARCEIROS SOLTA: logos de distribuidores sem contexto de
+   expansão ou prova social estruturada
+
+6. GRID DO INSTAGRAM SEM DIRECIONAMENTO: embed genérico de posts sem
+   conexão estratégica com o conteúdo da página
+
+7. FOOTER VAZIO: sem informações reais, sem contato, sem links úteis
+
+8. AUSÊNCIA DE SEÇÕES ESSENCIAIS: sem "sobre a marca", sem "por que
+   revender", sem números/resultados, sem FAQ B2B, sem contato segmentado
+
+9. NARRATIVA DE "IA E TECNOLOGIA": textos como "fusão explosiva entre
+   criatividade humana e inteligência artificial" → irrelevante para o
+   público, não é o posicionamento da marca
+
+10. SEM SEO, SEM ANALYTICS: site sem estrutura para rastreamento,
+    sem meta tags, sem integração Google
+
+
+════════════════════════════════════════════════════════════════════════════════
+REQUISITOS TÉCNICOS — FASE 1 (HOME LOCAL)
+════════════════════════════════════════════════════════════════════════════════
+
+AGORA (escopo desta entrega):
+→ SEO semântico preparado (meta tags, heading hierarchy, schema markup,
+  URLs limpas) — para ativar quando for ao ar
+→ Responsivo (desktop + mobile)
+→ Performance otimizada (Core Web Vitals)
+→ CTAs com links placeholder por fluxo de público (WhatsApp segmentado, etc.)
+→ Rodando local via `npm run dev`
+
+FUTURO (fora do escopo agora, mas a arquitetura deve permitir):
+→ Google Analytics + Tag Manager + Meta Pixel
+→ Integração com Mercado Livre como canal de venda
+→ Deploy e configuração de domínio
+→ Número único de triagem com links personalizados
+
+
+════════════════════════════════════════════════════════════════════════════════
+O QUE PRECISO QUE VOCÊ FAÇA — WORKFLOW
+════════════════════════════════════════════════════════════════════════════════
+
+Antes de tocar em código, preciso que você me apresente seu plano de
+trabalho. Liste para mim qual é a sua ideia de workflow para esse projeto,
+considerando:
+
+1. DIAGNÓSTICO E LEVANTAMENTO
+   → Analisar o dossiê estratégico e extrair as decisões de design
+   → Analisar a apresentação de reposicionamento e cruzar com o dossiê
+   → Analisar a ata da reunião e mapear as decisões que impactam o site
+   → Analisar o site atual (prints) — mapear anti-padrões a evitar
+   → Analisar as referências visuais que vou enviar (prints e links)
+   → Consolidar um briefing visual + estratégico unificado
+
+2. ARQUITETURA DA HOME
+   → Definir as seções/dobras da página com lógica de navegação e conversão
+   → Cada seção entrega o visitante para a próxima com propósito definido
+   → Peso B2B com 3 perfis segmentados + porta B2C com identidade
+   → Definir CTAs por público e por seção (WhatsApp segmentado, formulário,
+     redirecionamento para Mercado Livre, Instagram, etc.)
+   → Considerar a narrativa de expansão ("Chegamos em [cidade]") como
+     possível seção de prova social / mapa
+
+3. DESIGN SYSTEM
+   → Design tokens (cores por sabor, tipografia, espaçamento, bordas, sombras)
+   → Componentes base mapeados para reuso futuro
+   → Documentação no Storybook
+   → Tudo pensado para escalar — páginas de sabor, landing pages B2B,
+     blog e integrações futuras devem nascer dos mesmos componentes
+
+4. DESENVOLVIMENTO DA HOME
+   → Implementar a home com os componentes do design system
+   → Responsivo (desktop + mobile)
+   → Performance otimizada (Core Web Vitals)
+   → SEO semântico (headings, meta tags, schema) — preparado para ativar
+   → Rodando local via npm run dev
+
+5. ENTREGA
+   → Código no Git, organizado e documentado
+   → Storybook atualizado com todos os componentes
+   → README com instruções de como rodar localmente
+
+
+════════════════════════════════════════════════════════════════════════════════
+RESTRIÇÕES E ALERTAS
+════════════════════════════════════════════════════════════════════════════════
+
+→ Não sou desenvolvedor — preciso de orientação passo a passo
+→ O site atual é descartável — reformulação total
+→ A Bang Bang NÃO é uma marca institucional ou formal — o site precisa
+  ter a mesma energia das latas: impacto, atitude, saturação
+→ O diferencial da Bang Bang é a MARCA, não o produto — o site precisa
+  vender identidade e presença, não características técnicas do líquido
+→ Nunca usar linguagem genérica de "marca de bebida" — o tom é ousado,
+  direto, provocativo
+→ B2B e B2C nunca se misturam na mesma seção — fluxos, CTAs e tom distintos
+→ Cada sabor tem sua paleta própria — respeitar nas seções de produto
+→ "Bangers" como naming está em validação linguística — não cravar como
+  definitivo até aprovação do cliente
+→ Narrativa de "IA e tecnologia" não é posicionamento da marca — remover
+  qualquer referência a isso
+→ Ricardo (fundador) é rosto da marca — pode aparecer com autenticidade,
+  não como influencer
+→ O site deve ser tão visualmente marcante quanto as latas no PDV
+→ Storytelling invisível: cada seção tem uma intenção, mas o visitante
+  sente a narrativa sem que ela seja declarada
+
+
+════════════════════════════════════════════════════════════════════════════════
+ENTREGÁVEL IMEDIATO ESPERADO
+════════════════════════════════════════════════════════════════════════════════
+
+Não comece a codar. Primeiro me apresente:
+
+1. Seu workflow completo proposto (etapas, ordem, o que precisa de mim
+   em cada passo)
+2. Sua proposta de seções/dobras da HOME com a lógica de navegação,
+   indicando quais seções são B2B, quais são B2C, e qual o CTA de cada uma
+3. Lista de componentes que você já consegue mapear para o design system
+   com base nos materiais fornecidos
+4. Proposta de design tokens (paleta, tipografia, espaçamentos) baseada
+   nas referências visuais das latas e da apresentação
+5. Qualquer pergunta ou material que esteja faltando antes de começar
+
+Só avançamos para código após eu validar o plano.
+
+
+================================================================================
+FIM DO PROMPT
+Accellera — Central de Inteligência Organizacional
+Bang Bang — Projeto Site | Versão 2.0 | Atualizado em: 15/04/2026
+================================================================================
