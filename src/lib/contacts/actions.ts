@@ -10,7 +10,10 @@ export interface SaveContactsResult {
   error?: string
 }
 
-/** Upsert the singleton contact_channels row. Admin-only. */
+// Update the singleton contact_channels row. Admin-only.
+// We use .update() (not .upsert()) because the row is guaranteed to exist —
+// migration 20260418000001 seeds id=true on every environment, and our RLS
+// grants UPDATE but not INSERT on this table.
 export async function saveContactChannels(
   config: ContactsConfig,
 ): Promise<SaveContactsResult> {
@@ -18,15 +21,17 @@ export async function saveContactChannels(
 
   const supabase = await createSupabaseServerClient()
 
-  const { error } = await supabase.from("contact_channels").upsert({
-    id: true,
-    whatsapp_revenda: config.whatsappRevenda,
-    whatsapp_distribuidor: config.whatsappDistribuidor,
-    whatsapp_eventos: config.whatsappEventos,
-    link_revenda: config.linkRevenda,
-    link_distribuidor: config.linkDistribuidor,
-    link_eventos: config.linkEventos,
-  })
+  const { error } = await supabase
+    .from("contact_channels")
+    .update({
+      whatsapp_revenda: config.whatsappRevenda,
+      whatsapp_distribuidor: config.whatsappDistribuidor,
+      whatsapp_eventos: config.whatsappEventos,
+      link_revenda: config.linkRevenda,
+      link_distribuidor: config.linkDistribuidor,
+      link_eventos: config.linkEventos,
+    })
+    .eq("id", true)
 
   if (error) return { ok: false, error: error.message }
 
