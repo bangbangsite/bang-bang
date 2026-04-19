@@ -6,7 +6,7 @@ import { clearAllDemoData, DEMO_STORAGE_KEYS } from "@/lib/demo/reset"
 
 // "Danger zone" card. Staff-only gate — removes every localStorage key the
 // site owns (PDV overrides, contacts, clicks, wishlist, events, bangers,
-// FAQ). Staff session is preserved so the admin isn't kicked out.
+// FAQ). Auth cookies live outside localStorage so the admin isn't kicked out.
 //
 // Flow is 2-step (click → confirm) so a stray click can't nuke the data
 // by accident. Confirm state auto-dismisses after 4s, matching the pattern

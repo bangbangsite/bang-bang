@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import Link from "next/link"
+import { redirect } from "next/navigation"
 import { Logo } from "@/components/shared/Logo"
+import { getUser } from "@/lib/auth/supabase-auth"
 import { LoginForm } from "./LoginForm"
 
 export const metadata: Metadata = {
@@ -12,7 +14,11 @@ export const metadata: Metadata = {
 const GRAIN_URL =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")"
 
-export default function LoginPage() {
+export default async function LoginPage() {
+  // Bounce signed-in users straight to the dashboard.
+  const user = await getUser()
+  if (user) redirect("/dashboard")
+
   return (
     <main
       className="relative min-h-screen overflow-hidden flex items-center justify-center px-4 py-20 text-white"

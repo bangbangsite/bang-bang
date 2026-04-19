@@ -2,9 +2,7 @@
 // Supabase migration isn't done. Keeping them centralized means the reset
 // button and any future audit tool don't drift from the actual storage.
 //
-// `bb_staff_session_v1` is intentionally NOT listed — zeroing the data
-// shouldn't kick the admin out of the dashboard. When auth moves to
-// Supabase this file only needs its post-clear reload behavior updated.
+// Auth lives in Supabase (HTTP-only cookies) and is untouched by this reset.
 
 export const DEMO_STORAGE_KEYS = [
   // Wishlist (pedidos de cidade) + demo seed flag

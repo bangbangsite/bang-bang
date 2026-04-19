@@ -1,9 +1,7 @@
 "use client"
 
-import { useRouter } from "next/navigation"
-import { useState, type FormEvent } from "react"
-import { validateCredentials } from "@/lib/auth/credentials"
-import { setSession } from "@/lib/auth/session"
+import { useActionState, useState } from "react"
+import { loginAction, type LoginState } from "./actions"
 
 function EyeIcon({ open }: { open: boolean }) {
   return (
@@ -34,32 +32,15 @@ function EyeIcon({ open }: { open: boolean }) {
   )
 }
 
-export function LoginForm() {
-  const router = useRouter()
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
+const INITIAL_STATE: LoginState = { error: null }
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setError(null)
-    setSubmitting(true)
-    // Small artificial delay so the submit feels like a request.
-    await new Promise((r) => setTimeout(r, 400))
-    if (validateCredentials(email, password)) {
-      setSession()
-      router.replace("/dashboard")
-      return
-    }
-    setError("E-mail ou senha inválidos. Verifica e tenta de novo.")
-    setSubmitting(false)
-  }
+export function LoginForm() {
+  const [state, formAction, pending] = useActionState(loginAction, INITIAL_STATE)
+  const [showPassword, setShowPassword] = useState(false)
 
   return (
     <form
-      onSubmit={handleSubmit}
+      action={formAction}
       className="w-full rounded-3xl bg-white text-[#2D1810] p-8 md:p-10 shadow-[0_30px_80px_-20px_rgba(0,0,0,0.5)] border border-white/10 flex flex-col gap-5"
       noValidate
     >
@@ -89,13 +70,12 @@ export function LoginForm() {
           </label>
           <input
             id="login-email"
+            name="email"
             type="email"
             autoComplete="email"
             required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             placeholder="voce@bangbang.com.br"
-            disabled={submitting}
+            disabled={pending}
             className="h-11 px-4 rounded-xl border-2 border-[#4A2C1A]/15 bg-white text-[#2D1810] placeholder:text-[#4A2C1A]/40 text-base focus:border-[#E87A1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]/40 disabled:opacity-60 transition-colors"
           />
         </div>
@@ -110,13 +90,12 @@ export function LoginForm() {
           <div className="relative flex items-center">
             <input
               id="login-password"
+              name="password"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               placeholder="••••••••"
-              disabled={submitting}
+              disabled={pending}
               className="w-full h-11 pl-4 pr-11 rounded-xl border-2 border-[#4A2C1A]/15 bg-white text-[#2D1810] placeholder:text-[#4A2C1A]/40 text-base focus:border-[#E87A1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]/40 disabled:opacity-60 transition-colors"
             />
             <button
@@ -131,21 +110,21 @@ export function LoginForm() {
         </div>
       </div>
 
-      {error && (
+      {state.error && (
         <div
           role="alert"
           className="rounded-xl px-4 py-3 text-sm bg-[#FEE2E2] border border-[#FCA5A5] text-[#991B1B]"
         >
-          {error}
+          {state.error}
         </div>
       )}
 
       <button
         type="submit"
-        disabled={submitting}
+        disabled={pending}
         className="mt-2 inline-flex items-center justify-center gap-2 h-12 px-6 rounded-lg font-bold text-sm tracking-[0.08em] uppercase bg-[#E87A1E] text-white hover:bg-[#C4650F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
       >
-        {submitting ? "Verificando…" : "Entrar"}
+        {pending ? "Verificando…" : "Entrar"}
       </button>
 
       <p className="text-center text-xs text-[#4A2C1A]/50">

@@ -1,7 +1,7 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname, useRouter } from "next/navigation"
+import { usePathname } from "next/navigation"
 import {
   LayoutDashboard,
   MapPin,
@@ -15,7 +15,7 @@ import {
   X,
   Lock,
 } from "lucide-react"
-import { clearSession } from "@/lib/auth/session"
+import { logoutAction } from "@/app/login/actions"
 import { Logo } from "@/components/shared/Logo"
 import { usePDVs } from "@/lib/pdvs/usePDVs"
 import { useWishlist } from "@/lib/wishlist/useWishlist"
@@ -66,7 +66,6 @@ interface SidebarProps {
 
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
-  const router = useRouter()
   const { overrides } = usePDVs()
   const { total: totalRequests } = useWishlist()
   const { upcoming } = useEvents()
@@ -76,11 +75,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
     Object.keys(overrides.edited).length +
     overrides.added.length +
     overrides.deletedIds.length
-
-  const handleLogout = () => {
-    clearSession()
-    router.replace("/login")
-  }
 
   // Notification badges per nav route. Only routes that exist on the badge map
   // render a pill — keeps the sidebar quiet when nothing needs attention.
@@ -233,18 +227,19 @@ export function Sidebar({ open, onClose }: SidebarProps) {
             <p className="text-[10px] tracking-[0.24em] uppercase text-[#4A2C1A]/45 font-bold mb-2 px-2">
               Conta
             </p>
-            <button
-              type="button"
-              onClick={handleLogout}
-              className="group flex w-full items-center gap-3 pl-4 pr-3 py-2.5 rounded-lg text-[13px] font-medium text-[#4A2C1A]/75 hover:text-[#1A1A1A] hover:bg-[#FAFAF8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]"
-            >
-              <LogOut
-                size={17}
-                strokeWidth={1.9}
-                className="text-[#4A2C1A]/50 group-hover:text-[#E87A1E]"
-              />
-              Sair
-            </button>
+            <form action={logoutAction}>
+              <button
+                type="submit"
+                className="group flex w-full items-center gap-3 pl-4 pr-3 py-2.5 rounded-lg text-[13px] font-medium text-[#4A2C1A]/75 hover:text-[#1A1A1A] hover:bg-[#FAFAF8] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]"
+              >
+                <LogOut
+                  size={17}
+                  strokeWidth={1.9}
+                  className="text-[#4A2C1A]/50 group-hover:text-[#E87A1E]"
+                />
+                Sair
+              </button>
+            </form>
           </div>
         </div>
       </aside>
