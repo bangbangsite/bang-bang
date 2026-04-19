@@ -6,14 +6,11 @@ import { DashboardHeader } from "@/components/dashboard/DashboardHeader"
 import { StatCard } from "@/components/dashboard/StatCard"
 import { StateRanking } from "@/components/dashboard/StateRanking"
 import { RecentPDVsList } from "@/components/dashboard/RecentPDVsList"
-import { CTAEngagement } from "@/components/dashboard/CTAEngagement"
 import { FAQSnapshot } from "@/components/dashboard/FAQSnapshot"
 import { QuickActions } from "@/components/dashboard/QuickActions"
 import { WishlistRanking } from "@/components/dashboard/WishlistRanking"
-import { NovosBangersWidget } from "@/components/dashboard/NovosBangersWidget"
 import { ResetDemoDataCard } from "@/components/dashboard/ResetDemoDataCard"
 import { usePDVs, countsByUF, recentPDVs } from "@/lib/pdvs/usePDVs"
-import { useBangers } from "@/lib/bangers/useBangers"
 import type { CityRankRow } from "@/lib/wishlist/config"
 import { useMobileMenu } from "./mobile-menu-context"
 
@@ -22,20 +19,31 @@ interface DashboardHomeProps {
   upcomingCount: number
   /** Server-rendered UpcomingEventsWidget passed as a slot. */
   eventsWidget: ReactNode
+  /** Server-rendered CTAEngagement passed as a slot. */
+  engagementWidget: ReactNode
+  /** Server-rendered NovosBangersWidget passed as a slot. */
+  novosBangersWidget: ReactNode
   /** Pre-fetched total wishlist requests (from Server Component). */
   wishlistTotal: number
   /** Pre-computed wishlist city ranking (from Server Component). */
   wishlistRanking: readonly CityRankRow[]
+  /** Pre-fetched total banger applications (from Server Component). */
+  totalBangers: number
+  /** Count of applications with status = 'novo'. */
+  novosBangers: number
 }
 
 export function DashboardHome({
   upcomingCount,
   eventsWidget,
+  engagementWidget,
+  novosBangersWidget,
   wishlistTotal,
   wishlistRanking,
+  totalBangers,
+  novosBangers,
 }: DashboardHomeProps) {
   const { pdvs, overrides } = usePDVs()
-  const { novosCount: novosBangers, total: totalBangers } = useBangers()
   const { open: openMobileMenu } = useMobileMenu()
 
   const total = pdvs.length
@@ -131,15 +139,14 @@ export function DashboardHome({
 
         {/* Conteúdo do site: próximos eventos + bangers pendentes */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {/* eventsWidget is a Server Component rendered by the parent server page */}
           {eventsWidget}
-          <NovosBangersWidget />
+          {novosBangersWidget}
         </div>
 
         {/* Wishlist ranking + CTA engagement */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4">
           <WishlistRanking ranking={wishlistRanking} total={wishlistTotal} />
-          <CTAEngagement />
+          {engagementWidget}
         </div>
 
         {/* FAQ snapshot */}

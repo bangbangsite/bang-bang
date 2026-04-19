@@ -1,8 +1,6 @@
-"use client"
-
 import Link from "next/link"
 import { Users, ArrowUpRight, Star, Sparkles } from "lucide-react"
-import { useBangers } from "@/lib/bangers/useBangers"
+import { getBangers } from "@/lib/bangers/server"
 import {
   BANGER_NICHE_LABEL,
   formatFollowers,
@@ -26,16 +24,16 @@ function initials(name: string): string {
 }
 
 /**
- * Compact widget on the dashboard home — surfaces the 4 most recent banger
- * applications with status "novo" so staff can triage quickly without leaving
- * the home screen.
+ * Server Component — fetches the 4 most recent "novo" banger applications
+ * directly from Supabase so the dashboard home always reflects live data
+ * without a client-side hook.
  */
-export function NovosBangersWidget() {
-  const { applications, novosCount } = useBangers()
+export async function NovosBangersWidget() {
+  const applications = await getBangers()
+  const novosCount = applications.filter((a) => a.status === "novo").length
   const novosTop4 = applications
     .filter((a) => a.status === "novo")
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, 4)
+    .slice(0, 4) // getBangers() already orders by created_at desc
 
   return (
     <section

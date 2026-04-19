@@ -43,3 +43,4 @@ data/.~lock.*
 # local working material (design refs — not part of the codebase)
 Imagens de Referências/
 .claude/worktrees/
+.clone/

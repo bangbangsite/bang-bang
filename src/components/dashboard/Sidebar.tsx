@@ -18,7 +18,6 @@ import {
 import { logoutAction } from "@/app/login/actions"
 import { Logo } from "@/components/shared/Logo"
 import { usePDVs } from "@/lib/pdvs/usePDVs"
-import { useBangers } from "@/lib/bangers/useBangers"
 import { cn } from "@/lib/utils"
 
 interface NavGroup {
@@ -65,7 +64,6 @@ interface SidebarProps {
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { overrides } = usePDVs()
-  const { novosCount: novosBangers } = useBangers()
 
   const editedCount =
     Object.keys(overrides.edited).length +
@@ -74,10 +72,8 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
   // Notification badges per nav route. Only routes that exist on the badge map
   // render a pill — keeps the sidebar quiet when nothing needs attention.
-  // Bangers: candidatos com status "novo".
   const badges: Record<string, number> = {
     "/dashboard/pdvs": editedCount,
-    "/dashboard/bangers": novosBangers,
   }
 
   return (

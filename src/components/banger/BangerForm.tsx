@@ -1,11 +1,10 @@
 "use client"
 
-import { useState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { Check, Send, Sparkles, Plus, X, Star, Camera, Music, Video, Radio, Clapperboard, Hash } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { Select, type SelectOption } from "@/components/shared/Select"
-import { useBangers } from "@/lib/bangers/useBangers"
-import type { BangerNiche, PlatformId as ConfigPlatformId } from "@/lib/bangers/config"
+import { submitBangerApplication, type SubmitBangerState } from "@/lib/bangers/actions"
 
 const GRAIN_URL =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")"
@@ -44,13 +43,13 @@ interface PlatformDef {
 }
 
 const PLATFORMS: PlatformDef[] = [
-  { id: "instagram", label: "Instagram",  icon: <Camera size={16} strokeWidth={2.4} />,       accent: "#ff3a8a", placeholder: "@seuinsta" },
-  { id: "tiktok",    label: "TikTok",     icon: <Music size={16} strokeWidth={2.4} />,        accent: "#d4ff4d", placeholder: "@seutiktok" },
-  { id: "youtube",   label: "YouTube",    icon: <Video size={16} strokeWidth={2.4} />,        accent: "#ff7a3a", placeholder: "@seucanal" },
-  { id: "twitch",    label: "Twitch",     icon: <Clapperboard size={16} strokeWidth={2.4} />, accent: "#ffd36a", placeholder: "twitch.tv/voce" },
-  { id: "kwai",      label: "Kwai",       icon: <Radio size={16} strokeWidth={2.4} />,        accent: "#8ae6ff", placeholder: "@seukwai" },
-  { id: "x",         label: "X / Twitter",icon: <Hash size={16} strokeWidth={2.4} />,         accent: "#ffffff", placeholder: "@seux" },
-  { id: "outro",     label: "Outra rede", icon: <Plus size={16} strokeWidth={2.4} />,         accent: "#b3ff4d", placeholder: "nome da rede + @" },
+  { id: "instagram", label: "Instagram",   icon: <Camera size={16} strokeWidth={2.4} />,       accent: "#ff3a8a", placeholder: "@seuinsta" },
+  { id: "tiktok",    label: "TikTok",      icon: <Music size={16} strokeWidth={2.4} />,        accent: "#d4ff4d", placeholder: "@seutiktok" },
+  { id: "youtube",   label: "YouTube",     icon: <Video size={16} strokeWidth={2.4} />,        accent: "#ff7a3a", placeholder: "@seucanal" },
+  { id: "twitch",    label: "Twitch",      icon: <Clapperboard size={16} strokeWidth={2.4} />, accent: "#ffd36a", placeholder: "twitch.tv/voce" },
+  { id: "kwai",      label: "Kwai",        icon: <Radio size={16} strokeWidth={2.4} />,        accent: "#8ae6ff", placeholder: "@seukwai" },
+  { id: "x",         label: "X / Twitter", icon: <Hash size={16} strokeWidth={2.4} />,         accent: "#ffffff", placeholder: "@seux" },
+  { id: "outro",     label: "Outra rede",  icon: <Plus size={16} strokeWidth={2.4} />,         accent: "#b3ff4d", placeholder: "nome da rede + @" },
 ]
 
 interface RedeEntry {
@@ -58,7 +57,7 @@ interface RedeEntry {
   seguidores: string
 }
 
-interface FormState {
+interface FormFields {
   nome: string
   email: string
   whatsapp: string
@@ -71,7 +70,7 @@ interface FormState {
   maiorDeIdade: boolean
 }
 
-const INITIAL: FormState = {
+const INITIAL_FIELDS: FormFields = {
   nome: "",
   email: "",
   whatsapp: "",
@@ -84,25 +83,33 @@ const INITIAL: FormState = {
   maiorDeIdade: false,
 }
 
-export function BangerForm() {
-  const { addApplication } = useBangers()
-  const [form, setForm] = useState<FormState>(INITIAL)
-  const [submitted, setSubmitted] = useState(false)
+const INITIAL_STATE: SubmitBangerState = { ok: false }
 
-  const update = <K extends keyof FormState>(key: K, value: FormState[K]) => {
-    setForm((prev) => ({ ...prev, [key]: value }))
+export function BangerForm() {
+  const [state, formAction, pending] = useActionState(submitBangerApplication, INITIAL_STATE)
+  const [fields, setFields] = useState<FormFields>(INITIAL_FIELDS)
+
+  // Build the redes array in order for the hidden input (JSONB payload)
+  const redesPayload = fields.redesOrdem
+    .map((id) => {
+      const entry = fields.redes[id]
+      if (!entry) return null
+      return { platform: id, handle: entry.handle.trim(), seguidores: entry.seguidores.trim() }
+    })
+    .filter((r): r is NonNullable<typeof r> => r !== null)
+
+  const update = <K extends keyof FormFields>(key: K, value: FormFields[K]) => {
+    setFields((prev) => ({ ...prev, [key]: value }))
   }
 
   const togglePlatform = (id: PlatformId) => {
-    setForm((prev) => {
+    setFields((prev) => {
       if (prev.redesOrdem.includes(id)) {
-        // Remove
         const nextOrdem = prev.redesOrdem.filter((p) => p !== id)
         const nextRedes = { ...prev.redes }
         delete nextRedes[id]
         return { ...prev, redesOrdem: nextOrdem, redes: nextRedes }
       }
-      // Add
       return {
         ...prev,
         redesOrdem: [...prev.redesOrdem, id],
@@ -112,7 +119,7 @@ export function BangerForm() {
   }
 
   const updateRede = (id: PlatformId, field: keyof RedeEntry, value: string) => {
-    setForm((prev) => ({
+    setFields((prev) => ({
       ...prev,
       redes: {
         ...prev.redes,
@@ -122,52 +129,19 @@ export function BangerForm() {
   }
 
   const setAsPrincipal = (id: PlatformId) => {
-    setForm((prev) => {
+    setFields((prev) => {
       if (!prev.redesOrdem.includes(id) || prev.redesOrdem[0] === id) return prev
       const rest = prev.redesOrdem.filter((p) => p !== id)
       return { ...prev, redesOrdem: [id, ...rest] }
     })
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (form.redesOrdem.length === 0) return
-    // Map the form's per-platform map into the ordered redes[] the store
-    // expects. Order is preserved from redesOrdem so the dashboard can show
-    // the principal channel first.
-    const redes = form.redesOrdem
-      .map((id) => {
-        const entry = form.redes[id]
-        if (!entry) return null
-        return {
-          platform: id as ConfigPlatformId,
-          handle: entry.handle.trim(),
-          seguidores: entry.seguidores.trim(),
-        }
-      })
-      .filter((r): r is NonNullable<typeof r> => r !== null)
-    addApplication({
-      nome: form.nome.trim(),
-      email: form.email.trim(),
-      whatsapp: form.whatsapp.trim(),
-      cidade: form.cidade.trim(),
-      uf: form.uf.trim().toUpperCase(),
-      nicho: form.nicho as BangerNiche,
-      redes,
-      motivacao: form.motivacao.trim(),
-    })
-    setSubmitted(true)
+  const handleReset = () => {
+    setFields(INITIAL_FIELDS)
   }
 
-  if (submitted) {
-    return (
-      <SuccessPanel
-        onReset={() => {
-          setForm(INITIAL)
-          setSubmitted(false)
-        }}
-      />
-    )
+  if (state.ok) {
+    return <SuccessPanel onReset={handleReset} />
   }
 
   return (
@@ -238,12 +212,9 @@ export function BangerForm() {
             </ul>
           </div>
 
-          {/* Right — form. Glow blobs live in an internal wrapper with
-              overflow-hidden so the halo stays behind the fields (no bleed
-              outside the card) — while the form itself keeps overflow visible
-              so popups like the Select menu can escape normally. */}
+          {/* Right — form */}
           <form
-            onSubmit={handleSubmit}
+            action={formAction}
             className="relative rounded-[32px] border border-white/10 bg-black/35 backdrop-blur-md p-6 md:p-10 shadow-[0_40px_120px_-40px_rgba(212,255,77,0.25)]"
           >
             <div
@@ -260,13 +231,23 @@ export function BangerForm() {
               />
             </div>
 
+            {/* Hidden input carrying the redes JSONB payload */}
+            <input type="hidden" name="redes" value={JSON.stringify(redesPayload)} />
+
             <div className="relative z-10 flex flex-col gap-5">
+              {state.error && (
+                <div className="rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3 text-[13px] text-red-300">
+                  {state.error}
+                </div>
+              )}
+
               {/* Row 1: nome + email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Field label="Seu nome" required>
                   <input
                     required
-                    value={form.nome}
+                    name="nome"
+                    value={fields.nome}
                     onChange={(e) => update("nome", e.target.value)}
                     placeholder="Ex: Larissa Rocha"
                     className="banger-input"
@@ -275,8 +256,9 @@ export function BangerForm() {
                 <Field label="E-mail" required>
                   <input
                     required
+                    name="email"
                     type="email"
-                    value={form.email}
+                    value={fields.email}
                     onChange={(e) => update("email", e.target.value)}
                     placeholder="voce@exemplo.com"
                     className="banger-input"
@@ -289,7 +271,8 @@ export function BangerForm() {
                 <Field label="WhatsApp" required>
                   <input
                     required
-                    value={form.whatsapp}
+                    name="whatsapp"
+                    value={fields.whatsapp}
                     onChange={(e) => update("whatsapp", e.target.value)}
                     placeholder="(11) 99999-9999"
                     className="banger-input"
@@ -298,7 +281,8 @@ export function BangerForm() {
                 <Field label="Cidade" required>
                   <input
                     required
-                    value={form.cidade}
+                    name="cidade"
+                    value={fields.cidade}
                     onChange={(e) => update("cidade", e.target.value)}
                     placeholder="São Paulo"
                     className="banger-input"
@@ -307,8 +291,9 @@ export function BangerForm() {
                 <Field label="UF" required>
                   <input
                     required
+                    name="uf"
                     maxLength={2}
-                    value={form.uf}
+                    value={fields.uf}
                     onChange={(e) => update("uf", e.target.value.toUpperCase())}
                     placeholder="SP"
                     className="banger-input uppercase text-center"
@@ -327,16 +312,17 @@ export function BangerForm() {
 
               {/* Smart platform picker */}
               <PlatformPicker
-                form={form}
+                fields={fields}
                 onToggle={togglePlatform}
                 onUpdate={updateRede}
                 onSetPrincipal={setAsPrincipal}
               />
 
-              {/* Nicho — Select shared (dark) */}
+              {/* Nicho — hidden input mirrors Select value */}
+              <input type="hidden" name="nicho" value={fields.nicho} />
               <Field label="Seu nicho / tipo de conteúdo" required>
                 <Select
-                  value={form.nicho}
+                  value={fields.nicho}
                   onChange={(v) => update("nicho", v)}
                   options={NICHE_OPTIONS}
                   variant="dark"
@@ -352,8 +338,9 @@ export function BangerForm() {
               >
                 <textarea
                   required
+                  name="motivacao"
                   rows={4}
-                  value={form.motivacao}
+                  value={fields.motivacao}
                   onChange={(e) => update("motivacao", e.target.value)}
                   placeholder="Conta pra gente o que te conecta com a Bang Bang e como você imagina que rolaria a parceria..."
                   className="banger-input resize-none"
@@ -365,7 +352,7 @@ export function BangerForm() {
                 <input
                   type="checkbox"
                   required
-                  checked={form.maiorDeIdade}
+                  checked={fields.maiorDeIdade}
                   onChange={(e) => update("maiorDeIdade", e.target.checked)}
                   className="mt-1 w-4 h-4 accent-[#d4ff4d] cursor-pointer"
                 />
@@ -378,15 +365,17 @@ export function BangerForm() {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={form.redesOrdem.length === 0}
+                disabled={fields.redesOrdem.length === 0 || pending}
                 className="mt-3 group relative overflow-hidden inline-flex items-center justify-center gap-2.5 w-full h-14 rounded-lg font-black text-sm tracking-[0.15em] uppercase bg-[#d4ff4d] text-[#0a0606] hover:bg-[#b8ea38] transition-all hover:-translate-y-0.5 shadow-[0_20px_40px_-10px_rgba(212,255,77,0.45)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4ff4d] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0a0606] disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:bg-[#d4ff4d]"
               >
-                Quero ser Banger
-                <Send size={14} strokeWidth={2.8} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+                {pending ? "Enviando…" : "Quero ser Banger"}
+                {!pending && (
+                  <Send size={14} strokeWidth={2.8} className="transition-transform group-hover:translate-x-1 group-hover:-translate-y-0.5" />
+                )}
               </button>
 
               <p className="text-[11px] text-white/40 text-center uppercase tracking-[0.2em]">
-                {form.redesOrdem.length === 0
+                {fields.redesOrdem.length === 0
                   ? "Escolhe ao menos uma rede pra aplicar"
                   : "Resposta em até 14 dias úteis · Nada de spam"}
               </p>
@@ -433,17 +422,17 @@ export function BangerForm() {
 }
 
 function PlatformPicker({
-  form,
+  fields,
   onToggle,
   onUpdate,
   onSetPrincipal,
 }: {
-  form: FormState
+  fields: FormFields
   onToggle: (id: PlatformId) => void
   onUpdate: (id: PlatformId, field: keyof RedeEntry, value: string) => void
   onSetPrincipal: (id: PlatformId) => void
 }) {
-  const principalId = form.redesOrdem[0]
+  const principalId = fields.redesOrdem[0]
 
   return (
     <div className="flex flex-col gap-4">
@@ -451,9 +440,11 @@ function PlatformPicker({
         <span className="text-[11px] font-black uppercase tracking-[0.2em] text-white/60">
           Onde você tá? <span className="text-[#d4ff4d]">*</span>
         </span>
-        {form.redesOrdem.length > 0 && (
+        {fields.redesOrdem.length > 0 && (
           <span className="text-[11px] text-white/45 italic">
-            {form.redesOrdem.length} {form.redesOrdem.length === 1 ? "rede" : "redes"} selecionada{form.redesOrdem.length > 1 ? "s" : ""}
+            {fields.redesOrdem.length}{" "}
+            {fields.redesOrdem.length === 1 ? "rede" : "redes"} selecionada
+            {fields.redesOrdem.length > 1 ? "s" : ""}
           </span>
         )}
       </div>
@@ -461,7 +452,7 @@ function PlatformPicker({
       {/* Chip grid */}
       <div className="flex flex-wrap gap-2">
         {PLATFORMS.map((p) => {
-          const selected = form.redesOrdem.includes(p.id)
+          const selected = fields.redesOrdem.includes(p.id)
           return (
             <button
               key={p.id}
@@ -493,12 +484,12 @@ function PlatformPicker({
         })}
       </div>
 
-      {/* Expanded entries per selected platform (ordered by ordem) */}
+      {/* Expanded entries per selected platform */}
       <div className="flex flex-col gap-3">
-        {form.redesOrdem.map((id) => {
+        {fields.redesOrdem.map((id) => {
           const def = PLATFORMS.find((p) => p.id === id)
           if (!def) return null
-          const entry = form.redes[id] ?? { handle: "", seguidores: "" }
+          const entry = fields.redes[id] ?? { handle: "", seguidores: "" }
           const isPrincipal = principalId === id
 
           return (
@@ -596,7 +587,7 @@ function PlatformPicker({
           )
         })}
 
-        {form.redesOrdem.length === 0 && (
+        {fields.redesOrdem.length === 0 && (
           <p className="text-[13px] text-white/40 italic">
             Escolhe as redes onde você posta. Cada uma abre um campo pra @ e
             seguidores. A primeira vira sua principal — dá pra mudar depois.
@@ -625,9 +616,7 @@ function Field({
         {required && <span className="text-[#d4ff4d]">*</span>}
       </span>
       {children}
-      {helper && (
-        <span className="text-[11px] text-white/40">{helper}</span>
-      )}
+      {helper && <span className="text-[11px] text-white/40">{helper}</span>}
     </label>
   )
 }
