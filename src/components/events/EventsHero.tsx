@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useRef, useSyncExternalStore } from "react"
 import { ArrowDown, MapPin, Sparkles } from "lucide-react"
-import { useEvents } from "@/lib/events/useEvents"
 import { Container } from "@/components/shared/Container"
+import type { BangEvent } from "@/lib/events/config"
 
 const GRAIN_URL =
   "url(\"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>\")"
@@ -21,8 +21,7 @@ function useMediaQuery(query: string): boolean {
   )
 }
 
-// Deterministic star positions (same approach as the Banger hero) so SSR
-// output stays stable and the effect only turns on when allowed.
+// Deterministic star positions so SSR output stays stable.
 const STAR_SEEDS = Array.from({ length: 20 }, (_, i) => ({
   id: i,
   left: (i * 83) % 100,
@@ -33,12 +32,15 @@ const STAR_SEEDS = Array.from({ length: 20 }, (_, i) => ({
   opacity: 0.3 + ((i * 19) % 55) / 100,
 }))
 
-export function EventsHero() {
-  const { upcoming } = useEvents()
+interface EventsHeroProps {
+  /** Upcoming events fetched server-side. Used only for stats display. */
+  events: readonly BangEvent[]
+}
 
-  const totalEvents = upcoming.length
-  const cityCount = new Set(upcoming.map((e) => e.cidade).filter(Boolean)).size
-  const stateCount = new Set(upcoming.map((e) => e.uf).filter(Boolean)).size
+export function EventsHero({ events }: EventsHeroProps) {
+  const totalEvents = events.length
+  const cityCount = new Set(events.map((e) => e.cidade).filter(Boolean)).size
+  const stateCount = new Set(events.map((e) => e.uf).filter(Boolean)).size
 
   const heroRef = useRef<HTMLElement>(null)
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)")
@@ -47,7 +49,7 @@ export function EventsHero() {
 
   const stars = useMemo(() => (fxEnabled ? STAR_SEEDS : []), [fxEnabled])
 
-  // Mouse-reactive radial glow — same pattern as BangerHero.
+  // Mouse-reactive radial glow.
   useEffect(() => {
     if (!fxEnabled) return
     const hero = heroRef.current

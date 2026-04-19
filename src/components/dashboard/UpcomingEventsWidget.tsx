@@ -1,8 +1,6 @@
-"use client"
-
 import Link from "next/link"
 import { CalendarDays, ArrowUpRight, MapPin, PartyPopper, Star, Ticket } from "lucide-react"
-import { useEvents } from "@/lib/events/useEvents"
+import { getUpcomingEvents } from "@/lib/events/server"
 import type { BangEvent, EventCategoria } from "@/lib/events/config"
 
 const MONTH_ABBR = [
@@ -25,7 +23,7 @@ function parseISOLocal(iso: string): Date {
 
 function dayMonth(iso: string): { day: string; month: string } {
   const d = parseISOLocal(iso)
-  return { day: `${d.getDate()}`, month: MONTH_ABBR[d.getMonth()] }
+  return { day: `${d.getDate()}`, month: MONTH_ABBR[d.getMonth()] ?? "" }
 }
 
 function daysFromNow(iso: string): number {
@@ -40,20 +38,17 @@ function relativeLabel(iso: string): string {
   const days = daysFromNow(iso)
   if (days === 0) return "Hoje"
   if (days === 1) return "Amanhã"
-  if (days <= 7) return `Em ${days} dias`
   if (days <= 30) return `Em ${days} dias`
   const weeks = Math.round(days / 7)
   return `Em ${weeks} ${weeks === 1 ? "semana" : "semanas"}`
 }
 
 /**
- * Compact widget shown on the dashboard home — next 4 upcoming events. Drives
- * the staff's "what's coming up?" reflex without needing them to click into
- * /dashboard/eventos every time.
+ * Server Component: fetches the next 4 upcoming events at request time.
+ * No client-side state or hooks needed — purely rendered on the server.
  */
-export function UpcomingEventsWidget() {
-  const { upcoming } = useEvents()
-  const next4 = upcoming.slice(0, 4)
+export async function UpcomingEventsWidget() {
+  const next4 = await getUpcomingEvents(4)
 
   return (
     <section
@@ -122,9 +117,6 @@ function EventRow({ event }: { event: BangEvent }) {
 
   return (
     <li className="relative flex items-center gap-3 p-2.5 rounded-xl bg-[#FAFAF8] border border-[#4A2C1A]/8 hover:border-[#4A2C1A]/15 transition-colors">
-      {/* Avatar — date tile padronizado com o resto da dashboard:
-          círculo laranja sólido, dia/mês em branco. A cor da categoria
-          continua visível no label do body (badge da categoria). */}
       <div className="w-12 h-12 rounded-full shrink-0 flex flex-col items-center justify-center text-white bg-[#E87A1E]">
         <span
           className="text-[14px] font-black leading-none tabular-nums"
@@ -170,7 +162,7 @@ function EventRow({ event }: { event: BangEvent }) {
         </div>
       </div>
 
-      {/* Right meta — relative time + ticket icon */}
+      {/* Right meta */}
       <div className="flex flex-col items-end gap-1 shrink-0">
         <span className="text-[10px] font-bold tracking-[0.18em] uppercase text-[#4A2C1A]/55 tabular-nums">
           {relativeLabel(event.data)}
@@ -187,4 +179,3 @@ function EventRow({ event }: { event: BangEvent }) {
     </li>
   )
 }
-

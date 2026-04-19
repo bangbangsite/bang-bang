@@ -19,7 +19,6 @@ import { logoutAction } from "@/app/login/actions"
 import { Logo } from "@/components/shared/Logo"
 import { usePDVs } from "@/lib/pdvs/usePDVs"
 import { useWishlist } from "@/lib/wishlist/useWishlist"
-import { useEvents } from "@/lib/events/useEvents"
 import { useBangers } from "@/lib/bangers/useBangers"
 import { cn } from "@/lib/utils"
 
@@ -68,7 +67,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { overrides } = usePDVs()
   const { total: totalRequests } = useWishlist()
-  const { upcoming } = useEvents()
   const { novosCount: novosBangers } = useBangers()
 
   const editedCount =
@@ -78,11 +76,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
 
   // Notification badges per nav route. Only routes that exist on the badge map
   // render a pill — keeps the sidebar quiet when nothing needs attention.
-  // Eventos: próximos (futuros). Bangers: candidatos com status "novo".
+  // Bangers: candidatos com status "novo".
   const badges: Record<string, number> = {
     "/dashboard/pdvs": editedCount,
     "/dashboard/solicitacoes": totalRequests,
-    "/dashboard/eventos": upcoming.length,
     "/dashboard/bangers": novosBangers,
   }
 

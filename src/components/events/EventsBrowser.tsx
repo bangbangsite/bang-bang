@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from "react"
 import { CalendarOff, X, SlidersHorizontal, LayoutGrid, Map as MapIcon } from "lucide-react"
-import { useEvents } from "@/lib/events/useEvents"
-import { type EventCategoria, EVENT_CATEGORIAS } from "@/lib/events/config"
+import { type EventCategoria, EVENT_CATEGORIAS, type BangEvent } from "@/lib/events/config"
 import { EventCard } from "./EventCard"
 import { EventsMap } from "./EventsMap"
 import {
@@ -54,8 +53,12 @@ function eventMonthBuckets(data: string, dataFim?: string): string[] {
   return out
 }
 
-export function EventsBrowser() {
-  const { upcoming } = useEvents()
+interface EventsBrowserProps {
+  /** Upcoming events fetched server-side. Already filtered to today+future. */
+  events: readonly BangEvent[]
+}
+
+export function EventsBrowser({ events }: EventsBrowserProps) {
   const [filter, setFilter] = useState<EventsFilterState>(EMPTY_FILTER)
   const [page, setPage] = useState(1)
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -64,7 +67,7 @@ export function EventsBrowser() {
   // Aggregates off the full upcoming list — counts stay stable as user filters.
   const cityOptions = useMemo(() => {
     const m = new Map<string, { cidade: string; count: number }>()
-    for (const e of upcoming) {
+    for (const e of events) {
       if (!e.cidade) continue
       const prev = m.get(e.cidade)
       if (prev) prev.count += 1
@@ -73,18 +76,18 @@ export function EventsBrowser() {
     return [...m.values()].sort((a, b) =>
       a.cidade.localeCompare(b.cidade, "pt-BR"),
     )
-  }, [upcoming])
+  }, [events])
 
   const categoryCounts = useMemo(() => {
     const base = {} as Record<EventCategoria, number>
     for (const c of EVENT_CATEGORIAS) base[c] = 0
-    for (const e of upcoming) base[e.categoria] = (base[e.categoria] ?? 0) + 1
+    for (const e of events) base[e.categoria] = (base[e.categoria] ?? 0) + 1
     return base
-  }, [upcoming])
+  }, [events])
 
   const monthOptions = useMemo(() => {
     const counts = new Map<string, number>()
-    for (const e of upcoming) {
+    for (const e of events) {
       for (const bucket of eventMonthBuckets(e.data, e.dataFim)) {
         counts.set(bucket, (counts.get(bucket) ?? 0) + 1)
       }
@@ -92,11 +95,11 @@ export function EventsBrowser() {
     return [...counts.entries()]
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([iso, count]) => ({ iso, label: formatMonthLabel(iso), count }))
-  }, [upcoming])
+  }, [events])
 
   const filtered = useMemo(() => {
     const q = normalize(filter.query)
-    return upcoming.filter((e) => {
+    return events.filter((e) => {
       if (filter.cidades.length > 0 && !filter.cidades.includes(e.cidade)) return false
       if (filter.categorias.length > 0 && !filter.categorias.includes(e.categoria)) return false
       if (filter.meses.length > 0) {
@@ -112,7 +115,7 @@ export function EventsBrowser() {
       )
       return hay.includes(q)
     })
-  }, [upcoming, filter])
+  }, [events, filter])
 
   // Reset to page 1 whenever filter shifts
   const key = JSON.stringify(filter)

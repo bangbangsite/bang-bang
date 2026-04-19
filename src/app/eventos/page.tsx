@@ -4,6 +4,7 @@ import { Footer } from "@/components/shared/Footer"
 import { Container } from "@/components/shared/Container"
 import { EventsHero } from "@/components/events/EventsHero"
 import { EventsBrowser } from "@/components/events/EventsBrowser"
+import { getUpcomingEvents } from "@/lib/events/server"
 
 export const metadata: Metadata = {
   title: "Eventos Bang Bang — agenda de festas, shows e festivais",
@@ -16,15 +17,19 @@ export const metadata: Metadata = {
   },
 }
 
-export default function EventosPage() {
+// Server Component: fetches events once per request, passes to client children.
+// Zero client-side fetching on the public /eventos page.
+export default async function EventosPage() {
+  const events = await getUpcomingEvents()
+
   return (
     <>
       <Header />
       <main>
-        <EventsHero />
+        <EventsHero events={events} />
         <section className="bg-[#FAFAF8] py-14 md:py-20">
           <Container>
-            <EventsBrowser />
+            <EventsBrowser events={events} />
           </Container>
         </section>
       </main>

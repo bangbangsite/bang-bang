@@ -1,12 +1,10 @@
 /**
- * Public-facing events catalog. Consumed by /eventos and the dashboard.
- * Stored in localStorage until a backend is wired. The listing page reads
- * these through useEvents() and applies the filters.
+ * Public-facing events catalog — types, constants and pure helpers.
+ * No localStorage, no side effects. Consumed by server.ts, actions.ts,
+ * and any Client Components that need the type definitions.
  */
 
 import type { UF } from "@/lib/types/pdv"
-
-const KEY = "bb_events_v1"
 
 export type EventCategoria =
   | "Festa"
@@ -65,56 +63,7 @@ export const EMPTY_EVENT: Omit<BangEvent, "id" | "createdAt" | "slug"> = {
   destaque: false,
 }
 
-// ----------------- storage -----------------
-export function readEvents(): BangEvent[] {
-  if (typeof window === "undefined") return []
-  try {
-    const raw = window.localStorage.getItem(KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    return parsed.filter(isValidEvent)
-  } catch {
-    return []
-  }
-}
-
-export function writeEvents(next: BangEvent[]): void {
-  if (typeof window === "undefined") return
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify(next))
-  } catch {
-    /* ignore quota errors */
-  }
-}
-
-export function resetEvents(): void {
-  if (typeof window === "undefined") return
-  try {
-    window.localStorage.removeItem(KEY)
-  } catch {
-    /* ignore */
-  }
-}
-
-export const EVENTS_STORAGE_KEY = KEY
-
-// ----------------- helpers -----------------
-
-function isValidEvent(v: unknown): v is BangEvent {
-  if (!v || typeof v !== "object") return false
-  const r = v as Record<string, unknown>
-  return (
-    typeof r.id === "string" &&
-    typeof r.nome === "string" &&
-    typeof r.data === "string"
-  )
-}
-
-export function newEventId(): string {
-  const rand = Math.random().toString(36).slice(2, 8)
-  return `evt-${Date.now().toString(36)}-${rand}`
-}
+// ─── Pure helpers ────────────────────────────────────────────────────────────
 
 export function slugify(s: string): string {
   return s

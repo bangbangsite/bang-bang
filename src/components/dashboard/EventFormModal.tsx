@@ -1,14 +1,15 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useActionState, useState } from "react"
 import { X, Star } from "lucide-react"
 import { Select } from "@/components/shared/Select"
 import {
   EVENT_CATEGORIAS,
-  slugify,
   type BangEvent,
   type EventCategoria,
 } from "@/lib/events/config"
+import { createEvent, updateEvent } from "@/lib/events/actions"
+import type { EventActionResult } from "@/lib/events/actions"
 import type { UF } from "@/lib/types/pdv"
 
 const UFS: UF[] = [
@@ -21,22 +22,8 @@ interface EventFormModalProps {
   initial: BangEvent | null
   open: boolean
   onClose: () => void
-  onSubmit: (event: BangEvent) => void
-}
-
-const EMPTY_EVENT: Omit<BangEvent, "id" | "createdAt" | "slug"> = {
-  nome: "",
-  categoria: "Festa",
-  cidade: "",
-  uf: "",
-  data: "",
-  dataFim: undefined,
-  hora: "",
-  venue: "",
-  teaser: "",
-  coverUrl: "",
-  ticketUrl: "",
-  destaque: false,
+  /** Called after a successful save so the parent can refresh its list. */
+  onSaved?: (event: BangEvent) => void
 }
 
 function todayISO(): string {
@@ -44,17 +31,35 @@ function todayISO(): string {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`
 }
 
-export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormModalProps) {
-  const [form, setForm] = useState<BangEvent>(() =>
-    initial ?? {
-      id: "",
-      slug: "",
-      ...EMPTY_EVENT,
-      data: todayISO(),
-      createdAt: new Date().toISOString(),
-    },
-  )
+const INITIAL_STATE: EventActionResult = { ok: false, error: null }
+
+export function EventFormModal({ initial, open, onClose, onSaved }: EventFormModalProps) {
+  const isEdit = initial !== null
   const firstFieldRef = useRef<HTMLInputElement>(null)
+
+  // Controlled state for the two custom Select components — they need value+onChange.
+  // Hidden inputs carry these values into the FormData submitted to the server action.
+  const [categoria, setCategoria] = useState<EventCategoria>(initial?.categoria ?? "Festa")
+  const [uf, setUf] = useState<UF | "">(initial?.uf ?? "")
+  const [destaque, setDestaque] = useState<boolean>(initial?.destaque ?? false)
+
+  // Bind the action to the event id when editing.
+  const boundAction = isEdit
+    ? updateEvent.bind(null, initial.id)
+    : createEvent
+
+  const [state, formAction, isPending] = useActionState<EventActionResult, FormData>(
+    boundAction,
+    INITIAL_STATE,
+  )
+
+  // Close modal + notify parent on success.
+  useEffect(() => {
+    if (state.ok && state.event) {
+      onSaved?.(state.event)
+      onClose()
+    }
+  }, [state, onClose, onSaved])
 
   useEffect(() => {
     if (!open) return
@@ -68,30 +73,6 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
 
   if (!open) return null
 
-  const setField = <K extends keyof BangEvent>(key: K, value: BangEvent[K]) => {
-    setForm((f) => ({ ...f, [key]: value }))
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    const trimmed = form.nome.trim()
-    if (!trimmed) return
-    const cleaned: BangEvent = {
-      ...form,
-      nome: trimmed,
-      slug: form.slug.trim() || slugify(trimmed),
-      cidade: form.cidade.trim(),
-      venue: form.venue?.trim() || undefined,
-      teaser: form.teaser?.trim() || undefined,
-      coverUrl: form.coverUrl?.trim() || undefined,
-      ticketUrl: form.ticketUrl?.trim() || undefined,
-      hora: form.hora?.trim() || undefined,
-      dataFim: form.dataFim?.trim() || undefined,
-    }
-    onSubmit(cleaned)
-  }
-
-  const isEdit = initial !== null
   const labelCls = "text-[11px] font-bold tracking-[0.18em] uppercase text-[#4A2C1A]/70"
   const inputCls =
     "h-10 px-3 rounded-lg border border-[#4A2C1A]/15 bg-white text-[#2D1810] text-sm focus:border-[#E87A1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]/40 transition-colors disabled:opacity-60"
@@ -105,7 +86,7 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
       onClick={onClose}
     >
       <form
-        onSubmit={handleSubmit}
+        action={formAction}
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-2xl bg-white rounded-2xl border border-[#4A2C1A]/8 shadow-[0_30px_60px_-20px_rgba(45,24,16,0.35)] my-8 flex flex-col max-h-[calc(100vh-4rem)]"
       >
@@ -133,6 +114,16 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
           </button>
         </header>
 
+        {/* Error banner */}
+        {state.error && (
+          <div
+            role="alert"
+            className="mx-6 mt-4 px-4 py-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm"
+          >
+            {state.error}
+          </div>
+        )}
+
         {/* Body — scrollable */}
         <div className="flex-1 overflow-y-auto p-6 grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="md:col-span-2 flex flex-col gap-1.5">
@@ -140,21 +131,22 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <input
               ref={firstFieldRef}
               id="ev-nome"
+              name="nome"
               required
-              value={form.nome}
-              onChange={(e) => setField("nome", e.target.value)}
+              defaultValue={initial?.nome ?? ""}
               placeholder="Ex: Bang Bang Rooftop CWB"
               className={inputCls}
             />
           </div>
 
+          {/* Categoria — custom select + hidden input for FormData */}
           <div className="flex flex-col gap-1.5">
             <label htmlFor="ev-cat" className={labelCls}>Categoria *</label>
+            <input type="hidden" name="categoria" value={categoria} />
             <Select<EventCategoria>
               id="ev-cat"
-              className="w-full block"
-              value={form.categoria}
-              onChange={(v) => setField("categoria", v)}
+              value={categoria}
+              onChange={setCategoria}
               options={EVENT_CATEGORIAS.map((c) => ({ value: c, label: c }))}
             />
           </div>
@@ -163,9 +155,9 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-hora" className={labelCls}>Horário</label>
             <input
               id="ev-hora"
+              name="hora"
               type="time"
-              value={form.hora ?? ""}
-              onChange={(e) => setField("hora", e.target.value)}
+              defaultValue={initial?.hora ?? ""}
               className={inputCls}
             />
           </div>
@@ -174,10 +166,10 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-data" className={labelCls}>Data *</label>
             <input
               id="ev-data"
+              name="data"
               type="date"
               required
-              value={form.data}
-              onChange={(e) => setField("data", e.target.value)}
+              defaultValue={initial?.data ?? todayISO()}
               className={inputCls}
             />
           </div>
@@ -186,10 +178,9 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-data-fim" className={labelCls}>Data fim (opcional)</label>
             <input
               id="ev-data-fim"
+              name="dataFim"
               type="date"
-              value={form.dataFim ?? ""}
-              onChange={(e) => setField("dataFim", e.target.value || undefined)}
-              min={form.data || undefined}
+              defaultValue={initial?.dataFim ?? ""}
               className={inputCls}
             />
           </div>
@@ -198,21 +189,22 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-cidade" className={labelCls}>Cidade *</label>
             <input
               id="ev-cidade"
+              name="cidade"
               required
-              value={form.cidade}
-              onChange={(e) => setField("cidade", e.target.value)}
+              defaultValue={initial?.cidade ?? ""}
               placeholder="São Paulo"
               className={inputCls}
             />
           </div>
 
+          {/* UF — custom select + hidden input for FormData */}
           <div className="flex flex-col gap-1.5">
             <label htmlFor="ev-uf" className={labelCls}>UF</label>
+            <input type="hidden" name="uf" value={uf} />
             <Select<UF | "">
               id="ev-uf"
-              className="w-full block"
-              value={form.uf}
-              onChange={(v) => setField("uf", v)}
+              value={uf}
+              onChange={setUf}
               options={[
                 { value: "", label: "—" },
                 ...UFS.map((u) => ({ value: u as UF, label: u })),
@@ -224,8 +216,8 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-venue" className={labelCls}>Local / venue</label>
             <input
               id="ev-venue"
-              value={form.venue ?? ""}
-              onChange={(e) => setField("venue", e.target.value)}
+              name="venue"
+              defaultValue={initial?.venue ?? ""}
               placeholder="Audio Club, Mineirinho, Praia do Porto da Barra…"
               className={inputCls}
             />
@@ -240,9 +232,9 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             </label>
             <input
               id="ev-teaser"
+              name="teaser"
               maxLength={120}
-              value={form.teaser ?? ""}
-              onChange={(e) => setField("teaser", e.target.value)}
+              defaultValue={initial?.teaser ?? ""}
               placeholder="Sunset, lata gelada e a cidade aos seus pés."
               className={inputCls}
             />
@@ -252,9 +244,9 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-cover" className={labelCls}>URL da imagem de capa (opcional)</label>
             <input
               id="ev-cover"
+              name="coverUrl"
               type="url"
-              value={form.coverUrl ?? ""}
-              onChange={(e) => setField("coverUrl", e.target.value)}
+              defaultValue={initial?.coverUrl ?? ""}
               placeholder="https://…/cover.jpg"
               className={inputCls}
             />
@@ -267,9 +259,9 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             <label htmlFor="ev-ticket" className={labelCls}>URL de ingresso (opcional)</label>
             <input
               id="ev-ticket"
+              name="ticketUrl"
               type="url"
-              value={form.ticketUrl ?? ""}
-              onChange={(e) => setField("ticketUrl", e.target.value)}
+              defaultValue={initial?.ticketUrl ?? ""}
               placeholder="https://www.sympla.com.br/…"
               className={inputCls}
             />
@@ -278,14 +270,15 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
             </p>
           </div>
 
-          {/* Destaque toggle — featured tag on cards */}
+          {/* Destaque toggle — controlled, synced to a hidden input for FormData */}
           <div className="md:col-span-2">
+            <input type="hidden" name="destaque" value={String(destaque)} />
             <button
               type="button"
-              onClick={() => setField("destaque", !form.destaque)}
-              aria-pressed={Boolean(form.destaque)}
+              onClick={() => setDestaque((v) => !v)}
+              aria-pressed={destaque}
               className={
-                form.destaque
+                destaque
                   ? "w-full inline-flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-[#E87A1E]/40 bg-[#E87A1E]/8 text-[#C4650F] transition-colors"
                   : "w-full inline-flex items-center justify-between gap-3 px-4 py-3 rounded-xl border border-[#4A2C1A]/10 bg-white text-[#4A2C1A]/75 hover:bg-[#FAFAF8] transition-colors"
               }
@@ -294,7 +287,7 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
                 <Star
                   size={16}
                   strokeWidth={2.4}
-                  className={form.destaque ? "text-[#E87A1E] fill-[#E87A1E]" : "text-[#4A2C1A]/45"}
+                  className={destaque ? "text-[#E87A1E] fill-[#E87A1E]" : "text-[#4A2C1A]/45"}
                 />
                 <span className="text-[13px] font-semibold">
                   Marcar como destaque
@@ -312,15 +305,17 @@ export function EventFormModal({ initial, open, onClose, onSubmit }: EventFormMo
           <button
             type="button"
             onClick={onClose}
-            className="h-10 px-4 rounded-lg text-[13px] font-semibold text-[#4A2C1A]/75 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]"
+            disabled={isPending}
+            className="h-10 px-4 rounded-lg text-[13px] font-semibold text-[#4A2C1A]/75 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] disabled:opacity-60"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            className="h-10 px-4 rounded-lg text-[13px] font-semibold bg-[#E87A1E] text-white hover:bg-[#C4650F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 transition-colors shadow-[0_8px_18px_-8px_rgba(232,122,30,0.5)]"
+            disabled={isPending}
+            className="h-10 px-4 rounded-lg text-[13px] font-semibold bg-[#E87A1E] text-white hover:bg-[#C4650F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 transition-colors shadow-[0_8px_18px_-8px_rgba(232,122,30,0.5)] disabled:opacity-70"
           >
-            {isEdit ? "Salvar alterações" : "Criar evento"}
+            {isPending ? "Salvando…" : isEdit ? "Salvar alterações" : "Criar evento"}
           </button>
         </footer>
       </form>
