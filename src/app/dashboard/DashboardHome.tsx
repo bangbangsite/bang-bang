@@ -13,8 +13,8 @@ import { WishlistRanking } from "@/components/dashboard/WishlistRanking"
 import { NovosBangersWidget } from "@/components/dashboard/NovosBangersWidget"
 import { ResetDemoDataCard } from "@/components/dashboard/ResetDemoDataCard"
 import { usePDVs, countsByUF, recentPDVs } from "@/lib/pdvs/usePDVs"
-import { useWishlist } from "@/lib/wishlist/useWishlist"
 import { useBangers } from "@/lib/bangers/useBangers"
+import type { CityRankRow } from "@/lib/wishlist/config"
 import { useMobileMenu } from "./mobile-menu-context"
 
 interface DashboardHomeProps {
@@ -22,11 +22,19 @@ interface DashboardHomeProps {
   upcomingCount: number
   /** Server-rendered UpcomingEventsWidget passed as a slot. */
   eventsWidget: ReactNode
+  /** Pre-fetched total wishlist requests (from Server Component). */
+  wishlistTotal: number
+  /** Pre-computed wishlist city ranking (from Server Component). */
+  wishlistRanking: readonly CityRankRow[]
 }
 
-export function DashboardHome({ upcomingCount, eventsWidget }: DashboardHomeProps) {
+export function DashboardHome({
+  upcomingCount,
+  eventsWidget,
+  wishlistTotal,
+  wishlistRanking,
+}: DashboardHomeProps) {
   const { pdvs, overrides } = usePDVs()
-  const { total: totalRequests } = useWishlist()
   const { novosCount: novosBangers, total: totalBangers } = useBangers()
   const { open: openMobileMenu } = useMobileMenu()
 
@@ -99,9 +107,9 @@ export function DashboardHome({ upcomingCount, eventsWidget }: DashboardHomeProp
           />
           <StatCard
             label="Solicitações"
-            value={totalRequests}
+            value={wishlistTotal}
             hint={
-              totalRequests === 0
+              wishlistTotal === 0
                 ? "nenhum pedido de cidade ainda"
                 : "consumidores querendo Bang Bang"
             }
@@ -130,7 +138,7 @@ export function DashboardHome({ upcomingCount, eventsWidget }: DashboardHomeProp
 
         {/* Wishlist ranking + CTA engagement */}
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4">
-          <WishlistRanking />
+          <WishlistRanking ranking={wishlistRanking} total={wishlistTotal} />
           <CTAEngagement />
         </div>
 

@@ -70,6 +70,9 @@ export function useFAQ(): UseFAQApi {
   }, [])
 
   useEffect(() => {
+    // Syncing external (Supabase) state into React state on mount — exactly
+    // what useEffect is for; the lint rule is overly conservative here.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void reload()
   }, [reload])
 

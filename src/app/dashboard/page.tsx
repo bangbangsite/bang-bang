@@ -1,18 +1,25 @@
 import { getUpcomingEvents } from "@/lib/events/server"
+import { getWishlistRequests, getWishlistRankings } from "@/lib/wishlist/server"
 import { DashboardHome } from "./DashboardHome"
 import { UpcomingEventsWidget } from "@/components/dashboard/UpcomingEventsWidget"
 
-// Server Component wrapper: fetches events data and passes it as props to
-// the client-heavy dashboard shell. Keeps the client component free of
-// any direct Supabase calls while the rest (PDVs, wishlist, bangers) remain
-// in their existing localStorage hooks for now.
+// Server Component wrapper: fetches everything the dashboard home needs in
+// parallel and passes it down. Keeps DashboardHome free of direct Supabase
+// calls — PDVs and bangers stay on localStorage hooks until their own waves.
 export default async function DashboardPage() {
-  const upcomingEvents = await getUpcomingEvents()
+  const [upcomingEvents, wishlistRequests] = await Promise.all([
+    getUpcomingEvents(),
+    getWishlistRequests(),
+  ])
+
+  const wishlistRanking = getWishlistRankings(wishlistRequests)
 
   return (
     <DashboardHome
       upcomingCount={upcomingEvents.length}
       eventsWidget={<UpcomingEventsWidget />}
+      wishlistTotal={wishlistRequests.length}
+      wishlistRanking={wishlistRanking}
     />
   )
 }

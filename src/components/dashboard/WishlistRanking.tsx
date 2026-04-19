@@ -1,15 +1,15 @@
-"use client"
-
 import Link from "next/link"
 import { TrendingUp, ArrowUpRight, MapPin } from "lucide-react"
-import { useWishlist } from "@/lib/wishlist/useWishlist"
+import type { CityRankRow } from "@/lib/wishlist/config"
 
-/**
- * Dashboard widget — TOP 5 cities by demand on /onde-encontrar.
- * Feeds off the same localStorage the public form writes to.
- */
-export function WishlistRanking() {
-  const { ranking, total } = useWishlist()
+interface WishlistRankingProps {
+  ranking: readonly CityRankRow[]
+  total: number
+}
+
+// Presentational widget — TOP 5 cities by demand on /onde-encontrar. Data is
+// fetched by the parent Server Component and passed as props.
+export function WishlistRanking({ ranking, total }: WishlistRankingProps) {
   const top5 = ranking.slice(0, 5)
   const maxCount = top5[0]?.count ?? 1
 
@@ -65,7 +65,6 @@ export function WishlistRanking() {
                 key={`${row.cidade}-${row.uf}-${i}`}
                 className="relative rounded-xl bg-[#FAFAF8] border border-[#4A2C1A]/8 p-3 flex items-center gap-3 overflow-hidden"
               >
-                {/* demand bar behind content */}
                 <div
                   aria-hidden="true"
                   className="absolute inset-y-0 left-0 bg-[#E87A1E]/10"

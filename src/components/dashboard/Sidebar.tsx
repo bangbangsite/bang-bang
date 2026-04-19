@@ -18,7 +18,6 @@ import {
 import { logoutAction } from "@/app/login/actions"
 import { Logo } from "@/components/shared/Logo"
 import { usePDVs } from "@/lib/pdvs/usePDVs"
-import { useWishlist } from "@/lib/wishlist/useWishlist"
 import { useBangers } from "@/lib/bangers/useBangers"
 import { cn } from "@/lib/utils"
 
@@ -66,7 +65,6 @@ interface SidebarProps {
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname()
   const { overrides } = usePDVs()
-  const { total: totalRequests } = useWishlist()
   const { novosCount: novosBangers } = useBangers()
 
   const editedCount =
@@ -79,7 +77,6 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   // Bangers: candidatos com status "novo".
   const badges: Record<string, number> = {
     "/dashboard/pdvs": editedCount,
-    "/dashboard/solicitacoes": totalRequests,
     "/dashboard/bangers": novosBangers,
   }
 

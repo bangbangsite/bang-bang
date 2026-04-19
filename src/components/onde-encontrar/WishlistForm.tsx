@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef, useState, type FormEvent } from "react"
+import { useEffect, useRef, useState, useActionState } from "react"
 import {
   ArrowRight,
   Check,
@@ -11,7 +11,7 @@ import {
   Loader2,
   Sparkles,
 } from "lucide-react"
-import { useWishlist } from "@/lib/wishlist/useWishlist"
+import { submitWishlistRequest, type WishlistActionState } from "@/lib/wishlist/actions"
 import { EMPTY_REQUEST } from "@/lib/wishlist/config"
 import { Select } from "@/components/shared/Select"
 import { InstagramIcon } from "@/components/shared/icons/SocialIcons"
@@ -50,12 +50,14 @@ function formatWhatsapp(raw: string): string {
   return `(${d.slice(0, 2)}) ${d.slice(2, 7)}-${d.slice(7)}`
 }
 
+const initialState: WishlistActionState = { ok: false, error: null }
+
 export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
-  const { addRequest } = useWishlist()
+  const [state, formAction, isPending] = useActionState(submitWishlistRequest, initialState)
+
   const [form, setForm] = useState({ ...EMPTY_REQUEST })
   const [cepLoading, setCepLoading] = useState(false)
   const [cepError, setCepError] = useState<string | null>(null)
-  const [submitting, setSubmitting] = useState(false)
   const [submittedCity, setSubmittedCity] = useState<string | null>(null)
   // Mobile reveal gate — on small screens the form lives behind a big CTA so
   // the pitch column reads as a strong ask first. Desktop ignores this (CSS
@@ -63,6 +65,14 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
   // the user arrives from an empty-results search.
   const [mobileExpanded, setMobileExpanded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
+
+  // Show success state when the Server Action returns ok.
+  useEffect(() => {
+    if (state.ok) {
+      setSubmittedCity(form.cidade || "sua cidade")
+      setForm({ ...EMPTY_REQUEST })
+    }
+  }, [state.ok]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Apply prefill whenever it changes — does NOT overwrite fields the user
   // already typed. Tracked-key pattern so we only react to real changes.
@@ -149,26 +159,6 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
       cancelled = true
     }
   }, [form.cep])
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (submitting) return
-    const nome = form.nome.trim()
-    const whatsapp = form.whatsapp.replace(/\D/g, "")
-    if (!nome || whatsapp.length < 10) return
-    setSubmitting(true)
-    const saved = addRequest({
-      ...form,
-      nome,
-      whatsapp: form.whatsapp,
-      cep: form.cep.replace(/\D/g, ""),
-    })
-    setSubmittedCity(saved.cidade || "sua cidade")
-    setTimeout(() => {
-      setForm({ ...EMPTY_REQUEST })
-      setSubmitting(false)
-    }, 400)
-  }
 
   const canSubmit =
     form.nome.trim().length >= 2 &&
@@ -339,7 +329,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             visible from lg+ where it sits beside the pitch column. */}
         <form
           id="wishlist-form-panel"
-          onSubmit={handleSubmit}
+          action={formAction}
           className={cn(
             "flex-col gap-4 p-6 md:p-9 bg-[#FAFAF8]",
             mobileExpanded ? "flex" : "hidden lg:flex",
@@ -356,6 +346,23 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             </span>
           </div>
 
+          {/* Server action error — shown inline above the submit button */}
+          {state.error && (
+            <div
+              role="alert"
+              className="rounded-xl px-4 py-3 text-sm bg-[#FEE2E2] border border-[#FCA5A5] text-[#991B1B]"
+            >
+              {state.error}
+            </div>
+          )}
+
+          {/* Hidden fields — carry controlled state values into the FormData */}
+          <input type="hidden" name="cep" value={form.cep.replace(/\D/g, "")} />
+          <input type="hidden" name="endereco" value={form.endereco} />
+          <input type="hidden" name="bairro" value={form.bairro} />
+          <input type="hidden" name="cidade" value={form.cidade} />
+          <input type="hidden" name="uf" value={form.uf} />
+
           {/* Nome */}
           <Field
             id="wl-nome"
@@ -364,6 +371,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
           >
             <input
               id="wl-nome"
+              name="nome"
               type="text"
               autoComplete="name"
               required
@@ -385,6 +393,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
           >
             <input
               id="wl-wpp"
+              name="whatsapp"
               type="tel"
               inputMode="tel"
               autoComplete="tel"
@@ -401,7 +410,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             />
           </Field>
 
-          {/* CEP */}
+          {/* CEP — controlled display; raw digits go via hidden input */}
           <Field
             id="wl-cep"
             label="CEP"
@@ -453,6 +462,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             <Field id="wl-num" label="Nº">
               <input
                 id="wl-num"
+                name="numero"
                 type="text"
                 inputMode="numeric"
                 value={form.numero}
@@ -479,7 +489,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             />
           </Field>
 
-          {/* Cidade + UF */}
+          {/* Cidade + UF — controlled values sent via hidden inputs above */}
           <div className="grid grid-cols-[1fr_90px] gap-3">
             <Field id="wl-cidade" label="Cidade">
               <input
@@ -512,7 +522,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
 
           <button
             type="submit"
-            disabled={!canSubmit || submitting}
+            disabled={!canSubmit || isPending}
             className={cn(
               "mt-3 inline-flex items-center justify-center gap-2 h-11 rounded-lg text-[12px] font-black uppercase tracking-[0.18em] transition-all",
               "bg-[#E87A1E] text-white shadow-[0_10px_24px_-10px_rgba(232,122,30,0.55)]",
@@ -522,7 +532,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             )}
           >
             <MessageCircle size={14} strokeWidth={2.6} />
-            {submitting ? "Enviando…" : "Quero Bang Bang aqui"}
+            {isPending ? "Enviando…" : "Quero Bang Bang aqui"}
           </button>
 
           <p className="text-[11px] text-[#4A2C1A]/50 text-center">

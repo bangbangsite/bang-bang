@@ -1,13 +1,9 @@
 /**
- * City-request "wishlist" — consumers filling out the form on
- * /onde-encontrar when they don't find a PDV in their city. Stored in
- * localStorage until a backend is plugged in. Staff reads these in the
- * dashboard (/dashboard/solicitacoes) and ranks demand per city.
+ * City-request "wishlist" — types, constants, and pure helpers.
+ * Storage is now Supabase (see server.ts + actions.ts).
  */
 
 import type { UF } from "@/lib/types/pdv"
-
-const KEY = "bb_wishlist_v1"
 
 export interface CityRequest {
   id: string
@@ -37,59 +33,6 @@ export const EMPTY_REQUEST: Omit<CityRequest, "id" | "createdAt"> = {
   bairro: "",
   cidade: "",
   uf: "",
-}
-
-// ----------------- storage -----------------
-export function readWishlist(): CityRequest[] {
-  if (typeof window === "undefined") return []
-  try {
-    const raw = window.localStorage.getItem(KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    return parsed.filter(isValidRequest)
-  } catch {
-    return []
-  }
-}
-
-export function writeWishlist(next: CityRequest[]): void {
-  if (typeof window === "undefined") return
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify(next))
-  } catch {
-    /* ignore quota errors — storage is best-effort */
-  }
-}
-
-export function resetWishlist(): void {
-  if (typeof window === "undefined") return
-  try {
-    window.localStorage.removeItem(KEY)
-  } catch {
-    /* ignore */
-  }
-}
-
-export const WISHLIST_STORAGE_KEY = KEY
-
-// ----------------- helpers -----------------
-
-function isValidRequest(v: unknown): v is CityRequest {
-  if (!v || typeof v !== "object") return false
-  const r = v as Record<string, unknown>
-  return (
-    typeof r.id === "string" &&
-    typeof r.nome === "string" &&
-    typeof r.whatsapp === "string" &&
-    typeof r.createdAt === "string"
-  )
-}
-
-/** Generate a stable-ish id for a new request. */
-export function newRequestId(): string {
-  const rand = Math.random().toString(36).slice(2, 8)
-  return `req-${Date.now().toString(36)}-${rand}`
 }
 
 /** Ranking row used by the dashboard widget + stats. */

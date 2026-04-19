@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Temporary git worktrees created by Claude Code's isolated agents.
+    ".claude/worktrees/**",
   ]),
   ...storybook.configs["flat/recommended"]
 ]);

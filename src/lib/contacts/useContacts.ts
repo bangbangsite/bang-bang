@@ -92,6 +92,10 @@ export function useContacts(): UseContactsApi {
   }, [])
 
   useEffect(() => {
+    // Fetch the singleton row on mount. setState inside an async chain is
+    // legit here — we're syncing external (Supabase) state into React state,
+    // which is exactly what useEffect is for.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     void fetchChannels()
   }, [fetchChannels])
 
