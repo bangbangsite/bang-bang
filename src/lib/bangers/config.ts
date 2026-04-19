@@ -1,11 +1,7 @@
-/**
- * Banger applications — submissions from the public /seja-um-banger form.
- * Stored in localStorage until a backend is plugged in. Staff reads these
- * in the dashboard (/dashboard/bangers) and walks them through a status
- * pipeline (novo → em conversa → aprovado/parceiro, ou rejeitado).
- */
-
-const KEY = "bb_bangers_v1"
+// Banger applications — submissions from the public /seja-um-banger form.
+// Storage lives in Supabase (see src/lib/bangers/server.ts + actions.ts); this
+// file only carries the shared types, labels, and formatting helpers used by
+// both the form and the dashboard.
 
 export type BangerStatus =
   | "novo"
@@ -128,52 +124,8 @@ export const EMPTY_APPLICATION: Omit<BangerApplication, "id" | "createdAt" | "up
   notas: "",
 }
 
-// ----------------- storage -----------------
-export function readBangers(): BangerApplication[] {
-  if (typeof window === "undefined") return []
-  try {
-    const raw = window.localStorage.getItem(KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw)
-    if (!Array.isArray(parsed)) return []
-    return parsed.filter(isValidApplication)
-  } catch {
-    return []
-  }
-}
-
-export function writeBangers(next: BangerApplication[]): void {
-  if (typeof window === "undefined") return
-  try {
-    window.localStorage.setItem(KEY, JSON.stringify(next))
-  } catch {
-    /* ignore quota errors */
-  }
-}
-
-export function resetBangers(): void {
-  if (typeof window === "undefined") return
-  try {
-    window.localStorage.removeItem(KEY)
-  } catch {
-    /* ignore */
-  }
-}
-
-export const BANGERS_STORAGE_KEY = KEY
 
 // ----------------- helpers -----------------
-
-function isValidApplication(v: unknown): v is BangerApplication {
-  if (!v || typeof v !== "object") return false
-  const r = v as Record<string, unknown>
-  return (
-    typeof r.id === "string" &&
-    typeof r.nome === "string" &&
-    typeof r.email === "string" &&
-    typeof r.createdAt === "string"
-  )
-}
 
 export function newApplicationId(): string {
   const rand = Math.random().toString(36).slice(2, 8)

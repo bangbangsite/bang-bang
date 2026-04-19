@@ -1,34 +1,14 @@
-// Single source of truth for every localStorage key the site owns while the
-// Supabase migration isn't done. Keeping them centralized means the reset
-// button and any future audit tool don't drift from the actual storage.
+// Source of truth for the localStorage keys the site still owns after the
+// Phase 4 migration. Most features (contacts, wishlist, events, bangers,
+// FAQ, PDV overrides, click events) now live in Supabase and are
+// deliberately absent from this list — their reset happens in the DB.
 //
 // Auth lives in Supabase (HTTP-only cookies) and is untouched by this reset.
 
 export const DEMO_STORAGE_KEYS = [
-  // Wishlist (pedidos de cidade) + demo seed flag
-  "bb_wishlist_v1",
-  "bb_wishlist_demo_seeded",
-
-  // Contacts (canais de WhatsApp)
-  "bb_contacts_v1",
-
-  // CTA click counters
-  "bb_cta_clicks_v1",
-
-  // Eventos
-  "bb_events_v1",
-  "bb_events_demo_seeded_v2",
-
-  // Bangers (lista interna de candidatos)
-  "bb_bangers_v1",
-  "bb_bangers_demo_seeded",
-
-  // PDV overrides + IO log
-  "bb_pdv_overrides_v1",
+  // PDV import/export audit log (still client-side until we have a telemetry
+  // pipeline for it).
   "bb_pdv_io_log_v1",
-
-  // FAQ
-  "bb_faq_v1",
 ] as const
 
 export function clearAllDemoData(): void {

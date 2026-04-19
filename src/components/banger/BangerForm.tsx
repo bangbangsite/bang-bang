@@ -1,6 +1,6 @@
 "use client"
 
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useState } from "react"
 import { Check, Send, Sparkles, Plus, X, Star, Camera, Music, Video, Radio, Clapperboard, Hash } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { Select, type SelectOption } from "@/components/shared/Select"
