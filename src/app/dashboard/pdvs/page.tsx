@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState, useTransition } from "react"
 import {
   Plus,
   Search,
@@ -21,6 +21,7 @@ import { IOLogPanel } from "@/components/dashboard/IOLogPanel"
 import { Select, type SelectOption } from "@/components/shared/Select"
 import { usePDVs } from "@/lib/pdvs/usePDVs"
 import { useIOLog } from "@/lib/pdvs/io-log"
+import { importPDVOverridesBatch } from "@/lib/pdvs/actions"
 import type { ImportPreview } from "@/lib/pdvs/import"
 import { useMobileMenu } from "../mobile-menu-context"
 import type { PDV, PDVTipo, Tier, UF } from "@/lib/types/pdv"
@@ -42,9 +43,12 @@ const ALL_TIPOS: PDVTipo[] = [
 const ALL_TIERS: Tier[] = ["A", "B", "C"]
 
 export default function PDVsPage() {
-  const { pdvs, overrides, addPDV, updatePDV, deletePDV, resetAll, isAdded, isEdited } = usePDVs()
+  const { pdvs, overrides, addPDV, updatePDV, deletePDV, resetAll, isAdded, isEdited, loading, refresh } = usePDVs()
   const { add: addLogEvent } = useIOLog()
   const { open: openMobileMenu } = useMobileMenu()
+
+  // useTransition keeps the UI responsive while server actions are in-flight.
+  const [isPending, startTransition] = useTransition()
 
   const [query, setQuery] = useState("")
   const [ufFilter, setUfFilter] = useState<"all" | UF>("all")
@@ -151,15 +155,20 @@ export default function PDVsPage() {
   }
 
   const handleSubmit = (pdv: PDV) => {
-    if (editing) updatePDV(editing.id, pdv)
-    else addPDV(pdv)
+    startTransition(async () => {
+      if (editing) await updatePDV(editing.id, pdv)
+      else await addPDV(pdv)
+    })
     setModalOpen(false)
   }
 
   const handleConfirmDelete = () => {
     if (!confirmingDelete) return
-    deletePDV(confirmingDelete.id)
+    const pdv = confirmingDelete
     setConfirmingDelete(null)
+    startTransition(async () => {
+      await deletePDV(pdv.id)
+    })
   }
 
   const handleExport = async () => {
@@ -211,18 +220,24 @@ export default function PDVsPage() {
 
   const handleConfirmImport = () => {
     if (!importPreview) return
-    for (const pdv of importPreview.toAdd) addPDV(pdv)
-    for (const u of importPreview.toUpdate) updatePDV(u.id, u.patch)
-    addLogEvent({
-      kind: "import",
-      filename: importPreview.filename,
-      summary:
-        `${importPreview.toAdd.length} novos · ` +
-        `${importPreview.toUpdate.length} atualizados · ` +
-        `${importPreview.skipped.length} ignorados`,
-    })
+    const preview = importPreview
     setImportOpen(false)
     setImportPreview(null)
+    startTransition(async () => {
+      await importPDVOverridesBatch({
+        toAdd: preview.toAdd,
+        toUpdate: preview.toUpdate,
+      })
+      await refresh()
+      addLogEvent({
+        kind: "import",
+        filename: preview.filename,
+        summary:
+          `${preview.toAdd.length} novos · ` +
+          `${preview.toUpdate.length} atualizados · ` +
+          `${preview.skipped.length} ignorados`,
+      })
+    })
   }
 
   const totalChanges =
@@ -256,20 +271,27 @@ export default function PDVsPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  const isBusy = loading || isPending
+
   return (
     <>
       <DashboardHeader
         title="PDVs"
-        subtitle={`${filtered.length.toLocaleString("pt-BR")} ${
-          filtered.length === 1 ? "ponto" : "pontos"
-        } de venda${activeFilterCount > 0 ? " (filtrados)" : ""}`}
+        subtitle={
+          loading
+            ? "Carregando…"
+            : `${filtered.length.toLocaleString("pt-BR")} ${
+                filtered.length === 1 ? "ponto" : "pontos"
+              } de venda${activeFilterCount > 0 ? " (filtrados)" : ""}`
+        }
         onMenuOpen={openMobileMenu}
         actions={
           <>
             <button
               type="button"
               onClick={handlePickImport}
-              className="inline-flex items-center gap-2 h-10 px-4 rounded-lg border border-[#4A2C1A]/8 bg-white text-[#2D1810] text-[13px] font-semibold hover:bg-[#FAFAF8] hover:border-[#4A2C1A]/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] transition-colors"
+              disabled={isBusy}
+              className="inline-flex items-center gap-2 h-10 px-4 rounded-lg border border-[#4A2C1A]/8 bg-white text-[#2D1810] text-[13px] font-semibold hover:bg-[#FAFAF8] hover:border-[#4A2C1A]/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title="Importar planilha Excel no formato padrão"
             >
               <Upload size={15} strokeWidth={2} />
@@ -278,7 +300,7 @@ export default function PDVsPage() {
             <button
               type="button"
               onClick={handleExport}
-              disabled={exporting || pdvs.length === 0}
+              disabled={exporting || pdvs.length === 0 || isBusy}
               className="inline-flex items-center gap-2 h-10 px-4 rounded-lg border border-[#4A2C1A]/8 bg-white text-[#2D1810] text-[13px] font-semibold hover:bg-[#FAFAF8] hover:border-[#4A2C1A]/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               title={`Baixar ${pdvs.length.toLocaleString("pt-BR")} PDVs como planilha Excel`}
             >
@@ -290,7 +312,8 @@ export default function PDVsPage() {
             <button
               type="button"
               onClick={openCreate}
-              className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#E87A1E] text-white text-[13px] font-semibold hover:bg-[#C4650F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 transition-colors shadow-[0_8px_18px_-8px_rgba(232,122,30,0.5)]"
+              disabled={isBusy}
+              className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#E87A1E] text-white text-[13px] font-semibold hover:bg-[#C4650F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 transition-colors shadow-[0_8px_18px_-8px_rgba(232,122,30,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Plus size={15} strokeWidth={2.4} />
               <span className="hidden sm:inline">Adicionar PDV</span>
@@ -352,16 +375,19 @@ export default function PDVsPage() {
           {totalChanges > 0 && (
             <button
               type="button"
+              disabled={isBusy}
               onClick={() => {
                 if (
                   window.confirm(
-                    `Descartar as ${totalChanges} alterações locais? Isso não afeta a base original.`,
+                    `Descartar as ${totalChanges} alterações? Isso não afeta a base original.`,
                   )
                 ) {
-                  resetAll()
+                  startTransition(async () => {
+                    await resetAll()
+                  })
                 }
               }}
-              className="inline-flex items-center gap-1.5 h-11 px-4 rounded-xl text-sm font-semibold text-[#4A2C1A]/70 border border-[#4A2C1A]/15 hover:bg-[#2D1810]/5 transition-colors"
+              className="inline-flex items-center gap-1.5 h-11 px-4 rounded-xl text-sm font-semibold text-[#4A2C1A]/70 border border-[#4A2C1A]/15 hover:bg-[#2D1810]/5 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <RotateCcw size={14} strokeWidth={2.2} />
               Descartar alterações ({totalChanges})
@@ -469,6 +495,11 @@ export default function PDVsPage() {
 
         {/* ============ Table ============ */}
         <div className="rounded-2xl bg-white border border-[#4A2C1A]/8 overflow-hidden">
+          {isBusy && (
+            <div className="px-4 py-2 text-xs text-[#4A2C1A]/50 bg-[#FAFAF8] border-b border-[#4A2C1A]/8 text-center">
+              {loading ? "Carregando dados…" : "Salvando…"}
+            </div>
+          )}
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
@@ -485,8 +516,12 @@ export default function PDVsPage() {
                   <tr>
                     <td colSpan={5} className="px-4 py-12 text-center text-[#4A2C1A]/50">
                       <div className="flex flex-col items-center gap-2">
-                        <p className="italic">Nenhum PDV bate com esses filtros.</p>
-                        {activeFilterCount > 0 && (
+                        <p className="italic">
+                          {loading
+                            ? "Carregando pontos de venda…"
+                            : "Nenhum PDV bate com esses filtros."}
+                        </p>
+                        {!loading && activeFilterCount > 0 && (
                           <button
                             type="button"
                             onClick={clearAll}
@@ -557,7 +592,8 @@ export default function PDVsPage() {
                             <button
                               type="button"
                               onClick={() => openEdit(pdv)}
-                              className="w-8 h-8 flex items-center justify-center rounded-md text-[#4A2C1A]/70 hover:text-[#E87A1E] hover:bg-[#E87A1E]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]"
+                              disabled={isBusy}
+                              className="w-8 h-8 flex items-center justify-center rounded-md text-[#4A2C1A]/70 hover:text-[#E87A1E] hover:bg-[#E87A1E]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] disabled:opacity-40"
                               aria-label={`Editar ${pdv.nome}`}
                             >
                               <Pencil size={14} strokeWidth={2.2} />
@@ -565,7 +601,8 @@ export default function PDVsPage() {
                             <button
                               type="button"
                               onClick={() => setConfirmingDelete(pdv)}
-                              className="w-8 h-8 flex items-center justify-center rounded-md text-[#4A2C1A]/70 hover:text-[#D32F2F] hover:bg-[#D32F2F]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D32F2F]"
+                              disabled={isBusy}
+                              className="w-8 h-8 flex items-center justify-center rounded-md text-[#4A2C1A]/70 hover:text-[#D32F2F] hover:bg-[#D32F2F]/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D32F2F] disabled:opacity-40"
                               aria-label={`Remover ${pdv.nome}`}
                             >
                               <Trash2 size={14} strokeWidth={2.2} />

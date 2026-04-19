@@ -1,66 +1,56 @@
 "use client"
 
-import { useCallback, useMemo, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import basePDVsJson from "@/data/pdvs.json"
 import type { PDV } from "@/lib/types/pdv"
+import { EMPTY_OVERRIDES, type PDVOverrides } from "./overrides"
 import {
-  EMPTY_OVERRIDES,
-  readOverrides,
-  writeOverrides,
-  type PDVOverrides,
-} from "./overrides"
+  addPDVOverride,
+  editPDVOverride,
+  deletePDVOverride,
+  resetPDVOverrides,
+} from "./actions"
 
 const BASE = basePDVsJson as PDV[]
 
-// -----------------------------------------------------------------------------
-// External store so every dashboard component stays in sync when one mutates.
-// -----------------------------------------------------------------------------
-let snapshot: PDVOverrides | null = null
-const listeners = new Set<() => void>()
+// ─── DB row shape (snake_case from Supabase) ──────────────────────────────────
 
-function getSnapshot(): PDVOverrides {
-  if (snapshot === null) snapshot = readOverrides()
-  return snapshot
+interface DBRow {
+  added: PDV[]
+  edited: Record<string, Partial<PDV>>
+  deleted_ids: string[]
+  created_at_map: Record<string, string>
 }
 
-function getServerSnapshot(): PDVOverrides {
-  return EMPTY_OVERRIDES
-}
-
-function subscribe(onChange: () => void): () => void {
-  listeners.add(onChange)
-  // React to changes made in another tab
-  const storageListener = (e: StorageEvent) => {
-    if (e.key && e.key.startsWith("bb_pdv_overrides")) {
-      snapshot = readOverrides()
-      for (const l of listeners) l()
-    }
-  }
-  window.addEventListener("storage", storageListener)
-  return () => {
-    listeners.delete(onChange)
-    window.removeEventListener("storage", storageListener)
+function rowToOverrides(row: DBRow): PDVOverrides {
+  return {
+    added: Array.isArray(row.added) ? row.added : [],
+    edited:
+      row.edited && typeof row.edited === "object"
+        ? (row.edited as Record<string, Partial<PDV>>)
+        : {},
+    deletedIds: Array.isArray(row.deleted_ids) ? row.deleted_ids : [],
+    createdAt:
+      row.created_at_map && typeof row.created_at_map === "object"
+        ? (row.created_at_map as Record<string, string>)
+        : {},
   }
 }
 
-function commit(next: PDVOverrides): void {
-  snapshot = next
-  writeOverrides(next)
-  for (const l of listeners) l()
-}
+// ─── Public hook API ──────────────────────────────────────────────────────────
 
-// -----------------------------------------------------------------------------
-// Public hook
-// -----------------------------------------------------------------------------
 export interface UsePDVsApi {
   /** Full merged list (base ∪ added, minus deletedIds, with edits applied). */
   pdvs: readonly PDV[]
   overrides: PDVOverrides
-  addPDV: (pdv: PDV) => void
-  updatePDV: (id: string, patch: Partial<PDV>) => void
-  deletePDV: (id: string) => void
+  loading: boolean
+  addPDV: (pdv: PDV) => Promise<void>
+  updatePDV: (id: string, patch: Partial<PDV>) => Promise<void>
+  deletePDV: (id: string) => Promise<void>
   /** Wipes all staff edits — everything reverts to the base dataset. */
-  resetAll: () => void
+  resetAll: () => Promise<void>
+  /** Refreshes overrides from Supabase. */
+  refresh: () => Promise<void>
   /** Whether a PDV originated from the staff dashboard (not the base xlsx). */
   isAdded: (id: string) => boolean
   /** Whether a base PDV has been edited in the dashboard. */
@@ -68,7 +58,33 @@ export interface UsePDVsApi {
 }
 
 export function usePDVs(): UsePDVsApi {
-  const overrides = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const [overrides, setOverrides] = useState<PDVOverrides>(EMPTY_OVERRIDES)
+  const [loading, setLoading] = useState(true)
+
+  const fetchOverrides = useCallback(async () => {
+    // Dynamic import keeps the Supabase browser client out of the initial
+    // bundle for pages that don't use this hook (e.g. public site).
+    const { createSupabaseBrowserClient } = await import(
+      "@/lib/supabase/client"
+    )
+    const supabase = createSupabaseBrowserClient()
+    const { data, error } = await supabase
+      .from("pdv_overrides")
+      .select("added, edited, deleted_ids, created_at_map")
+      .eq("id", true)
+      .single<DBRow>()
+
+    if (error || !data) {
+      setOverrides({ ...EMPTY_OVERRIDES })
+    } else {
+      setOverrides(rowToOverrides(data))
+    }
+    setLoading(false)
+  }, [])
+
+  useEffect(() => {
+    fetchOverrides()
+  }, [fetchOverrides])
 
   const pdvs = useMemo<readonly PDV[]>(() => {
     const deleted = new Set(overrides.deletedIds)
@@ -84,76 +100,127 @@ export function usePDVs(): UsePDVsApi {
     return merged
   }, [overrides])
 
-  const addPDV = useCallback((pdv: PDV) => {
-    const curr = getSnapshot()
-    commit({
-      ...curr,
-      added: [...curr.added, pdv],
-      createdAt: { ...curr.createdAt, [pdv.id]: new Date().toISOString() },
-    })
-  }, [])
+  // Optimistic helper: applies a transformation locally before the server
+  // action resolves, then re-fetches to get the authoritative state.
+  const optimistic = useCallback(
+    async (
+      localUpdate: (curr: PDVOverrides) => PDVOverrides,
+      action: () => Promise<void>,
+    ) => {
+      setOverrides((curr) => localUpdate(curr))
+      try {
+        await action()
+      } finally {
+        // Re-sync from DB regardless of success/failure so the UI is correct.
+        await fetchOverrides()
+      }
+    },
+    [fetchOverrides],
+  )
 
-  const updatePDV = useCallback((id: string, patch: Partial<PDV>) => {
-    const curr = getSnapshot()
-    // Edits to PDVs added in this session mutate the added record directly.
-    const addedIdx = curr.added.findIndex((p) => p.id === id)
-    if (addedIdx !== -1) {
-      const nextAdded = [...curr.added]
-      nextAdded[addedIdx] = { ...nextAdded[addedIdx], ...patch }
-      commit({
-        ...curr,
-        added: nextAdded,
-        createdAt: { ...curr.createdAt, [id]: new Date().toISOString() },
-      })
-      return
-    }
-    commit({
-      ...curr,
-      edited: {
-        ...curr.edited,
-        [id]: { ...(curr.edited[id] ?? {}), ...patch },
-      },
-      createdAt: { ...curr.createdAt, [id]: new Date().toISOString() },
-    })
-  }, [])
+  const addPDV = useCallback(
+    (pdv: PDV) =>
+      optimistic(
+        (curr) => ({
+          ...curr,
+          added: [...curr.added, pdv],
+          createdAt: { ...curr.createdAt, [pdv.id]: new Date().toISOString() },
+        }),
+        () => addPDVOverride(pdv),
+      ),
+    [optimistic],
+  )
 
-  const deletePDV = useCallback((id: string) => {
-    const curr = getSnapshot()
-    // Removing an added PDV actually removes it from the list; base PDVs are
-    // soft-deleted so resetAll() can restore them.
-    const addedIdx = curr.added.findIndex((p) => p.id === id)
-    if (addedIdx !== -1) {
-      commit({
-        ...curr,
-        added: curr.added.filter((_, i) => i !== addedIdx),
-        createdAt: Object.fromEntries(
-          Object.entries(curr.createdAt).filter(([k]) => k !== id),
-        ),
-      })
-      return
-    }
-    commit({
-      ...curr,
-      deletedIds: curr.deletedIds.includes(id)
-        ? curr.deletedIds
-        : [...curr.deletedIds, id],
-    })
-  }, [])
+  const updatePDV = useCallback(
+    (id: string, patch: Partial<PDV>) =>
+      optimistic(
+        (curr) => {
+          const addedIdx = curr.added.findIndex((p) => p.id === id)
+          if (addedIdx !== -1) {
+            const nextAdded = [...curr.added]
+            nextAdded[addedIdx] = { ...nextAdded[addedIdx], ...patch }
+            return {
+              ...curr,
+              added: nextAdded,
+              createdAt: {
+                ...curr.createdAt,
+                [id]: new Date().toISOString(),
+              },
+            }
+          }
+          return {
+            ...curr,
+            edited: {
+              ...curr.edited,
+              [id]: { ...(curr.edited[id] ?? {}), ...patch },
+            },
+            createdAt: { ...curr.createdAt, [id]: new Date().toISOString() },
+          }
+        },
+        () => editPDVOverride(id, patch),
+      ),
+    [optimistic],
+  )
 
-  const resetAll = useCallback(() => {
-    commit(EMPTY_OVERRIDES)
-  }, [])
+  const deletePDV = useCallback(
+    (id: string) =>
+      optimistic(
+        (curr) => {
+          const addedIdx = curr.added.findIndex((p) => p.id === id)
+          if (addedIdx !== -1) {
+            const nextCreatedAt = { ...curr.createdAt }
+            delete nextCreatedAt[id]
+            return {
+              ...curr,
+              added: curr.added.filter((_, i) => i !== addedIdx),
+              createdAt: nextCreatedAt,
+            }
+          }
+          return {
+            ...curr,
+            deletedIds: curr.deletedIds.includes(id)
+              ? curr.deletedIds
+              : [...curr.deletedIds, id],
+          }
+        },
+        () => deletePDVOverride(id),
+      ),
+    [optimistic],
+  )
+
+  const resetAll = useCallback(
+    () =>
+      optimistic(
+        () => ({ ...EMPTY_OVERRIDES }),
+        () => resetPDVOverrides(),
+      ),
+    [optimistic],
+  )
+
+  const refresh = useCallback(() => fetchOverrides(), [fetchOverrides])
 
   const isAdded = useCallback(
     (id: string) => overrides.added.some((p) => p.id === id),
     [overrides.added],
   )
+
   const isEdited = useCallback(
     (id: string) => Object.hasOwn(overrides.edited, id),
     [overrides.edited],
   )
 
-  return { pdvs, overrides, addPDV, updatePDV, deletePDV, resetAll, isAdded, isEdited }
+  return {
+    pdvs,
+    overrides,
+    loading,
+    addPDV,
+    updatePDV,
+    deletePDV,
+    resetAll,
+    refresh,
+    isAdded,
+    isEdited,
+  }
 }
 
 /** Counts per UF, sorted descending (useful for the ranking bar chart). */
