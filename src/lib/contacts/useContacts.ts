@@ -1,48 +1,14 @@
 "use client"
 
-import { useCallback, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useState } from "react"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
-  CONTACTS_STORAGE_KEY,
   DEFAULT_CONTACTS,
-  readContacts,
-  writeContacts,
-  resetContacts,
   MSG_REVENDA,
   MSG_DISTRIBUIDOR,
   MSG_EVENTOS,
   type ContactsConfig,
 } from "./config"
-
-// External store so every component reading contacts stays in sync.
-let snapshot: ContactsConfig | null = null
-const listeners = new Set<() => void>()
-
-function getSnapshot(): ContactsConfig {
-  if (snapshot === null) snapshot = readContacts()
-  return snapshot
-}
-function getServerSnapshot(): ContactsConfig {
-  return DEFAULT_CONTACTS
-}
-function subscribe(fn: () => void): () => void {
-  listeners.add(fn)
-  const storageListener = (e: StorageEvent) => {
-    if (e.key === CONTACTS_STORAGE_KEY) {
-      snapshot = readContacts()
-      for (const l of listeners) l()
-    }
-  }
-  window.addEventListener("storage", storageListener)
-  return () => {
-    listeners.delete(fn)
-    window.removeEventListener("storage", storageListener)
-  }
-}
-function commit(next: ContactsConfig): void {
-  snapshot = next
-  writeContacts(next)
-  for (const l of listeners) l()
-}
 
 // ----------------- URL builder -----------------
 
@@ -84,10 +50,11 @@ export function resolveChannelUrl(customLink: string, phone: string, message = "
 }
 
 // ----------------- hook -----------------
+
 export interface UseContactsApi {
   config: ContactsConfig
-  update: (patch: Partial<ContactsConfig>) => void
-  reset: () => void
+  /** Whether a fetch is in progress (initial load). */
+  loading: boolean
   /** Resolved URLs per category — already includes the default message. */
   urls: {
     revenda: string
@@ -97,18 +64,36 @@ export interface UseContactsApi {
   hasAnyConfigured: boolean
 }
 
+/** Fetch contact_channels once on mount. RLS allows anonymous SELECT. */
 export function useContacts(): UseContactsApi {
-  const config = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const [config, setConfig] = useState<ContactsConfig>(DEFAULT_CONTACTS)
+  const [loading, setLoading] = useState(true)
 
-  const update = useCallback((patch: Partial<ContactsConfig>) => {
-    commit({ ...getSnapshot(), ...patch })
+  const fetchChannels = useCallback(async () => {
+    const supabase = createSupabaseBrowserClient()
+    const { data, error } = await supabase
+      .from("contact_channels")
+      .select(
+        "whatsapp_revenda, whatsapp_distribuidor, whatsapp_eventos, link_revenda, link_distribuidor, link_eventos",
+      )
+      .single()
+
+    if (!error && data) {
+      setConfig({
+        whatsappRevenda: data.whatsapp_revenda,
+        whatsappDistribuidor: data.whatsapp_distribuidor,
+        whatsappEventos: data.whatsapp_eventos,
+        linkRevenda: data.link_revenda,
+        linkDistribuidor: data.link_distribuidor,
+        linkEventos: data.link_eventos,
+      })
+    }
+    setLoading(false)
   }, [])
 
-  const reset = useCallback(() => {
-    resetContacts()
-    snapshot = DEFAULT_CONTACTS
-    for (const l of listeners) l()
-  }, [])
+  useEffect(() => {
+    void fetchChannels()
+  }, [fetchChannels])
 
   const urls = {
     revenda: resolveChannelUrl(config.linkRevenda, config.whatsappRevenda, MSG_REVENDA),
@@ -116,9 +101,7 @@ export function useContacts(): UseContactsApi {
     eventos: resolveChannelUrl(config.linkEventos, config.whatsappEventos, MSG_EVENTOS),
   }
 
-  const hasAnyConfigured = Boolean(
-    urls.revenda || urls.distribuidor || urls.eventos,
-  )
+  const hasAnyConfigured = Boolean(urls.revenda || urls.distribuidor || urls.eventos)
 
-  return { config, update, reset, urls, hasAnyConfigured }
+  return { config, loading, urls, hasAnyConfigured }
 }

@@ -1,118 +1,148 @@
 "use client"
 
-import { useCallback, useMemo, useSyncExternalStore } from "react"
+import { useCallback, useEffect, useState, useTransition } from "react"
+import { createSupabaseBrowserClient } from "@/lib/supabase/client"
 import {
-  DEFAULT_FAQ_STATE,
-  FAQ_STORAGE_KEY,
-  MAX_FAQ_ITEMS,
-  readFAQ,
-  writeFAQ,
-  resetFAQ,
-  genFAQId,
-  type FAQItem,
-  type FAQState,
-} from "./config"
+  addFaqItem,
+  updateFaqItem,
+  removeFaqItem,
+  swapFaqPositions,
+  resetFaqToDefaults,
+} from "./actions"
+import { DEFAULT_FAQ, MAX_FAQ_ITEMS, type FAQItem } from "./config"
 
-let snapshot: FAQState | null = null
-const listeners = new Set<() => void>()
+// Fetch items sorted by position from the browser client.
+async function fetchItems(): Promise<FAQItem[]> {
+  const supabase = createSupabaseBrowserClient()
+  const { data, error } = await supabase
+    .from("faq_items")
+    .select("id, question, answer, position, updated_at")
+    .order("position", { ascending: true })
+    .limit(MAX_FAQ_ITEMS)
 
-function getSnapshot(): FAQState {
-  if (snapshot === null) snapshot = readFAQ()
-  return snapshot
-}
-function getServerSnapshot(): FAQState {
-  return DEFAULT_FAQ_STATE
-}
-function subscribe(fn: () => void): () => void {
-  listeners.add(fn)
-  const storageListener = (e: StorageEvent) => {
-    if (e.key === FAQ_STORAGE_KEY) {
-      snapshot = readFAQ()
-      for (const l of listeners) l()
-    }
-  }
-  window.addEventListener("storage", storageListener)
-  return () => {
-    listeners.delete(fn)
-    window.removeEventListener("storage", storageListener)
-  }
-}
-function commit(items: FAQItem[]): void {
-  const trimmed = items.slice(0, MAX_FAQ_ITEMS)
-  const next: FAQState = { items: trimmed, updatedAt: new Date().toISOString() }
-  snapshot = next
-  writeFAQ(next)
-  for (const l of listeners) l()
+  if (error || !data || data.length === 0) return DEFAULT_FAQ
+
+  return data.map((row) => ({
+    id: row.id as string,
+    question: row.question as string,
+    answer: row.answer as string,
+    position: row.position as number,
+  }))
 }
 
 export interface UseFAQApi {
   items: FAQItem[]
-  updatedAt: string | null
+  loading: boolean
   count: number
   max: number
   canAdd: boolean
-  addItem: (input: Omit<FAQItem, "id">) => void
-  updateItem: (id: string, patch: Partial<Omit<FAQItem, "id">>) => void
-  removeItem: (id: string) => void
-  moveUp: (id: string) => void
-  moveDown: (id: string) => void
-  reset: () => void
+  /** ISO timestamp of the most recent updated_at among fetched rows, or null. */
+  updatedAt: string | null
+  addItem: (input: Omit<FAQItem, "id" | "position">) => Promise<void>
+  updateItem: (id: string, patch: Partial<Pick<FAQItem, "question" | "answer">>) => Promise<void>
+  removeItem: (id: string) => Promise<void>
+  moveUp: (id: string) => Promise<void>
+  moveDown: (id: string) => Promise<void>
+  reset: () => Promise<void>
 }
 
 export function useFAQ(): UseFAQApi {
-  const state = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+  const [items, setItems] = useState<FAQItem[]>(DEFAULT_FAQ)
+  const [loading, setLoading] = useState(true)
+  const [updatedAt, setUpdatedAt] = useState<string | null>(null)
+  const [, startTransition] = useTransition()
 
-  const items = useMemo(() => state.items, [state.items])
+  const reload = useCallback(async () => {
+    const fetched = await fetchItems()
+    setItems(fetched)
+    setLoading(false)
 
-  const addItem = useCallback((input: Omit<FAQItem, "id">) => {
-    const curr = getSnapshot().items
-    if (curr.length >= MAX_FAQ_ITEMS) return
-    commit([...curr, { ...input, id: genFAQId() }])
+    // Also read updated_at directly for the subtitle label.
+    const supabase = createSupabaseBrowserClient()
+    const { data } = await supabase
+      .from("faq_items")
+      .select("updated_at")
+      .order("updated_at", { ascending: false })
+      .limit(1)
+      .single()
+
+    if (data) setUpdatedAt(data.updated_at as string)
   }, [])
 
-  const updateItem = useCallback(
-    (id: string, patch: Partial<Omit<FAQItem, "id">>) => {
-      const curr = getSnapshot().items
-      commit(curr.map((it) => (it.id === id ? { ...it, ...patch } : it)))
+  useEffect(() => {
+    void reload()
+  }, [reload])
+
+  const addItem = useCallback(
+    async (input: Omit<FAQItem, "id" | "position">) => {
+      startTransition(async () => {
+        await addFaqItem(input)
+        await reload()
+      })
     },
-    [],
+    [reload],
   )
 
-  const removeItem = useCallback((id: string) => {
-    const curr = getSnapshot().items
-    commit(curr.filter((it) => it.id !== id))
-  }, [])
+  const updateItem = useCallback(
+    async (id: string, patch: Partial<Pick<FAQItem, "question" | "answer">>) => {
+      startTransition(async () => {
+        await updateFaqItem(id, patch)
+        await reload()
+      })
+    },
+    [reload],
+  )
 
-  const moveUp = useCallback((id: string) => {
-    const curr = getSnapshot().items
-    const i = curr.findIndex((it) => it.id === id)
-    if (i <= 0) return
-    const next = [...curr]
-    ;[next[i - 1], next[i]] = [next[i], next[i - 1]]
-    commit(next)
-  }, [])
+  const removeItem = useCallback(
+    async (id: string) => {
+      startTransition(async () => {
+        await removeFaqItem(id)
+        await reload()
+      })
+    },
+    [reload],
+  )
 
-  const moveDown = useCallback((id: string) => {
-    const curr = getSnapshot().items
-    const i = curr.findIndex((it) => it.id === id)
-    if (i < 0 || i >= curr.length - 1) return
-    const next = [...curr]
-    ;[next[i], next[i + 1]] = [next[i + 1], next[i]]
-    commit(next)
-  }, [])
+  const moveUp = useCallback(
+    async (id: string) => {
+      const idx = items.findIndex((it) => it.id === id)
+      if (idx <= 0) return
+      const prev = items[idx - 1]
+      startTransition(async () => {
+        await swapFaqPositions(id, prev.id)
+        await reload()
+      })
+    },
+    [items, reload],
+  )
 
-  const reset = useCallback(() => {
-    resetFAQ()
-    snapshot = DEFAULT_FAQ_STATE
-    for (const l of listeners) l()
-  }, [])
+  const moveDown = useCallback(
+    async (id: string) => {
+      const idx = items.findIndex((it) => it.id === id)
+      if (idx < 0 || idx >= items.length - 1) return
+      const next = items[idx + 1]
+      startTransition(async () => {
+        await swapFaqPositions(id, next.id)
+        await reload()
+      })
+    },
+    [items, reload],
+  )
+
+  const reset = useCallback(async () => {
+    startTransition(async () => {
+      await resetFaqToDefaults()
+      await reload()
+    })
+  }, [reload])
 
   return {
     items,
-    updatedAt: state.updatedAt,
+    loading,
     count: items.length,
     max: MAX_FAQ_ITEMS,
     canAdd: items.length < MAX_FAQ_ITEMS,
+    updatedAt,
     addItem,
     updateItem,
     removeItem,

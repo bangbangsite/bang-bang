@@ -1,9 +1,10 @@
 "use client"
 
-import { useState, useEffect, type FormEvent } from "react"
+import { useState, useEffect, useTransition, type FormEvent } from "react"
 import { MessageCircle, Briefcase, PartyPopper, RotateCcw, Check, ExternalLink, Link as LinkIcon } from "lucide-react"
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader"
 import { useContacts, normalizeCustomLink } from "@/lib/contacts/useContacts"
+import { saveContactChannels } from "@/lib/contacts/actions"
 import type { ContactsConfig } from "@/lib/contacts/config"
 import { useMobileMenu } from "../mobile-menu-context"
 
@@ -67,18 +68,19 @@ function formatPhonePreview(raw: string): string {
 }
 
 export default function ContatosPage() {
-  const { config, urls, update, reset, hasAnyConfigured } = useContacts()
+  const { config, urls, hasAnyConfigured, loading } = useContacts()
   const { open: openMobileMenu } = useMobileMenu()
 
   const [form, setForm] = useState<ContactsConfig>(config)
   const [savedAt, setSavedAt] = useState<number | null>(null)
+  const [saveError, setSaveError] = useState<string | null>(null)
+  const [isPending, startTransition] = useTransition()
 
-  // Sync local form when config changes externally (another tab) — tracked-key
-  // pattern avoids setState-in-effect.
-  const extKey = JSON.stringify(config)
-  const [trackedKey, setTrackedKey] = useState(extKey)
-  if (extKey !== trackedKey) {
-    setTrackedKey(extKey)
+  // Sync local form when remote config loads for the first time.
+  const configKey = JSON.stringify(config)
+  const [trackedKey, setTrackedKey] = useState(configKey)
+  if (configKey !== trackedKey) {
+    setTrackedKey(configKey)
     setForm(config)
   }
 
@@ -86,14 +88,37 @@ export default function ContatosPage() {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    update(form)
-    setSavedAt(Date.now())
+    setSaveError(null)
+    startTransition(async () => {
+      const result = await saveContactChannels(form)
+      if (result.ok) {
+        setSavedAt(Date.now())
+      } else {
+        setSaveError(result.error ?? "Erro ao salvar. Tente novamente.")
+      }
+    })
   }
 
   const handleReset = () => {
     if (window.confirm("Limpar todos os links? Os CTAs voltam a usar o fallback (scroll pra seção final).")) {
-      reset()
-      setSavedAt(Date.now())
+      const empty: ContactsConfig = {
+        whatsappRevenda: "",
+        whatsappDistribuidor: "",
+        whatsappEventos: "",
+        linkRevenda: "",
+        linkDistribuidor: "",
+        linkEventos: "",
+      }
+      setSaveError(null)
+      startTransition(async () => {
+        const result = await saveContactChannels(empty)
+        if (result.ok) {
+          setForm(empty)
+          setSavedAt(Date.now())
+        } else {
+          setSaveError(result.error ?? "Erro ao limpar. Tente novamente.")
+        }
+      })
     }
   }
 
@@ -127,15 +152,26 @@ export default function ContatosPage() {
             <p className="text-[12px] text-[#4A2C1A]/65 mt-0.5 leading-relaxed">
               Cada categoria abaixo tem <strong className="text-[#2D1810] font-semibold">1 WhatsApp</strong>. Quando você preenche, todos os botões daquela
               categoria no site passam a abrir o mesmo link (com mensagem padrão já preenchida).
-              Os valores ficam salvos no seu navegador até conectarmos um backend.
             </p>
           </div>
         </div>
+
+        {loading && (
+          <div className="rounded-xl bg-white border border-[#4A2C1A]/8 px-4 py-3 text-sm text-[#4A2C1A]/60">
+            Carregando configurações…
+          </div>
+        )}
 
         {savedAt !== null && (
           <div className="rounded-xl bg-white border border-[#2E7D32]/30 text-[#1B5E20] px-4 py-2.5 text-sm flex items-center gap-2">
             <Check size={15} strokeWidth={2.4} />
             <span className="font-semibold">Links salvos.</span>
+          </div>
+        )}
+
+        {saveError !== null && (
+          <div className="rounded-xl bg-[#FEE2E2] border border-[#FCA5A5] text-[#991B1B] px-4 py-2.5 text-sm">
+            {saveError}
           </div>
         )}
 
@@ -270,17 +306,18 @@ export default function ContatosPage() {
           <div className="flex items-center gap-2 flex-wrap">
             <button
               type="submit"
-              disabled={!dirty}
+              disabled={!dirty || isPending}
               className="inline-flex items-center gap-2 h-10 px-4 rounded-lg bg-[#E87A1E] text-white text-[13px] font-semibold hover:bg-[#C4650F] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_8px_18px_-8px_rgba(232,122,30,0.5)]"
             >
               <Check size={15} strokeWidth={2.4} />
-              Salvar links
+              {isPending ? "Salvando…" : "Salvar links"}
             </button>
             {hasAnyConfigured && (
               <button
                 type="button"
                 onClick={handleReset}
-                className="inline-flex items-center gap-1.5 h-10 px-4 rounded-lg text-[13px] font-semibold text-[#4A2C1A]/70 border border-[#4A2C1A]/8 bg-white hover:bg-[#FAFAF8] transition-colors"
+                disabled={isPending}
+                className="inline-flex items-center gap-1.5 h-10 px-4 rounded-lg text-[13px] font-semibold text-[#4A2C1A]/70 border border-[#4A2C1A]/8 bg-white hover:bg-[#FAFAF8] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <RotateCcw size={14} strokeWidth={2.2} />
                 Resetar tudo

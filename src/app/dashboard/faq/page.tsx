@@ -40,15 +40,18 @@ export default function FAQPage() {
     setModalOpen(true)
   }
 
-  const handleSubmit = (patch: { question: string; answer: string }) => {
-    if (editing) updateItem(editing.id, patch)
-    else addItem(patch)
+  const handleSubmit = async (patch: { question: string; answer: string }) => {
+    if (editing) {
+      await updateItem(editing.id, patch)
+    } else {
+      await addItem(patch)
+    }
     setModalOpen(false)
   }
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!confirmingDelete) return
-    removeItem(confirmingDelete.id)
+    await removeItem(confirmingDelete.id)
     setConfirmingDelete(null)
   }
 
@@ -152,7 +155,7 @@ export default function FAQPage() {
                   <div className="flex flex-col gap-1 shrink-0">
                     <button
                       type="button"
-                      onClick={() => moveUp(item.id)}
+                      onClick={() => void moveUp(item.id)}
                       disabled={isFirst}
                       aria-label="Mover pra cima"
                       className="w-7 h-7 flex items-center justify-center rounded-md text-[#4A2C1A]/50 hover:text-[#2D1810] hover:bg-[#2D1810]/5 disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-[#4A2C1A]/50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]"
@@ -164,7 +167,7 @@ export default function FAQPage() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => moveDown(item.id)}
+                      onClick={() => void moveDown(item.id)}
                       disabled={isLast}
                       aria-label="Mover pra baixo"
                       className="w-7 h-7 flex items-center justify-center rounded-md text-[#4A2C1A]/50 hover:text-[#2D1810] hover:bg-[#2D1810]/5 disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-[#4A2C1A]/50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]"
@@ -218,7 +221,7 @@ export default function FAQPage() {
               type="button"
               onClick={() => {
                 if (window.confirm("Voltar pra lista padrão? Suas edições serão perdidas.")) {
-                  reset()
+                  void reset()
                 }
               }}
               className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md text-[11px] font-semibold text-[#4A2C1A]/60 hover:text-[#D32F2F] transition-colors"
@@ -273,7 +276,7 @@ export default function FAQPage() {
               </button>
               <button
                 type="button"
-                onClick={handleConfirmDelete}
+                onClick={() => void handleConfirmDelete()}
                 className="h-10 px-4 rounded-lg text-[13px] font-semibold bg-[#D32F2F] text-white hover:bg-[#B71C1C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D32F2F] focus-visible:ring-offset-2"
               >
                 Remover
