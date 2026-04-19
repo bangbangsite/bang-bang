@@ -82,6 +82,9 @@ async function writeRow(next: PDVOverrides): Promise<void> {
 }
 
 function revalidatePDVPages() {
+  // Home renders the OndeComprarSection teaser with merged PDVs too, so
+  // we need to invalidate / alongside /onde-encontrar and the dashboard.
+  revalidatePath("/")
   revalidatePath("/onde-encontrar")
   revalidatePath("/dashboard/pdvs")
 }

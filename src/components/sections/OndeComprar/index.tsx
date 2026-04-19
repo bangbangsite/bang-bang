@@ -5,23 +5,24 @@ import Link from "next/link"
 import { MapPin, ArrowRight } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { SectionWrapper } from "@/components/shared/SectionWrapper"
-import pdvsData from "@/data/pdvs.json"
-import activeUfsData from "@/data/pdvs-active-ufs.json"
 import type { PDV, PDVsByUF } from "@/lib/types/pdv"
 import { OndeComprarProvider } from "./store"
 import { BuscaRapida } from "./BuscaRapida"
 
-const pdvs = pdvsData as PDV[]
-const activeUfs = activeUfsData as PDVsByUF[]
-const TOTAL_PDVS = pdvs.length
-const CITIES = new Set(pdvs.map((p) => `${p.cidade}|${p.uf}`)).size
-const STATES = new Set(pdvs.map((p) => p.uf)).size
+interface OndeComprarSectionProps {
+  pdvs: PDV[]
+  activeUfs: PDVsByUF[]
+}
 
 function isCepDigits(raw: string): boolean {
   return /^\d{8}$/.test(raw.replace(/\D/g, ""))
 }
 
-export function OndeComprarSection() {
+export function OndeComprarSection({ pdvs, activeUfs }: OndeComprarSectionProps) {
+  const totalPdvs = pdvs.length
+  const cities = new Set(pdvs.map((p) => `${p.cidade}|${p.uf}`)).size
+  const states = new Set(pdvs.map((p) => p.uf)).size
+
   // Shared input state between BuscaRapida and the gateway CTA so a typed CEP
   // travels with the click on "Ver mapa completo" — even if the user never
   // pressed Enter inside the search.
@@ -74,11 +75,11 @@ export function OndeComprarSection() {
                   Kept intentionally quiet so it doesn't compete with the
                   headline or the search input. */}
               <div className="mt-1 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#4A2C1A]/15 bg-white/50 backdrop-blur-sm text-[11px] text-[#4A2C1A]/70 whitespace-nowrap">
-                <StatInline value={TOTAL_PDVS} label="PDVs" />
+                <StatInline value={totalPdvs} label="PDVs" />
                 <span aria-hidden="true" className="text-[#4A2C1A]/30">·</span>
-                <StatInline value={CITIES} label="cidades" />
+                <StatInline value={cities} label="cidades" />
                 <span aria-hidden="true" className="text-[#4A2C1A]/30">·</span>
-                <StatInline value={STATES} label="estados" />
+                <StatInline value={states} label="estados" />
               </div>
             </div>
 

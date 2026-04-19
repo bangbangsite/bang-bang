@@ -8,8 +8,11 @@ import { EventosSection } from "@/components/sections/EventosSection"
 import { OndeComprarSection } from "@/components/sections/OndeComprar"
 import { FAQSection } from "@/components/sections/FAQSection"
 import { CTASection } from "@/components/sections/CTASection"
+import { getMergedPDVs } from "@/lib/pdvs/server"
 
-export default function Home() {
+export default async function Home() {
+  const { pdvs, activeUfs } = await getMergedPDVs()
+
   return (
     <>
       <Header />
@@ -31,7 +34,7 @@ export default function Home() {
         <EventosSection />
 
         {/* 06 — Onde Comprar: gateway enxuto pra /onde-encontrar */}
-        <OndeComprarSection />
+        <OndeComprarSection pdvs={pdvs} activeUfs={activeUfs} />
 
         {/* 07 — FAQ: quebrar objeções B2B (ilha card branca dentro do cinza) */}
         <FAQSection />

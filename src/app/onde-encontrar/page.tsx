@@ -2,9 +2,7 @@ import type { Metadata } from "next"
 import { Header } from "@/components/shared/Header"
 import { Footer } from "@/components/shared/Footer"
 import { OndeEncontrarBody } from "@/components/onde-encontrar/OndeEncontrarBody"
-import pdvsData from "@/data/pdvs.json"
-import activeUfsData from "@/data/pdvs-active-ufs.json"
-import type { PDV, PDVsByUF } from "@/lib/types/pdv"
+import { getMergedPDVs } from "@/lib/pdvs/server"
 
 export const metadata: Metadata = {
   title: "Onde encontrar Bang Bang — PDVs parceiros",
@@ -17,9 +15,8 @@ export const metadata: Metadata = {
   },
 }
 
-export default function OndeEncontrarPage() {
-  const pdvs = pdvsData as PDV[]
-  const activeUfs = activeUfsData as PDVsByUF[]
+export default async function OndeEncontrarPage() {
+  const { pdvs, activeUfs } = await getMergedPDVs()
 
   return (
     <>
