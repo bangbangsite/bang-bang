@@ -12,7 +12,7 @@ export async function loginAction(
   formData: FormData,
 ): Promise<LoginState> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase()
-  const password = String(formData.get("password") ?? "")
+  const password = String(formData.get("password") ?? "").trim()
 
   if (!email || !password) {
     return { error: "Preencha e-mail e senha." }
