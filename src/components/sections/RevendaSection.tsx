@@ -195,7 +195,7 @@ export function RevendaSection() {
           eyebrow="Pra distribuidores"
           title="Bang Bang"
           highlight="no seu portfólio."
-          subtitle="Categoria em alta, marca consolidada, território exclusivo. Não é só mais um SKU — é giro garantido."
+          subtitle="Categoria em alta, marca consolidada, território exclusivo. Não é só mais um SKU. É giro garantido."
           align="center"
         />
 
