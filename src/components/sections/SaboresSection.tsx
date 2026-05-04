@@ -776,27 +776,19 @@ function ActiveSaborCard({ product }: { product: Product }) {
               <span className="text-[11px] md:text-[12px] font-semibold tracking-wider uppercase text-white/60 tabular-nums">
                 {vol}
               </span>
-              <div className="flex items-center gap-4">
-                <a
-                  href="/lamina-comercial.pdf"
-                  download
-                  className="inline-flex items-center gap-1.5 text-[10px] md:text-[11px] font-bold tracking-[0.18em] uppercase text-white/65 hover:text-[#ffd36a] transition-colors group"
-                >
-                  <Download size={12} strokeWidth={2.4} />
-                  Ficha completa
-                </a>
-                <a
-                  href="/onde-encontrar"
-                  className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-bold tracking-[0.18em] uppercase text-white hover:text-[#ffd36a] transition-colors group"
-                >
-                  Onde comprar
-                  <ArrowRight
-                    size={13}
-                    strokeWidth={2.6}
-                    className="transition-transform group-hover:translate-x-0.5"
-                  />
-                </a>
-              </div>
+              <a
+                href="/lamina-comercial.pdf"
+                download
+                className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-bold tracking-[0.18em] uppercase text-white hover:text-[#ffd36a] transition-colors group"
+              >
+                <Download size={13} strokeWidth={2.6} />
+                Ficha completa (PDF)
+                <ArrowRight
+                  size={13}
+                  strokeWidth={2.6}
+                  className="transition-transform group-hover:translate-x-0.5"
+                />
+              </a>
             </div>
           </div>
         </div>

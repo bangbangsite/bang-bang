@@ -9,12 +9,12 @@ import {
   User,
   MessageCircle,
   Loader2,
-  Sparkles,
 } from "lucide-react"
-import { submitWishlistRequest, type WishlistActionState } from "@/lib/wishlist/actions"
+import {
+  submitWishlistRequest,
+  type WishlistActionState,
+} from "@/lib/wishlist/actions"
 import { EMPTY_REQUEST } from "@/lib/wishlist/config"
-import { Select } from "@/components/shared/Select"
-import { InstagramIcon } from "@/components/shared/icons/SocialIcons"
 import type { UF } from "@/lib/types/pdv"
 import { cn } from "@/lib/utils"
 
@@ -30,11 +30,6 @@ interface WishlistFormProps {
     bairro?: string
   } | null
 }
-
-const UF_LIST: UF[] = [
-  "AC","AL","AP","AM","BA","CE","DF","ES","GO","MA","MT","MS","MG",
-  "PA","PB","PR","PE","PI","RJ","RN","RS","RO","RR","SC","SP","SE","TO",
-]
 
 function formatCep(raw: string): string {
   const d = raw.replace(/\D/g, "").slice(0, 8)
@@ -53,20 +48,21 @@ function formatWhatsapp(raw: string): string {
 const initialState: WishlistActionState = { ok: false, error: null }
 
 export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
-  const [state, formAction, isPending] = useActionState(submitWishlistRequest, initialState)
+  const [state, formAction, isPending] = useActionState(
+    submitWishlistRequest,
+    initialState,
+  )
 
   const [form, setForm] = useState({ ...EMPTY_REQUEST })
   const [cepLoading, setCepLoading] = useState(false)
   const [cepError, setCepError] = useState<string | null>(null)
   const [submittedCity, setSubmittedCity] = useState<string | null>(null)
-  // Mobile reveal gate — on small screens the form lives behind a big CTA so
-  // the pitch column reads as a strong ask first. Desktop ignores this (CSS
-  // forces the form visible from lg+). `highlighted` auto-opens the form when
-  // the user arrives from an empty-results search.
+  // Mobile reveal gate — small screens hide the form behind a CTA so the pitch
+  // reads first. `highlighted` auto-opens the form when the user arrives from
+  // an empty-results search.
   const [mobileExpanded, setMobileExpanded] = useState(false)
   const sectionRef = useRef<HTMLElement>(null)
 
-  // Show success state when the Server Action returns ok.
   useEffect(() => {
     if (state.ok) {
       setSubmittedCity(form.cidade || "sua cidade")
@@ -74,8 +70,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
     }
   }, [state.ok]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Apply prefill whenever it changes — does NOT overwrite fields the user
-  // already typed. Tracked-key pattern so we only react to real changes.
+  // Apply prefill — only the fields we still expose or use silently.
   const prefillKey = JSON.stringify(prefill ?? {})
   const [trackedPrefillKey, setTrackedPrefillKey] = useState(prefillKey)
   if (prefillKey !== trackedPrefillKey) {
@@ -86,15 +81,10 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
         cep: f.cep || (prefill.cep ? formatCep(prefill.cep) : f.cep),
         cidade: f.cidade || prefill.cidade || f.cidade,
         uf: f.uf || (prefill.uf ?? f.uf),
-        endereco: f.endereco || prefill.endereco || f.endereco,
-        bairro: f.bairro || prefill.bairro || f.bairro,
       }))
     }
   }
 
-  // Scroll into view + subtle focus when the search turns empty. We also
-  // force the mobile form open, since a `highlighted` arrival means the user
-  // already asked a question and we shouldn't hide the answer behind a CTA.
   useEffect(() => {
     if (!highlighted) return
     setMobileExpanded(true)
@@ -108,7 +98,6 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
 
   const revealMobileForm = () => {
     setMobileExpanded(true)
-    // Wait one frame for the form to mount before focusing the first field.
     requestAnimationFrame(() => {
       document.getElementById("wl-nome")?.focus({ preventScroll: true })
       document
@@ -117,7 +106,8 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
     })
   }
 
-  // Auto-lookup when CEP reaches 8 digits (trigger for manual typing).
+  // Auto-lookup when CEP reaches 8 digits — populates cidade/uf silently in
+  // hidden form state so the backend still gets geolocation data.
   useEffect(() => {
     const digits = form.cep.replace(/\D/g, "")
     if (digits.length !== 8) return
@@ -129,27 +119,23 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
         const res = await fetch(`https://viacep.com.br/ws/${digits}/json/`)
         if (!res.ok) throw new Error("network")
         const data: {
-          logradouro?: string
-          bairro?: string
           localidade?: string
           uf?: string
           erro?: boolean
         } = await res.json()
         if (cancelled) return
         if (data.erro) {
-          setCepError("CEP não encontrado. Preencha o endereço manualmente.")
+          setCepError("CEP não encontrado. Confere os dígitos.")
           return
         }
         setForm((f) => ({
           ...f,
-          endereco: f.endereco || data.logradouro || "",
-          bairro: f.bairro || data.bairro || "",
-          cidade: f.cidade || data.localidade || "",
-          uf: f.uf || ((data.uf ?? "").toUpperCase() as UF | ""),
+          cidade: data.localidade || f.cidade,
+          uf: ((data.uf ?? f.uf) as UF | "").toString().toUpperCase() as UF | "",
         }))
       } catch {
         if (!cancelled) {
-          setCepError("Não consegui consultar o CEP agora. Preencha manualmente.")
+          setCepError("Não consegui consultar o CEP agora. Tenta de novo.")
         }
       } finally {
         if (!cancelled) setCepLoading(false)
@@ -160,9 +146,11 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
     }
   }, [form.cep])
 
+  const cepValid = form.cep.replace(/\D/g, "").length === 8
   const canSubmit =
     form.nome.trim().length >= 2 &&
-    form.whatsapp.replace(/\D/g, "").length >= 10
+    form.whatsapp.replace(/\D/g, "").length >= 10 &&
+    cepValid
 
   // ----------------- Success state -----------------
   if (submittedCity) {
@@ -218,8 +206,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
       )}
     >
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] items-stretch">
-        {/* Left — pitch column. Subtle warm gradient so it differentiates from
-            the form panel without becoming a heavy creme block. */}
+        {/* Left — pitch column. Trimmed: title + 1-line subtitle. */}
         <div
           className="relative flex flex-col gap-4 p-6 md:p-9 lg:border-r border-[#4A2C1A]/8"
           style={{
@@ -244,9 +231,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
           </h3>
 
           <p className="text-[#4A2C1A]/75 leading-relaxed text-[15px]">
-            Não achou PDV perto de você? Registra sua demanda aqui. A gente usa
-            esses pedidos pra priorizar próximas cidades — quanto mais gente
-            pedir, mais rápido chegamos aí.
+            Joga teu CEP — quando abrir PDV aí, a gente te avisa.
           </p>
 
           {highlighted && (
@@ -256,14 +241,6 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             </div>
           )}
 
-          <ul className="mt-2 flex flex-col gap-2.5 text-[14px] text-[#4A2C1A]/75">
-            <Bullet>Sem email, sem enrolação — só WhatsApp.</Bullet>
-            <Bullet>CEP preenche seu endereço automaticamente.</Bullet>
-            <Bullet>A gente te chama quando abrir PDV aí.</Bullet>
-          </ul>
-
-          {/* Mobile-only CTA — reveals the form. Hidden from lg+ since the form
-              sits alongside the pitch on desktop. */}
           {!mobileExpanded && (
             <button
               type="button"
@@ -271,7 +248,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
               aria-expanded={false}
               aria-controls="wishlist-form-panel"
               className={cn(
-                "lg:hidden mt-3 inline-flex w-full items-center justify-center gap-2 h-14 px-6 rounded-xl",
+                "lg:hidden mt-2 inline-flex w-full items-center justify-center gap-2 h-14 px-6 rounded-xl",
                 "bg-[#E87A1E] text-white font-black text-[13px] uppercase tracking-[0.16em]",
                 "shadow-[0_16px_40px_-10px_rgba(232,122,30,0.55)]",
                 "hover:bg-[#C4650F] active:translate-y-0 transition-all",
@@ -282,51 +259,10 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
               <ArrowRight size={16} strokeWidth={2.6} />
             </button>
           )}
-
-          {/* Post-submit nudge — minimal IG follow prompt anchored at the
-              bottom of the pitch column as a gentle PS. Hidden on mobile
-              when the form is still gated: the "depois de indicar" copy
-              only makes sense once the ask is visible. */}
-          <div
-            className={cn(
-              "mt-auto pt-6 border-t border-[#4A2C1A]/10 flex items-start gap-3",
-              !mobileExpanded && "hidden lg:flex",
-            )}
-          >
-            <span
-              className="shrink-0 w-9 h-9 rounded-lg flex items-center justify-center text-white"
-              style={{
-                background:
-                  "linear-gradient(135deg, #f5a623 0%, #E87A1E 45%, #c13584 90%, #833ab4 100%)",
-              }}
-              aria-hidden="true"
-            >
-              <InstagramIcon size={16} />
-            </span>
-            <div className="flex-1 min-w-0">
-              <p className="text-[13px] text-[#4A2C1A]/75 leading-relaxed">
-                Depois de indicar,{" "}
-                <span className="text-[#2D1810] font-semibold">
-                  segue a gente
-                </span>{" "}
-                — postamos em tempo real cada cidade nova que a Bang Bang
-                domina.
-              </p>
-              <a
-                href="https://www.instagram.com/bebabangbang"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-1.5 inline-flex items-center gap-1.5 text-[11px] font-bold tracking-[0.22em] uppercase text-[#E87A1E] hover:text-[#C4650F] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] rounded"
-              >
-                @bebabangbang
-                <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </div>
         </div>
 
-        {/* Right — form. Hidden on mobile until the user taps the CTA; always
-            visible from lg+ where it sits beside the pitch column. */}
+        {/* Right — form. 3 fields only: nome, whatsapp, CEP. CEP auto-fills
+            cidade/UF in hidden state for backend storage. */}
         <form
           id="wishlist-form-panel"
           action={formAction}
@@ -335,18 +271,12 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             mobileExpanded ? "flex" : "hidden lg:flex",
           )}
         >
-          {/* Eyebrow */}
           <div className="flex items-center justify-between gap-2 mb-1">
             <span className="text-[10px] font-black tracking-[0.22em] uppercase text-[#4A2C1A]/55">
               Cadastro · &lt;30s
             </span>
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold tracking-[0.18em] uppercase text-[#E87A1E]">
-              <Sparkles size={10} strokeWidth={2.6} />
-              Sem email
-            </span>
           </div>
 
-          {/* Server action error — shown inline above the submit button */}
           {state.error && (
             <div
               role="alert"
@@ -356,14 +286,11 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             </div>
           )}
 
-          {/* Hidden fields — carry controlled state values into the FormData */}
+          {/* Hidden — cidade/uf populated silently from ViaCEP for analytics */}
           <input type="hidden" name="cep" value={form.cep.replace(/\D/g, "")} />
-          <input type="hidden" name="endereco" value={form.endereco} />
-          <input type="hidden" name="bairro" value={form.bairro} />
           <input type="hidden" name="cidade" value={form.cidade} />
           <input type="hidden" name="uf" value={form.uf} />
 
-          {/* Nome */}
           <Field
             id="wl-nome"
             label="Seu nome"
@@ -384,7 +311,6 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             />
           </Field>
 
-          {/* WhatsApp */}
           <Field
             id="wl-wpp"
             label="WhatsApp"
@@ -410,7 +336,6 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             />
           </Field>
 
-          {/* CEP — controlled display; raw digits go via hidden input */}
           <Field
             id="wl-cep"
             label="CEP"
@@ -418,7 +343,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             hint={
               cepLoading
                 ? "Consultando…"
-                : cepError ?? "8 dígitos preenchem o endereço"
+                : cepError ?? "8 dígitos pra geolocalização"
             }
             hintTone={cepError ? "error" : undefined}
           >
@@ -428,6 +353,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
                 type="text"
                 inputMode="numeric"
                 autoComplete="postal-code"
+                required
                 value={form.cep}
                 onChange={(e) =>
                   setForm((f) => ({ ...f, cep: formatCep(e.target.value) }))
@@ -443,82 +369,6 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
               )}
             </div>
           </Field>
-
-          {/* Endereço + Nº */}
-          <div className="grid grid-cols-[1fr_100px] gap-3">
-            <Field id="wl-end" label="Endereço">
-              <input
-                id="wl-end"
-                type="text"
-                autoComplete="street-address"
-                value={form.endereco}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, endereco: e.target.value }))
-                }
-                placeholder="Rua / Av."
-                className={inputCls}
-              />
-            </Field>
-            <Field id="wl-num" label="Nº">
-              <input
-                id="wl-num"
-                name="numero"
-                type="text"
-                inputMode="numeric"
-                value={form.numero}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, numero: e.target.value }))
-                }
-                placeholder="123"
-                className={inputCls}
-              />
-            </Field>
-          </div>
-
-          {/* Bairro */}
-          <Field id="wl-bairro" label="Bairro">
-            <input
-              id="wl-bairro"
-              type="text"
-              value={form.bairro}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, bairro: e.target.value }))
-              }
-              placeholder="Seu bairro"
-              className={inputCls}
-            />
-          </Field>
-
-          {/* Cidade + UF — controlled values sent via hidden inputs above */}
-          <div className="grid grid-cols-[1fr_90px] gap-3">
-            <Field id="wl-cidade" label="Cidade">
-              <input
-                id="wl-cidade"
-                type="text"
-                autoComplete="address-level2"
-                required
-                value={form.cidade}
-                onChange={(e) =>
-                  setForm((f) => ({ ...f, cidade: e.target.value }))
-                }
-                placeholder="Sua cidade"
-                className={inputCls}
-              />
-            </Field>
-            <Field id="wl-uf" label="UF">
-              <Select<UF | "">
-                id="wl-uf"
-                aria-label="Estado"
-                className="w-full block"
-                value={form.uf}
-                onChange={(v) => setForm((f) => ({ ...f, uf: v }))}
-                options={[
-                  { value: "", label: "—" },
-                  ...UF_LIST.map((uf) => ({ value: uf as UF, label: uf })),
-                ]}
-              />
-            </Field>
-          </div>
 
           <button
             type="submit"
@@ -587,19 +437,5 @@ function Field({
         </p>
       )}
     </div>
-  )
-}
-
-function Bullet({ children }: { children: React.ReactNode }) {
-  return (
-    <li className="flex items-start gap-2.5">
-      <span
-        aria-hidden="true"
-        className="shrink-0 mt-0.5 w-4 h-4 rounded-full bg-[#E87A1E]/12 text-[#E87A1E] inline-flex items-center justify-center"
-      >
-        <Check size={10} strokeWidth={3} />
-      </span>
-      <span>{children}</span>
-    </li>
   )
 }

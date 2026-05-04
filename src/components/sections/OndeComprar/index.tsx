@@ -1,7 +1,6 @@
 "use client"
 
-import Link from "next/link"
-import { ArrowRight, MapPin, Building2, Globe2 } from "lucide-react"
+import { MapPin, Building2, Globe2 } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { SectionWrapper } from "@/components/shared/SectionWrapper"
 import { SectionTitle } from "@/components/shared/SectionTitle"
@@ -82,17 +81,6 @@ export function OndeComprarSection({ pdvs }: OndeComprarSectionProps) {
         <div className="mt-12 md:mt-16">
           <WishlistForm />
         </div>
-
-        <p className="mt-10 text-center text-sm text-[#4A2C1A]/60">
-          Procurando um PDV específico?{" "}
-          <Link
-            href="/onde-encontrar"
-            className="text-[#E87A1E] font-bold uppercase tracking-[0.12em] text-xs hover:text-[#C4650F] transition-colors inline-flex items-center gap-1 ml-1"
-          >
-            Ver mapa completo
-            <ArrowRight size={12} strokeWidth={2.6} />
-          </Link>
-        </p>
       </Container>
     </SectionWrapper>
   )

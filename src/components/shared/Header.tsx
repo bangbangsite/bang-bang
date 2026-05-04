@@ -12,9 +12,8 @@ import { trackClick } from "@/lib/contacts/clicks"
 
 const navLinks = [
   { label: "Sabores",        href: "/#sabores" },
-  { label: "Revenda",        href: "/#revenda" },
+  { label: "Distribuição",   href: "/#distribuicao" },
   { label: "Eventos",        href: "/eventos" },
-  { label: "Onde encontrar", href: "/onde-encontrar" },
   { label: "Seja um Banger", href: "/seja-um-banger" },
   { label: "Contato",        href: "/#contato" },
 ]
@@ -24,7 +23,6 @@ export function Header() {
   const [menuOpen, setMenuOpen]   = useState(false)
   const pathname = usePathname()
   const { urls } = useContacts()
-  const revendaHref = urls.revenda || "#contato"
   const distribuidorHref = urls.distribuidor || "#contato"
 
   // On the homepage the header is transparent over the hero until scroll; on
@@ -99,24 +97,15 @@ export function Header() {
             ))}
           </nav>
 
-          {/* Desktop CTAs — 2 B2B entry points */}
+          {/* Desktop CTA — único, foco grande distribuidor */}
           <div className="hidden md:flex items-center gap-3">
             <Button
               variant="primary"
               size="sm"
-              href={revendaHref}
-              onClick={() => trackClick("revenda")}
-            >
-              Quero revender
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
               href={distribuidorHref}
               onClick={() => trackClick("distribuidor")}
-              className="border-white text-white hover:bg-white hover:text-[#2D1810]"
             >
-              Seja um distribuidor
+              Sou distribuidor
             </Button>
           </div>
 
@@ -159,26 +148,14 @@ export function Header() {
           <Button
             variant="primary"
             size="lg"
-            href={revendaHref}
-            onClick={() => {
-              trackClick("revenda")
-              closeMobileMenu()
-            }}
-            className="min-w-[220px] justify-center"
-          >
-            Quero revender
-          </Button>
-          <Button
-            variant="outline"
-            size="lg"
             href={distribuidorHref}
             onClick={() => {
               trackClick("distribuidor")
               closeMobileMenu()
             }}
-            className="min-w-[220px] justify-center border-white text-white hover:bg-white hover:text-[#2D1810]"
+            className="min-w-[220px] justify-center"
           >
-            Seja um distribuidor
+            Sou distribuidor
           </Button>
         </div>
 

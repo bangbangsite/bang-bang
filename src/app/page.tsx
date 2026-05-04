@@ -34,8 +34,8 @@ export default async function Home() {
             discreto pra agenda B2C em /eventos */}
         <EventosSection />
 
-        {/* 06 — Quero Bang Bang na minha cidade: capilaridade (KPIs) +
-            wishlist form + link discreto pro mapa completo em /onde-encontrar */}
+        {/* 06 — Quero Bang Bang na minha cidade: KPIs de capilaridade +
+            wishlist form (3 fields). Mapa completo é só admin (/dashboard). */}
         <OndeComprarSection pdvs={pdvs} />
 
         {/* 07 — FAQ: quebrar objeções B2B (ilha card branca dentro do cinza) */}
