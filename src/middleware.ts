@@ -23,9 +23,12 @@ const COOKIE_MAX_AGE = 60 * 60 * 24 * 90 // 90 days
 // must not break the page — the user just won't have an updated token
 // for this request, and the next one tries again.
 async function refreshSession(req: NextRequest): Promise<NextResponse> {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
   if (
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+    !url ||
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    url.includes("127.0.0.1") ||
+    url.includes("localhost")
   ) {
     return NextResponse.next({ request: req })
   }

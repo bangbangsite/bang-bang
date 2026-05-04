@@ -36,13 +36,26 @@ function rowToOverrides(row: DBRow): PDVOverrides {
 }
 
 export async function getPDVOverrides(): Promise<PDVOverrides> {
-  const supabase = await createSupabaseServerClient()
-  const { data, error } = await supabase
-    .from("pdv_overrides")
-    .select("added, edited, deleted_ids, created_at_map")
-    .eq("id", true)
-    .single<DBRow>()
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL
+  if (
+    !url ||
+    !process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    url.includes("127.0.0.1") ||
+    url.includes("localhost")
+  ) {
+    return EMPTY_OVERRIDES
+  }
+  try {
+    const supabase = await createSupabaseServerClient()
+    const { data, error } = await supabase
+      .from("pdv_overrides")
+      .select("added, edited, deleted_ids, created_at_map")
+      .eq("id", true)
+      .single<DBRow>()
 
-  if (error || !data) return EMPTY_OVERRIDES
-  return rowToOverrides(data)
+    if (error || !data) return EMPTY_OVERRIDES
+    return rowToOverrides(data)
+  } catch {
+    return EMPTY_OVERRIDES
+  }
 }
