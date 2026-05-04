@@ -1,12 +1,12 @@
 const ITEMS = [
-  "Alto giro de estoque",
-  "Sem preparo, sem perda",
-  "4 sabores na linha",
-  "RTD que mais cresce",
-  "Presente em todo o Brasil",
-  "PDVs parceiros",
-  "Suporte completo da marca",
-  "Margem real pro seu negócio",
+  "Categoria RTD em alta",
+  "Expansão acelerada",
+  "Capilaridade nacional",
+  "4 SKUs prontos pra prateleira",
+  "Pallet PBR · 2.112 latas",
+  "Território exclusivo",
+  "Marketing co-op",
+  "Suporte de campo",
 ]
 
 // Content is doubled so the seamless loop works: marquee scrolls translateX(-50%)

@@ -115,7 +115,7 @@ export async function FAQSection() {
           <div className="flex flex-col items-center text-center gap-4">
             <span className="inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-[#2D1810]/20 bg-[#FAFAF8] text-[#4A2C1A]">
               <span className="w-2 h-2 rounded-full bg-[#E87A1E] shadow-[0_0_10px_#E87A1E]" />
-              Dúvidas frequentes
+              Pra distribuidores
             </span>
 
             <h2
@@ -139,7 +139,7 @@ export async function FAQSection() {
             </h2>
 
             <p className="text-[#4A2C1A]/70 text-base md:text-lg max-w-xl">
-              Respostas diretas. Se faltar algo, fala com a gente — responde no mesmo dia útil.
+              Respostas diretas pra quem decide. Se faltar algo, fala com a gente — responde no mesmo dia útil.
             </p>
           </div>
 

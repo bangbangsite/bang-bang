@@ -11,7 +11,7 @@ import { CTASection } from "@/components/sections/CTASection"
 import { getMergedPDVs } from "@/lib/pdvs/server"
 
 export default async function Home() {
-  const { pdvs, activeUfs } = await getMergedPDVs()
+  const { pdvs } = await getMergedPDVs()
 
   return (
     <>
@@ -26,15 +26,17 @@ export default async function Home() {
         {/* 03 — Sabores: showcase do produto (alimenta os dois lados) */}
         <SaboresSection />
 
-        {/* 04 — Revenda + Parceiros (mesma dobra): argumento B2B + prova social */}
+        {/* 04 — Distribuição + Logística + Parceiros: argumento B2B + ficha
+            técnica + prova social, todos na mesma dobra */}
         <RevendaSection />
 
         {/* 05 — Eventos: pivot B2B — "ative sua marca em eventos" com link
             discreto pra agenda B2C em /eventos */}
         <EventosSection />
 
-        {/* 06 — Onde Comprar: gateway enxuto pra /onde-encontrar */}
-        <OndeComprarSection pdvs={pdvs} activeUfs={activeUfs} />
+        {/* 06 — Quero Bang Bang na minha cidade: capilaridade (KPIs) +
+            wishlist form + link discreto pro mapa completo em /onde-encontrar */}
+        <OndeComprarSection pdvs={pdvs} />
 
         {/* 07 — FAQ: quebrar objeções B2B (ilha card branca dentro do cinza) */}
         <FAQSection />

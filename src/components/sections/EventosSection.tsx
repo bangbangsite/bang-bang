@@ -2,13 +2,10 @@
 
 import Image, { type StaticImageData } from "next/image"
 import Link from "next/link"
-import { CalendarDays, MessageCircle, PartyPopper } from "lucide-react"
+import { CalendarDays } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { SectionWrapper } from "@/components/shared/SectionWrapper"
-import { Button } from "@/components/shared/Button"
 import { HeroSparks } from "@/components/shared/HeroSparks"
-import { useContacts } from "@/lib/contacts/useContacts"
-import { trackClick } from "@/lib/contacts/clicks"
 import evento01 from "@/../public/images/eventos/evento-01.webp"
 import evento02 from "@/../public/images/eventos/evento-02.webp"
 import evento03 from "@/../public/images/eventos/evento-03.webp"
@@ -133,9 +130,6 @@ function TextBlock({ title, description }: { title: string; description: string 
 }
 
 export function EventosSection() {
-  const { urls } = useContacts()
-  const eventosHref = urls.eventos || "#contato"
-
   return (
     <SectionWrapper
       id="eventos"
@@ -194,9 +188,8 @@ export function EventosSection() {
             </span>
           </h2>
           <p className="text-white/75 text-base md:text-lg max-w-2xl leading-relaxed">
-            Festa, festival, rooftop, pop-up. Você manda o briefing e a gente
-            chega geladinha — com cenografia, geladeira, copo, equipe e
-            reposição. Você só toca o evento.
+            Festivais, rooftops, festas privadas, ativações de marca. Onde a
+            Bang Bang chega, a noite muda.
           </p>
         </div>
 
@@ -226,43 +219,20 @@ export function EventosSection() {
           )}
         </div>
 
-        {/* CTAs — both B2B */}
-        <div className="mt-12 md:mt-16 flex flex-col md:flex-row items-center justify-center gap-3">
-          <Button
-            variant="primary"
-            size="md"
-            href={eventosHref}
-            icon={<PartyPopper size={18} />}
-            onClick={() => trackClick("eventos")}
-          >
-            Quero Bang Bang no meu evento
-          </Button>
-          <Button
-            variant="outline"
-            size="md"
-            href={eventosHref}
-            icon={<MessageCircle size={18} />}
-            onClick={() => trackClick("eventos")}
-          >
-            Sou produtor — quero conversar
-          </Button>
-        </div>
-
-        {/* Soft B2C handoff to the public agenda — small link, doesn't compete
-            with the two B2B CTAs above. */}
-        <div className="mt-8 flex justify-center">
+        {/* CTA único — discreto. Captação forte de evento privado vive em
+            /eventos; aqui é só vitrine. */}
+        <div className="mt-12 md:mt-16 flex justify-center">
           <Link
             href="/eventos"
-            className="group inline-flex items-center gap-2 text-sm text-white/55 hover:text-[#ffd36a] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] rounded px-1 -mx-1"
+            className="group inline-flex items-center gap-2.5 text-sm text-white/70 hover:text-[#ffd36a] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] rounded px-1 -mx-1"
           >
             <CalendarDays
               size={14}
               strokeWidth={2.2}
-              className="text-[#ffd36a]/70 group-hover:text-[#ffd36a]"
+              className="text-[#ffd36a]/80 group-hover:text-[#ffd36a]"
             />
-            <span>Sou consumidor — </span>
             <span className="font-semibold underline underline-offset-4 decoration-[#ffd36a]/40 group-hover:decoration-[#ffd36a]">
-              agenda Bang Bang
+              Agenda completa & briefing de eventos
             </span>
             <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
               →

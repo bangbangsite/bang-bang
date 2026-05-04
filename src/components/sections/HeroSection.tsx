@@ -6,6 +6,8 @@ import caipiImg from "@/../public/images/latas/caipi.png"
 import muleImg from "@/../public/images/latas/mule.png"
 import spritzImg from "@/../public/images/latas/spritz.png"
 import bangImg from "@/../public/images/latas/bang.png"
+import { useContacts } from "@/lib/contacts/useContacts"
+import { trackClick } from "@/lib/contacts/clicks"
 
 // Media query hook that's SSR-safe via useSyncExternalStore.
 // Server snapshot is always false so the initial HTML renders without hero FX,
@@ -121,6 +123,11 @@ export function HeroSection() {
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)")
   const isWide = useMediaQuery("(min-width: 1024px)")
   const fxEnabled = canHover && !reduceMotion && isWide
+
+  const { urls } = useContacts()
+  const distribuidorHref = urls.distribuidor || "#contato"
+  const distribuidorIsExternal =
+    distribuidorHref.startsWith("http") || distribuidorHref.startsWith("mailto:")
 
   const sparks = useMemo(() => (fxEnabled ? makeSparks() : []), [fxEnabled])
 
@@ -311,18 +318,21 @@ export function HeroSection() {
           </span>
         </h1>
 
-        <p className="text-white text-base sm:text-lg max-w-[38ch] leading-relaxed mb-7 [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] lg:[text-shadow:none] lg:text-white/85">
-          Quatro drinks clássicos em lata de 473 ml, prontos para gelar.
-          <span className="hidden lg:inline"> Mexa o mouse — as latas respondem.</span>
+        <p className="text-white text-base sm:text-lg max-w-[42ch] leading-relaxed mb-7 [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] lg:[text-shadow:none] lg:text-white/85">
+          Quatro RTDs em lata de 473 ml. Categoria em alta no Brasil — e a Bang Bang não para de crescer.
         </p>
 
         <div className="flex flex-col gap-3 items-start pointer-events-auto">
           <div className="flex flex-col sm:flex-row gap-3.5 items-start sm:items-center">
             <a
-              href="#contato"
+              href={distribuidorHref}
+              {...(distribuidorIsExternal
+                ? { target: "_blank", rel: "noopener noreferrer" as const }
+                : {})}
+              onClick={() => trackClick("distribuidor")}
               className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-lg font-black text-sm tracking-[0.12em] uppercase bg-[#E87A1E] text-white shadow-[0_12px_32px_-8px_rgba(232,122,30,0.65)] hover:-translate-y-0.5 hover:bg-[#C4650F] hover:shadow-[0_16px_40px_-10px_rgba(232,122,30,0.85)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2a1410]"
             >
-              Sou parceiro
+              Sou distribuidor
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
                 <path d="M5 12h14M13 5l7 7-7 7" />
               </svg>
@@ -334,16 +344,6 @@ export function HeroSection() {
               Ver sabores
             </a>
           </div>
-          {/* B2C handoff — hidden on mobile (Sabores right below is the next
-              step for consumers); visible from lg+ where it sits alongside
-              the two primary B2B CTAs. */}
-          <a
-            href="#onde-comprar"
-            className="group hidden lg:inline-flex items-center gap-1.5 text-[12px] font-semibold tracking-[0.12em] uppercase text-white/55 hover:text-[#ffd36a] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] rounded px-1 -mx-1"
-          >
-            Sou consumidor — onde encontrar
-            <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">→</span>
-          </a>
         </div>
 
       </div>
@@ -474,7 +474,7 @@ export function HeroSection() {
           473 ml · 5,5% vol
         </span>
         <span className="hidden md:inline-flex gap-2 items-center px-3.5 py-2 rounded-full border border-white/25 bg-white/[0.05] backdrop-blur-md">
-          Mova o cursor →
+          Expansão nacional
         </span>
         <span className="inline-flex gap-2 items-center px-3.5 py-2 rounded-full border border-white/25 bg-white/[0.05] backdrop-blur-md">
           Bebida mista gaseificada

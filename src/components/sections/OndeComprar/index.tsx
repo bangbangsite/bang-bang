@@ -1,121 +1,99 @@
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
-import { MapPin, ArrowRight } from "lucide-react"
+import { ArrowRight, MapPin, Building2, Globe2 } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { SectionWrapper } from "@/components/shared/SectionWrapper"
-import type { PDV, PDVsByUF } from "@/lib/types/pdv"
-import { OndeComprarProvider } from "./store"
-import { BuscaRapida } from "./BuscaRapida"
+import { SectionTitle } from "@/components/shared/SectionTitle"
+import { WishlistForm } from "@/components/onde-encontrar/WishlistForm"
+import type { PDV } from "@/lib/types/pdv"
 
 interface OndeComprarSectionProps {
   pdvs: PDV[]
-  activeUfs: PDVsByUF[]
 }
 
-function isCepDigits(raw: string): boolean {
-  return /^\d{8}$/.test(raw.replace(/\D/g, ""))
+interface KpiProps {
+  icon: React.ReactNode
+  value: string
+  label: string
 }
 
-export function OndeComprarSection({ pdvs, activeUfs }: OndeComprarSectionProps) {
+function KpiCard({ icon, value, label }: KpiProps) {
+  return (
+    <div className="flex items-center gap-4 rounded-2xl bg-white border border-[#4A2C1A]/10 p-5 md:p-6 shadow-[0_12px_32px_-22px_rgba(74,44,26,0.25)]">
+      <div
+        className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0 shadow-[0_8px_18px_-6px_rgba(232,122,30,0.55)]"
+        style={{
+          background:
+            "linear-gradient(135deg, #E87A1E 0%, #C4650F 60%, #E85D10 100%)",
+        }}
+      >
+        {icon}
+      </div>
+      <div className="flex flex-col">
+        <span
+          className="text-3xl md:text-4xl font-black tracking-tight text-[#1A1A1A] tabular-nums"
+          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+        >
+          {value}
+        </span>
+        <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#4A2C1A]/60">
+          {label}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+export function OndeComprarSection({ pdvs }: OndeComprarSectionProps) {
   const totalPdvs = pdvs.length
   const cities = new Set(pdvs.map((p) => `${p.cidade}|${p.uf}`)).size
   const states = new Set(pdvs.map((p) => p.uf)).size
 
-  // Shared input state between BuscaRapida and the gateway CTA so a typed CEP
-  // travels with the click on "Ver mapa completo" — even if the user never
-  // pressed Enter inside the search.
-  const [searchValue, setSearchValue] = useState("")
-
-  const cepDigits = searchValue.replace(/\D/g, "")
-  const ctaHref = isCepDigits(searchValue)
-    ? `/onde-encontrar?cep=${cepDigits}`
-    : "/onde-encontrar"
-
   return (
-    <SectionWrapper id="onde-comprar" bg="light" py="md">
+    <SectionWrapper id="quero-bang-bang" bg="light" py="lg">
       <Container>
-        <OndeComprarProvider pdvs={pdvs} activeUfs={activeUfs}>
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-8 lg:gap-12 items-center max-w-5xl mx-auto">
-            {/* Left — pitch. Centered on mobile (feels more punchy for a
-                single-column pitch block); left-aligned from lg+ where the
-                two-column grid takes over. */}
-            <div className="flex flex-col items-center text-center gap-3 lg:items-start lg:text-left">
-              <span className="inline-flex items-center gap-2.5 text-[10px] md:text-[11px] font-semibold tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-[#2D1810]/20 bg-white/60 backdrop-blur-md text-[#4A2C1A]">
-                <span className="w-2 h-2 rounded-full bg-[#E87A1E] shadow-[0_0_10px_#E87A1E]" />
-                Pra quem bebe
-              </span>
+        <SectionTitle
+          eyebrow="Capilaridade"
+          title="Onde a Bang Bang"
+          highlight="já tá."
+          subtitle="Em expansão acelerada por todo o Brasil — e a próxima cidade pode ser a sua."
+          align="center"
+        />
 
-              <h2
-                className="font-black uppercase text-[#1A1A1A] leading-[0.95] tracking-tight"
-                style={{
-                  fontFamily: "var(--font-heading-var)",
-                  fontWeight: 700,
-                  fontSize: "clamp(2.25rem, 5.5vw, 2.75rem)",
-                }}
-              >
-                Acha a Bang Bang{" "}
-                <span
-                  className="bg-clip-text text-transparent"
-                  style={{
-                    backgroundImage:
-                      "linear-gradient(90deg, #E87A1E, #ff7a3a 55%, #E87A1E)",
-                  }}
-                >
-                  mais perto.
-                </span>
-              </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5 mt-12 max-w-4xl mx-auto">
+          <KpiCard
+            icon={<MapPin size={22} strokeWidth={2.4} />}
+            value={totalPdvs.toLocaleString("pt-BR")}
+            label="PDVs ativos"
+          />
+          <KpiCard
+            icon={<Building2 size={22} strokeWidth={2.4} />}
+            value={cities.toLocaleString("pt-BR")}
+            label="Cidades"
+          />
+          <KpiCard
+            icon={<Globe2 size={22} strokeWidth={2.4} />}
+            value={states.toLocaleString("pt-BR")}
+            label="Estados"
+          />
+        </div>
 
-              <p className="text-[#4A2C1A]/70 text-sm md:text-base leading-relaxed">
-                Joga teu CEP, cidade ou estado. Se ainda não chegou aí, dá pra pedir.
-              </p>
+        <div className="mt-12 md:mt-16">
+          <WishlistForm />
+        </div>
 
-              {/* Stats — single discreet pill with all three numbers inline.
-                  Kept intentionally quiet so it doesn't compete with the
-                  headline or the search input. */}
-              <div className="mt-1 inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#4A2C1A]/15 bg-white/50 backdrop-blur-sm text-[11px] text-[#4A2C1A]/70 whitespace-nowrap">
-                <StatInline value={totalPdvs} label="PDVs" />
-                <span aria-hidden="true" className="text-[#4A2C1A]/30">·</span>
-                <StatInline value={cities} label="cidades" />
-                <span aria-hidden="true" className="text-[#4A2C1A]/30">·</span>
-                <StatInline value={states} label="estados" />
-              </div>
-            </div>
-
-            {/* Right — busca + CTA. The CTA href reflects the typed CEP so a
-                click on "Ver mapa completo" carries the value over even when
-                the user didn't press Enter. */}
-            <div className="flex flex-col gap-3.5">
-              <BuscaRapida
-                eagerCepRedirectTo="/onde-encontrar"
-                missRedirectTo="/onde-encontrar"
-                onInputChange={setSearchValue}
-              />
-
-              <Link
-                href={ctaHref}
-                className="inline-flex items-center justify-center gap-2.5 px-6 h-12 rounded-lg bg-[#E87A1E] text-white font-black text-sm uppercase tracking-[0.14em] shadow-[0_12px_32px_-10px_rgba(232,122,30,0.6)] hover:bg-[#C4650F] hover:-translate-y-0.5 hover:shadow-[0_16px_40px_-10px_rgba(232,122,30,0.75)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2"
-              >
-                <MapPin size={16} strokeWidth={2.6} />
-                Ver mapa completo
-                <ArrowRight size={16} strokeWidth={2.6} />
-              </Link>
-            </div>
-          </div>
-        </OndeComprarProvider>
+        <p className="mt-10 text-center text-sm text-[#4A2C1A]/60">
+          Procurando um PDV específico?{" "}
+          <Link
+            href="/onde-encontrar"
+            className="text-[#E87A1E] font-bold uppercase tracking-[0.12em] text-xs hover:text-[#C4650F] transition-colors inline-flex items-center gap-1 ml-1"
+          >
+            Ver mapa completo
+            <ArrowRight size={12} strokeWidth={2.6} />
+          </Link>
+        </p>
       </Container>
     </SectionWrapper>
-  )
-}
-
-function StatInline({ value, label }: { value: number; label: string }) {
-  return (
-    <span className="inline-flex items-baseline gap-1">
-      <span className="font-bold text-[#4A2C1A]/90 tabular-nums">
-        {value.toLocaleString("pt-BR")}
-      </span>
-      <span className="text-[#4A2C1A]/60">{label}</span>
-    </span>
   )
 }

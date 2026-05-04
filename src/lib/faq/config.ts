@@ -19,43 +19,43 @@ export const DEFAULT_FAQ: FAQItem[] = [
   {
     id: "item-1",
     position: 0,
-    question: "Como faço para revender Bang Bang?",
+    question: "Qual o pedido mínimo pra fechar distribuição?",
     answer:
-      "Entre em contato pelo WhatsApp comercial. Nossa equipe vai te orientar sobre pedido mínimo, condições e entrega na sua região.",
+      "Depende da região e do plano de penetração combinado. Nossa equipe comercial monta a proposta com você caso a caso — sem letra miúda. Fala no WhatsApp comercial e a gente alinha.",
   },
   {
     id: "item-2",
     position: 1,
-    question: "Qual o pedido mínimo?",
+    question: "Vocês trabalham com território exclusivo?",
     answer:
-      "O pedido mínimo varia por região e canal. Fale com nosso comercial para receber a tabela atualizada.",
+      "Sim. Distribuidor fechado tem área protegida, sem canibalização interna. Plano comercial e meta de sell-out são alinhados antes de assinar.",
   },
   {
     id: "item-3",
     position: 2,
-    question: "Vocês atendem minha região?",
+    question: "Qual a margem do distribuidor?",
     answer:
-      "Estamos expandindo cidade por cidade. Informe sua localização e verificamos a cobertura disponível.",
+      "Tabela dedicada por volume, com preço sugerido pro PDV que protege margem em toda a cadeia. Condições fechadas em reunião comercial — não publicamos no site.",
   },
   {
     id: "item-4",
     position: 3,
-    question: "Tem material de apoio para PDV?",
+    question: "Como funciona a logística e o prazo de entrega?",
     answer:
-      "Sim. Fornecemos material de PDV, kit de ativação para eventos e suporte de campanha para parceiros.",
+      "Pallet PBR com 176 packs (2.112 latas), 1.000 kg, 1,96 m³. Saída de fábrica em janela combinada por pedido. Reposição planejada via sell-out monitorado.",
   },
   {
     id: "item-5",
     position: 4,
-    question: "Como funciona para eventos?",
+    question: "Tem suporte de marketing e material de PDV?",
     answer:
-      "Temos kit de cenografia reutilizável e suporte de ativação. Entre em contato com o briefing do evento e montamos a proposta.",
+      "Sim. Geladeira branded, material de ponto, ativações em datas-chave e suporte de campo. Verba de marketing co-op alinhada por canal e volume.",
   },
   {
     id: "item-6",
     position: 5,
-    question: "Qual a margem de lucro?",
+    question: "A categoria RTD vende mesmo no Brasil?",
     answer:
-      "A margem varia por canal e volume. Solicite a tabela comercial para ver as condições do seu perfil.",
+      "RTD é o segmento de maior crescimento em bebidas alcoólicas no Brasil. Bang Bang surfa essa onda com 4 SKUs prontos pra prateleira e marca consolidada em eventos e redes.",
   },
 ]

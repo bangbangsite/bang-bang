@@ -8,7 +8,7 @@ import {
   useCallback,
 } from "react"
 import Image, { type StaticImageData } from "next/image"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Download } from "lucide-react"
 import { Container } from "@/components/shared/Container"
 import { SectionWrapper } from "@/components/shared/SectionWrapper"
 import { SectionTitle } from "@/components/shared/SectionTitle"
@@ -47,6 +47,10 @@ interface Product {
   notes: string[]
   /** Volume + alcohol info. */
   vol: string
+  /** Tech codes from the lamina comercial — surfaced for B2B distributors. */
+  ean: string
+  dun: string
+  mapa: string
   flavor: FlavorKey
   img: StaticImageData
   dotColor: string
@@ -65,6 +69,9 @@ const PRODUCTS: Product[] = [
       "Vodka, três limões e zero esforço. A caipirinha que cabia no bar agora cabe na sua mochila — mesma vibe tropical, sem coqueteleira, sem dor de cabeça.",
     notes: ["Cítrico marcante", "Lima·tahiti·siciliano", "Refrescante", "Pra dia de praia"],
     vol: "473 ml · 5,5% vol",
+    ean: "7908733208102",
+    dun: "17908733208109",
+    mapa: "000029-0.000165",
     flavor: "caipi",
     img: caipiImg,
     dotColor: "#2a8f3e",
@@ -81,6 +88,9 @@ const PRODUCTS: Product[] = [
       "Gengibre puxado, vodka premium, toque cítrico de lima. O drink que pedia bartender agora é só abrir e servir — mantendo o caráter que você espera de um Mule de verdade.",
     notes: ["Gengibre acentuado", "Vodka premium", "Lima fresca", "Pra noite que começa cedo"],
     vol: "473 ml · 5,5% vol",
+    ean: "7908733208096",
+    dun: "17908733208093",
+    mapa: "000029-0.000163",
     flavor: "mule",
     img: muleImg,
     dotColor: "#d67a3e",
@@ -97,6 +107,9 @@ const PRODUCTS: Product[] = [
       "Aromático, levemente amargo, com baunilha e toque cítrico. O Spritz que abria a noite no rooftop italiano agora vai com você do happy hour ao after — sem perder a postura.",
     notes: ["Baunilha sutil", "Toque cítrico", "Aperitivo amargo", "Pra rooftop e brunch"],
     vol: "473 ml · 5,5% vol",
+    ean: "7908733208119",
+    dun: "17908733208116",
+    mapa: "000029-0.000164",
     flavor: "spritz",
     img: spritzImg,
     dotColor: "#e0a070",
@@ -113,6 +126,9 @@ const PRODUCTS: Product[] = [
       "Whisky puxado e energético na medida certa. O combo que sempre rolou na pista agora vem pronto, balanceado, sem aquele momento de improvisar mistura no balcão.",
     notes: ["Whisky encorpado", "Energético equilibrado", "Impacto direto", "Pra balada longa"],
     vol: "473 ml · 5,5% vol",
+    ean: "7908733208089",
+    dun: "17908733208086",
+    mapa: "000029-0.000162",
     flavor: "bang",
     img: bangImg,
     dotColor: "#e8661a",
@@ -635,8 +651,20 @@ function StackedSaborCard({
 // ---------------------------------------------------------------------------
 
 function ActiveSaborCard({ product }: { product: Product }) {
-  const { name, nickname, tagline, longDescription, notes, vol, img, dotColor, gradient } =
-    product
+  const {
+    name,
+    nickname,
+    tagline,
+    longDescription,
+    notes,
+    vol,
+    ean,
+    dun,
+    mapa,
+    img,
+    dotColor,
+    gradient,
+  } = product
 
   return (
     <article
@@ -721,22 +749,55 @@ function ActiveSaborCard({ product }: { product: Product }) {
             ))}
           </ul>
 
-          {/* Vol info + CTA */}
-          <div className="flex items-center justify-between gap-3 mt-2 pt-4 border-t border-white/15">
-            <span className="text-[11px] md:text-[12px] font-semibold tracking-wider uppercase text-white/60 tabular-nums">
-              {vol}
-            </span>
-            <a
-              href="/onde-encontrar"
-              className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-bold tracking-[0.18em] uppercase text-white hover:text-[#ffd36a] transition-colors group"
-            >
-              Onde comprar
-              <ArrowRight
-                size={13}
-                strokeWidth={2.6}
-                className="transition-transform group-hover:translate-x-0.5"
-              />
-            </a>
+          {/* Tech specs — B2B distributor info embedded discretely */}
+          <div className="mt-2 pt-4 border-t border-white/15 flex flex-col gap-3">
+            <dl className="grid grid-cols-3 gap-2 md:gap-3 text-[10px] md:text-[11px]">
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <dt className="font-bold tracking-[0.18em] uppercase text-white/45">EAN</dt>
+                <dd className="font-mono font-semibold text-white/85 tabular-nums truncate">
+                  {ean}
+                </dd>
+              </div>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <dt className="font-bold tracking-[0.18em] uppercase text-white/45">DUN</dt>
+                <dd className="font-mono font-semibold text-white/85 tabular-nums truncate">
+                  {dun}
+                </dd>
+              </div>
+              <div className="flex flex-col gap-0.5 min-w-0">
+                <dt className="font-bold tracking-[0.18em] uppercase text-white/45">MAPA</dt>
+                <dd className="font-mono font-semibold text-white/85 truncate">
+                  {mapa}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="flex items-center justify-between gap-3 flex-wrap">
+              <span className="text-[11px] md:text-[12px] font-semibold tracking-wider uppercase text-white/60 tabular-nums">
+                {vol}
+              </span>
+              <div className="flex items-center gap-4">
+                <a
+                  href="/lamina-comercial.pdf"
+                  download
+                  className="inline-flex items-center gap-1.5 text-[10px] md:text-[11px] font-bold tracking-[0.18em] uppercase text-white/65 hover:text-[#ffd36a] transition-colors group"
+                >
+                  <Download size={12} strokeWidth={2.4} />
+                  Ficha completa
+                </a>
+                <a
+                  href="/onde-encontrar"
+                  className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-bold tracking-[0.18em] uppercase text-white hover:text-[#ffd36a] transition-colors group"
+                >
+                  Onde comprar
+                  <ArrowRight
+                    size={13}
+                    strokeWidth={2.6}
+                    className="transition-transform group-hover:translate-x-0.5"
+                  />
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
