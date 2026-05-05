@@ -39,7 +39,7 @@ async function refreshSession(req: NextRequest): Promise<NextResponse> {
   }
 }
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const { pathname, searchParams } = req.nextUrl
   const previewToken = process.env.PREVIEW_TOKEN
 
