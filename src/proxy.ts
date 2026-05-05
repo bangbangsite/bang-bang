@@ -12,6 +12,7 @@ import { updateSupabaseSession } from "@/lib/supabase/middleware"
 // Supabase session refresh runs on every "let through" branch (post-launch
 // traffic and preview-authenticated traffic), so access tokens stay fresh
 // before they hit Server Components and Route Handlers.
+// teste
 
 const PREVIEW_COOKIE = "bb_preview"
 const COMING_SOON_PATH = "/coming-soon"
