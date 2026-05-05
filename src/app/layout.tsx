@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, Oswald, Permanent_Marker } from "next/font/google";
+import { Inter, Oswald, Permanent_Marker, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -18,6 +18,13 @@ const oswald = Oswald({
 const permanentMarker = Permanent_Marker({
   subsets: ["latin"],
   variable: "--font-accent-var",
+  display: "swap",
+  weight: "400",
+});
+
+const bebasNeue = Bebas_Neue({
+  subsets: ["latin"],
+  variable: "--font-display-var",
   display: "swap",
   weight: "400",
 });
@@ -95,7 +102,7 @@ export default function RootLayout({
         />
       </head>
       <body
-        className={`${inter.variable} ${oswald.variable} ${permanentMarker.variable} antialiased`}
+        className={`${inter.variable} ${oswald.variable} ${permanentMarker.variable} ${bebasNeue.variable} antialiased`}
       >
         {children}
       </body>

@@ -5,7 +5,6 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/shared/Button"
 import { Logo } from "@/components/shared/Logo"
 import { useContacts } from "@/lib/contacts/useContacts"
 import { trackClick } from "@/lib/contacts/clicks"
@@ -55,7 +54,7 @@ export function Header() {
           // the logo + hamburger stay legible when hero decorations (peek
           // cans, bright gradient) pass under the bar.
           isSolid
-            ? "bg-[#2D1810] shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+            ? "bg-[#2C1505] shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
             : "bg-gradient-to-b from-black/40 via-black/15 to-transparent"
         )}
       >
@@ -65,7 +64,7 @@ export function Header() {
               full size from md+ where there's a taller h-20 bar. */}
           <Link
             href="/"
-            className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] rounded"
+            className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] rounded"
             aria-label="Bang Bang — página inicial"
           >
             <Logo
@@ -90,7 +89,7 @@ export function Header() {
               <a
                 key={link.href}
                 href={link.href}
-                className="text-sm text-white hover:text-[#E87A1E] transition-colors duration-150 font-semibold tracking-wide"
+                className="text-sm text-white hover:text-[#C07828] transition-colors duration-150 font-semibold tracking-wide"
               >
                 {link.label}
               </a>
@@ -99,14 +98,18 @@ export function Header() {
 
           {/* Desktop CTA — único, foco grande distribuidor */}
           <div className="hidden md:flex items-center gap-3">
-            <Button
-              variant="primary"
-              size="sm"
+            <a
               href={distribuidorHref}
               onClick={() => trackClick("distribuidor")}
+              className="inline-flex items-center gap-2 px-5 h-10 rounded-xl text-[12px] tracking-[0.12em] uppercase text-white shadow-[0_8px_22px_-8px_rgba(192,120,40,0.6)] hover:-translate-y-0.5 hover:bg-[#A06230] hover:shadow-[0_12px_28px_-10px_rgba(160,98,48,0.8)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2C1505]"
+              style={{
+                fontFamily: "var(--font-heading-var)",
+                fontWeight: 700,
+                background: "#C07828",
+              }}
             >
               Sou distribuidor
-            </Button>
+            </a>
           </div>
 
           {/* Mobile hamburger */}
@@ -125,7 +128,7 @@ export function Header() {
       {/* Mobile fullscreen menu */}
       <div
         className={cn(
-          "fixed inset-0 bg-[#2D1810] z-40 flex flex-col items-center justify-center gap-8 transition-all duration-[250ms]",
+          "fixed inset-0 bg-[#2C1505] z-40 flex flex-col items-center justify-center gap-8 transition-all duration-[250ms]",
           menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         )}
         aria-hidden={!menuOpen}
@@ -136,7 +139,7 @@ export function Header() {
               key={link.href}
               href={link.href}
               onClick={closeMobileMenu}
-              className="text-3xl font-heading font-black uppercase text-white hover:text-[#E87A1E] transition-colors duration-150 tracking-widest"
+              className="text-3xl font-heading font-black uppercase text-white hover:text-[#C07828] transition-colors duration-150 tracking-widest"
               style={{ fontFamily: "var(--font-heading-var)" }}
             >
               {link.label}
@@ -145,18 +148,21 @@ export function Header() {
         </nav>
 
         <div className="flex flex-col items-center gap-4 mt-4">
-          <Button
-            variant="primary"
-            size="lg"
+          <a
             href={distribuidorHref}
             onClick={() => {
               trackClick("distribuidor")
               closeMobileMenu()
             }}
-            className="min-w-[220px] justify-center"
+            className="inline-flex items-center justify-center gap-2.5 min-w-[220px] px-8 h-14 rounded-xl text-sm tracking-[0.12em] uppercase text-white shadow-[0_12px_32px_-8px_rgba(192,120,40,0.65)] hover:-translate-y-0.5 hover:bg-[#A06230] hover:shadow-[0_16px_40px_-10px_rgba(160,98,48,0.85)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2C1505]"
+            style={{
+              fontFamily: "var(--font-heading-var)",
+              fontWeight: 700,
+              background: "#C07828",
+            }}
           >
             Sou distribuidor
-          </Button>
+          </a>
         </div>
 
         {/* Staff access — intentionally discreet. Absolute bottom so the main
@@ -165,7 +171,7 @@ export function Header() {
         <Link
           href="/dashboard"
           onClick={closeMobileMenu}
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-semibold tracking-[0.3em] uppercase text-white/30 hover:text-white/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] rounded px-2 py-1"
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 text-[10px] font-semibold tracking-[0.3em] uppercase text-white/30 hover:text-white/70 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] rounded px-2 py-1"
         >
           Acesso staff
         </Link>

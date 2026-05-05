@@ -20,17 +20,18 @@ export function MarqueeBanner() {
       aria-label="Benefícios Bang Bang"
       className="marquee-container relative w-full overflow-hidden py-5"
       style={{
+        // DS validated brand gradient (horizontal, mirror at 50%)
         background:
-          "linear-gradient(90deg, #C4650F 0%, #E87A1E 50%, #C4650F 100%)",
+          "linear-gradient(90deg, #270C08 0%, #8C4515 50%, #C8902C 100%)",
       }}
     >
-      {/* edge fade on both sides to soften the loop seam */}
+      {/* edge fade on both sides to soften the loop seam — uses DS Espresso */}
       <div
         aria-hidden="true"
         className="absolute left-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to right, rgba(196,101,15,0.8), transparent)",
+            "linear-gradient(to right, rgba(39,12,8,0.85), transparent)",
         }}
       />
       <div
@@ -38,7 +39,7 @@ export function MarqueeBanner() {
         className="absolute right-0 top-0 bottom-0 w-16 z-10 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to left, rgba(196,101,15,0.8), transparent)",
+            "linear-gradient(to left, rgba(200,144,44,0.55), transparent)",
         }}
       />
 
@@ -51,12 +52,17 @@ export function MarqueeBanner() {
           <span
             key={index}
             className="inline-flex items-center shrink-0"
+            // DS body = Oswald
             style={{ fontFamily: "var(--font-heading-var)" }}
           >
-            <span className="font-black uppercase text-sm tracking-[0.22em] text-white px-5">
+            <span
+              className="uppercase text-sm tracking-[0.22em] text-white px-5"
+              style={{ fontWeight: 700 }}
+            >
               {item}
             </span>
-            <span className="text-[#ffd36a]/80 text-sm select-none" aria-hidden="true">
+            {/* DS Cream Light star — softer warm contrast on the dark left half of the gradient */}
+            <span className="text-[#EEE0C4]/85 text-sm select-none" aria-hidden="true">
               ★
             </span>
           </span>

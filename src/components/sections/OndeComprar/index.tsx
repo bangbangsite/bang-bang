@@ -19,24 +19,36 @@ interface KpiProps {
 
 function KpiCard({ icon, value, label }: KpiProps) {
   return (
-    <div className="flex items-center gap-4 rounded-2xl bg-white border border-[#4A2C1A]/10 p-5 md:p-6 shadow-[0_12px_32px_-22px_rgba(74,44,26,0.25)]">
+    <div
+      // DS Brand White surface, Brand Dark border, lg radius (24)
+      className="flex items-center gap-4 rounded-3xl bg-white border border-[#2C1505]/10 p-5 md:p-6 shadow-[0_12px_32px_-22px_rgba(39,12,8,0.3)]"
+    >
       <div
-        className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0 shadow-[0_8px_18px_-6px_rgba(232,122,30,0.55)]"
+        // DS validated brand gradient, md radius (12)
+        className="w-12 h-12 rounded-xl flex items-center justify-center text-white shrink-0 shadow-[0_8px_18px_-6px_rgba(39,12,8,0.5)]"
         style={{
           background:
-            "linear-gradient(135deg, #E87A1E 0%, #C4650F 60%, #E85D10 100%)",
+            "linear-gradient(135deg, #270C08 0%, #8C4515 50%, #C8902C 100%)",
         }}
       >
         {icon}
       </div>
       <div className="flex flex-col">
         <span
-          className="text-3xl md:text-4xl font-black tracking-tight text-[#1A1A1A] tabular-nums"
-          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+          // DS display value → Bebas Neue, scaled up
+          className="text-4xl md:text-5xl text-[#2C1505] tabular-nums leading-none"
+          style={{
+            fontFamily: "var(--font-display-var)",
+            fontWeight: 400,
+            letterSpacing: "0.02em",
+          }}
         >
           {value}
         </span>
-        <span className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#4A2C1A]/60">
+        <span
+          className="mt-1.5 text-[11px] tracking-[0.18em] uppercase text-[#5A5228]/85"
+          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+        >
           {label}
         </span>
       </div>

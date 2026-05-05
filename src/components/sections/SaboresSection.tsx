@@ -58,6 +58,8 @@ interface Product {
   gradient: string
 }
 
+// DS validated flavor palettes (Bang Bang Boom DS v0)
+// Each: BG (deep) → Primary (mid) → Secondary (peak), Accent for highlights.
 const PRODUCTS: Product[] = [
   {
     name: "Caipi Vodka 3 Limões",
@@ -74,9 +76,10 @@ const PRODUCTS: Product[] = [
     mapa: "000029-0.000165",
     flavor: "caipi",
     img: caipiImg,
-    dotColor: "#2a8f3e",
+    // DS Caipi Verde Floresta: BG #1A3F18 / Primary #2B6B28 / Secondary #8DC63F / Accent #F2E84B
+    dotColor: "#8DC63F",
     gradient:
-      "radial-gradient(circle at 50% 20%, rgba(140,220,140,0.22), transparent 55%), linear-gradient(160deg, #0f3d1a 0%, #1e5a2a 45%, #2a7a3a 100%)",
+      "radial-gradient(circle at 50% 20%, rgba(242,232,75,0.22), transparent 55%), linear-gradient(160deg, #1A3F18 0%, #2B6B28 45%, #8DC63F 100%)",
   },
   {
     name: "Moscow Mule",
@@ -93,9 +96,10 @@ const PRODUCTS: Product[] = [
     mapa: "000029-0.000163",
     flavor: "mule",
     img: muleImg,
-    dotColor: "#d67a3e",
+    // DS Mule Chocolate Cobre: BG #4A2008 / Primary #7A3B10 / Secondary #C47830 / Accent #F0C060
+    dotColor: "#C47830",
     gradient:
-      "radial-gradient(circle at 50% 20%, rgba(255,180,120,0.22), transparent 55%), linear-gradient(160deg, #2d1810 0%, #5a3220 45%, #8b5e3c 100%)",
+      "radial-gradient(circle at 50% 20%, rgba(240,192,96,0.22), transparent 55%), linear-gradient(160deg, #4A2008 0%, #7A3B10 45%, #C47830 100%)",
   },
   {
     name: "40+3 Spritz",
@@ -112,9 +116,10 @@ const PRODUCTS: Product[] = [
     mapa: "000029-0.000164",
     flavor: "spritz",
     img: spritzImg,
-    dotColor: "#e0a070",
+    // DS Spritz Caramelo Creme: BG #3D2912 / Primary #A07030 / Secondary #D9B778 / Accent #F5E8C8
+    dotColor: "#D9B778",
     gradient:
-      "radial-gradient(circle at 50% 20%, rgba(255,210,150,0.22), transparent 55%), linear-gradient(160deg, #3d2a0f 0%, #8f6a3a 45%, #c49a6c 100%)",
+      "radial-gradient(circle at 50% 20%, rgba(245,232,200,0.22), transparent 55%), linear-gradient(160deg, #3D2912 0%, #A07030 45%, #D9B778 100%)",
   },
   {
     name: "Whisky + Energy",
@@ -131,9 +136,10 @@ const PRODUCTS: Product[] = [
     mapa: "000029-0.000162",
     flavor: "bang",
     img: bangImg,
-    dotColor: "#e8661a",
+    // DS Bang Laranja Queimado: BG #3A1B05 / Primary #C05010 / Secondary #E86820 / Accent #FFB05A
+    dotColor: "#E86820",
     gradient:
-      "radial-gradient(circle at 50% 20%, rgba(255,210,130,0.22), transparent 55%), linear-gradient(160deg, #2a1410 0%, #6a2a14 45%, #e8661a 100%)",
+      "radial-gradient(circle at 50% 20%, rgba(255,176,90,0.22), transparent 55%), linear-gradient(160deg, #3A1B05 0%, #C05010 45%, #E86820 100%)",
   },
 ]
 
@@ -257,7 +263,8 @@ function SaboresPinned() {
     <section
       id="sabores"
       ref={wrapperRef}
-      className="relative bg-[#FAFAF8]"
+      // DS Brand Cream
+      className="relative bg-[#F5ECD7]"
       style={{ height: `${PRODUCTS.length * 100}vh` }}
     >
       {/* Sticky panel — fills the viewport while the wrapper scrolls past. */}
@@ -360,10 +367,11 @@ function ProgressDots({
             aria-label={`${i + 1} de ${total} — ${PRODUCTS[i].nickname}`}
             onClick={() => onJump(i)}
             className={cn(
-              "rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2",
+              // DS Brand Amber #C07828 / Brand Dark #2C1505
+              "rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C07828] focus-visible:ring-offset-2",
               isActive
-                ? "w-2 h-10 bg-[#E87A1E] shadow-[0_0_12px_rgba(232,122,30,0.6)]"
-                : "w-2 h-2 bg-[#4A2C1A]/25 hover:bg-[#4A2C1A]/55",
+                ? "w-2 h-10 bg-[#C07828] shadow-[0_0_12px_rgba(192,120,40,0.6)]"
+                : "w-2 h-2 bg-[#2C1505]/25 hover:bg-[#2C1505]/55",
             )}
           />
         )
@@ -489,6 +497,7 @@ function StrippedSaborCard({
       type="button"
       onClick={onSelect}
       aria-label={`Ver detalhes de ${name}`}
+      // DS radius md = 12px
       className="absolute rounded-xl overflow-hidden text-white text-left transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2"
       style={{
         top,
@@ -529,12 +538,16 @@ function StrippedSaborCard({
         style={{ paddingRight: STRIP_CAN_W + 6 }}
       >
         <span
-          className="font-black uppercase tracking-tight text-[15px] leading-[1.05] line-clamp-2"
-          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+          className="uppercase text-[15px] leading-[1.05] line-clamp-2"
+          // DS H3 Oswald SemiBold/Bold; letter-spacing 0
+          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700, letterSpacing: "0.01em" }}
         >
           {name}
         </span>
-        <span className="inline-flex items-center gap-1.5 text-[10px] font-semibold tracking-[0.22em] uppercase text-white/80">
+        <span
+          className="inline-flex items-center gap-1.5 text-[10px] tracking-[0.22em] uppercase text-white/80"
+          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+        >
           <span
             className="inline-block w-1.5 h-1.5 rounded-full"
             style={{ background: dotColor, boxShadow: `0 0 6px ${dotColor}` }}
@@ -568,8 +581,9 @@ function StackedSaborCard({
       onClick={onSelect}
       aria-label={`Ver detalhes de ${name}`}
       className={cn(
-        "group absolute top-0 bottom-0 rounded-2xl overflow-hidden text-white text-left transition-all duration-300",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FAFAF8]",
+        // DS radius lg = 24px (rounded-3xl)
+        "group absolute top-0 bottom-0 rounded-3xl overflow-hidden text-white text-left transition-all duration-300",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5ECD7]",
         !isFront && "hover:translate-x-[8px] cursor-pointer",
       )}
       style={{
@@ -590,7 +604,10 @@ function StackedSaborCard({
 
       {/* Nickname pill — anchored to the RIGHT so it stays on the visible
           peek stripe even when the card is behind the front card. */}
-      <span className="absolute top-4 right-3 z-[2] inline-flex items-center gap-1.5 text-[10px] md:text-[11px] font-semibold tracking-[0.22em] uppercase px-2.5 py-1.5 rounded-full border border-white/35 bg-white/5 backdrop-blur-md whitespace-nowrap">
+      <span
+        className="absolute top-4 right-3 z-[2] inline-flex items-center gap-1.5 text-[10px] md:text-[11px] tracking-[0.22em] uppercase px-2.5 py-1.5 rounded-full border border-white/35 bg-white/5 backdrop-blur-md whitespace-nowrap"
+        style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+      >
         <span
           className="inline-block w-1.5 h-1.5 rounded-full"
           style={{ background: dotColor, boxShadow: `0 0 6px ${dotColor}` }}
@@ -626,8 +643,9 @@ function StackedSaborCard({
           }}
         >
           <p
-            className="font-black uppercase text-white text-[12px] md:text-[14px] leading-tight tracking-tight line-clamp-2"
-            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+            className="uppercase text-white text-[12px] md:text-[14px] leading-tight line-clamp-2"
+            // DS Oswald Bold; small caps spacing
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700, letterSpacing: "0.02em" }}
           >
             {name}
           </p>
@@ -635,8 +653,13 @@ function StackedSaborCard({
       ) : (
         // Back card vertical label — sits on the visible peek stripe
         <span
-          className="absolute right-2 bottom-4 z-[2] text-[10px] font-black tracking-[0.28em] uppercase text-white/80 whitespace-nowrap"
-          style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
+          className="absolute right-2 bottom-4 z-[2] text-[10px] tracking-[0.28em] uppercase text-white/80 whitespace-nowrap"
+          style={{
+            fontFamily: "var(--font-heading-var)",
+            fontWeight: 700,
+            writingMode: "vertical-rl",
+            transform: "rotate(180deg)",
+          }}
         >
           {nickname}
         </span>
@@ -669,9 +692,8 @@ function ActiveSaborCard({ product }: { product: Product }) {
   return (
     <article
       className={cn(
-        "relative overflow-hidden rounded-2xl text-white",
-        // Capped at the available pin viewport so the can never gets clipped
-        // on shorter screens. The min keeps it readable on the static fallback.
+        // DS radius lg = 24px
+        "relative overflow-hidden rounded-3xl text-white",
         "min-h-[480px] md:min-h-[520px] lg:max-h-[calc(100vh-180px)]",
         "animate-[fadeInScale_400ms_ease-out]",
       )}
@@ -691,7 +713,10 @@ function ActiveSaborCard({ product }: { product: Product }) {
             fluid inside the pin viewport. */}
         <div className="relative flex flex-col items-center justify-end px-4 pt-12 md:pt-14 pb-4 md:pb-6 min-h-[360px] md:min-h-0">
           {/* Nickname badge — overlay on top-left of the can stage */}
-          <span className="absolute top-5 md:top-6 left-5 md:left-6 inline-flex items-center gap-2 text-[10px] md:text-[11px] font-semibold tracking-[0.24em] uppercase px-3 py-1.5 rounded-full border border-white/35 bg-white/5 backdrop-blur-md z-[2]">
+          <span
+            className="absolute top-5 md:top-6 left-5 md:left-6 inline-flex items-center gap-2 text-[10px] md:text-[11px] tracking-[0.24em] uppercase px-3 py-1.5 rounded-full border border-white/35 bg-white/5 backdrop-blur-md z-[2]"
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+          >
             <span
               className="inline-block w-1.5 h-1.5 rounded-full"
               style={{ background: dotColor, boxShadow: `0 0 8px ${dotColor}` }}
@@ -720,29 +745,40 @@ function ActiveSaborCard({ product }: { product: Product }) {
           }}
         >
           <h3
-            className="font-black uppercase tracking-tight leading-[0.95] text-white text-2xl md:text-3xl lg:text-4xl"
-            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+            // DS H1 scale → Bebas Neue (display) for the hero name on the active card
+            className="uppercase leading-[0.95] text-white text-3xl md:text-4xl lg:text-5xl"
+            style={{
+              fontFamily: "var(--font-display-var)",
+              fontWeight: 400,
+              letterSpacing: "0.03em",
+            }}
           >
             {name}
           </h3>
 
           <p
-            className="text-[15px] md:text-[17px] font-bold italic leading-snug"
-            style={{ color: dotColor }}
+            className="text-[15px] md:text-[17px] italic leading-snug"
+            // DS body = Oswald; tagline keeps flavor secondary color
+            style={{ color: dotColor, fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
           >
             {tagline}
           </p>
 
-          <p className="text-white/80 text-[14px] md:text-[15px] leading-relaxed max-w-[42ch]">
+          <p
+            className="text-white/85 text-[14px] md:text-[15px] leading-relaxed max-w-[42ch]"
+            // DS body = Oswald, line-height 1.7
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+          >
             {longDescription}
           </p>
 
-          {/* Notes — small chip pills */}
+          {/* Notes — small chip pills (DS radius sm = 6px) */}
           <ul className="flex flex-wrap gap-1.5 md:gap-2 mt-1">
             {notes.map((note) => (
               <li
                 key={note}
-                className="inline-flex items-center text-[10px] md:text-[11px] font-bold tracking-[0.12em] uppercase px-2.5 py-1 rounded-md border border-white/20 bg-white/5 backdrop-blur-sm text-white/85"
+                className="inline-flex items-center text-[10px] md:text-[11px] tracking-[0.14em] uppercase px-2.5 py-1 rounded-md border border-white/20 bg-white/5 backdrop-blur-sm text-white/85"
+                style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
               >
                 {note}
               </li>
@@ -751,35 +787,43 @@ function ActiveSaborCard({ product }: { product: Product }) {
 
           {/* Tech specs — B2B distributor info embedded discretely */}
           <div className="mt-2 pt-4 border-t border-white/15 flex flex-col gap-3">
-            <dl className="grid grid-cols-3 gap-2 md:gap-3 text-[10px] md:text-[11px]">
+            <dl
+              className="grid grid-cols-3 gap-2 md:gap-3 text-[10px] md:text-[11px]"
+              style={{ fontFamily: "var(--font-heading-var)" }}
+            >
               <div className="flex flex-col gap-0.5 min-w-0">
-                <dt className="font-bold tracking-[0.18em] uppercase text-white/45">EAN</dt>
-                <dd className="font-mono font-semibold text-white/85 tabular-nums truncate">
+                <dt className="tracking-[0.18em] uppercase text-white/45" style={{ fontWeight: 700 }}>EAN</dt>
+                <dd className="font-mono text-white/85 tabular-nums truncate" style={{ fontWeight: 600 }}>
                   {ean}
                 </dd>
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
-                <dt className="font-bold tracking-[0.18em] uppercase text-white/45">DUN</dt>
-                <dd className="font-mono font-semibold text-white/85 tabular-nums truncate">
+                <dt className="tracking-[0.18em] uppercase text-white/45" style={{ fontWeight: 700 }}>DUN</dt>
+                <dd className="font-mono text-white/85 tabular-nums truncate" style={{ fontWeight: 600 }}>
                   {dun}
                 </dd>
               </div>
               <div className="flex flex-col gap-0.5 min-w-0">
-                <dt className="font-bold tracking-[0.18em] uppercase text-white/45">MAPA</dt>
-                <dd className="font-mono font-semibold text-white/85 truncate">
+                <dt className="tracking-[0.18em] uppercase text-white/45" style={{ fontWeight: 700 }}>MAPA</dt>
+                <dd className="font-mono text-white/85 truncate" style={{ fontWeight: 600 }}>
                   {mapa}
                 </dd>
               </div>
             </dl>
 
             <div className="flex items-center justify-between gap-3 flex-wrap">
-              <span className="text-[11px] md:text-[12px] font-semibold tracking-wider uppercase text-white/60 tabular-nums">
+              <span
+                className="text-[11px] md:text-[12px] tracking-wider uppercase text-white/65 tabular-nums"
+                style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+              >
                 {vol}
               </span>
               <a
                 href="/lamina-comercial.pdf"
                 download
-                className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] font-bold tracking-[0.18em] uppercase text-white hover:text-[#ffd36a] transition-colors group"
+                // DS hover → Brand Amber #C07828 (replacing #ffd36a)
+                className="inline-flex items-center gap-1.5 text-[11px] md:text-[12px] tracking-[0.18em] uppercase text-white hover:text-[#C8902C] transition-colors group"
+                style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
               >
                 <Download size={13} strokeWidth={2.6} />
                 Ficha completa (PDF)
