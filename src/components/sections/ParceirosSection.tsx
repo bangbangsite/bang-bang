@@ -127,10 +127,11 @@ const LOGOS: PartnerLogo[] = [
     name: "Mercadão Único",
     render: () => (
       <div
-        className="h-12 px-4 flex items-center rounded-lg text-white"
+        className="h-12 px-4 flex items-center rounded-xl text-white"
         style={{
+          // DS validated brand gradient
           background:
-            "linear-gradient(135deg, #C4650F 0%, #E87A1E 60%, #F2A71F 100%)",
+            "linear-gradient(135deg, #270C08 0%, #8C4515 50%, #C8902C 100%)",
         }}
       >
         <span className="text-[16px] font-black italic leading-none tracking-tight">
@@ -179,7 +180,7 @@ const DOUBLED = [...LOGOS, ...LOGOS]
 
 interface ParceirosBlockProps {
   /** Background color used by the edge fades (so the loop seam blends). Pass
-   * the host section's bg color as hex. Defaults to #FAFAF8 (light surface). */
+   * the host section's bg color as hex. Defaults to DS Brand Cream #F5ECD7. */
   fadeColor?: string
   className?: string
 }
@@ -191,28 +192,37 @@ interface ParceirosBlockProps {
  * a single fold).
  */
 export function ParceirosBlock({
-  fadeColor = "#FAFAF8",
+  fadeColor = "#F5ECD7",
   className,
 }: ParceirosBlockProps) {
   return (
     <div className={className}>
       <Container>
         <div className="flex flex-col items-center text-center gap-3">
-          <span className="inline-flex items-center gap-2.5 text-[10px] md:text-[11px] font-semibold tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-[#2D1810]/20 bg-white/60 backdrop-blur-md text-[#4A2C1A]">
-            <span className="w-2 h-2 rounded-full bg-[#E87A1E] shadow-[0_0_10px_#E87A1E]" />
+          <span
+            // DS Brand Dark border + Olive Smoke text + Brand Amber dot
+            className="inline-flex items-center gap-2.5 text-[10px] md:text-[11px] tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-[#2C1505]/20 bg-white/60 backdrop-blur-md text-[#5A5228]"
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+          >
+            <span className="w-2 h-2 rounded-full bg-[#C07828] shadow-[0_0_10px_#C07828]" />
             Parceiros
           </span>
           <h3
-            className="font-black uppercase text-[#1A1A1A] tracking-tight leading-[0.95]"
+            // DS H1 → Bebas Neue display
+            className="uppercase text-[#2C1505] leading-[0.95]"
             style={{
-              fontFamily: "var(--font-heading-var)",
-              fontWeight: 700,
-              fontSize: "clamp(1.5rem, 3vw, 2.25rem)",
+              fontFamily: "var(--font-display-var)",
+              fontWeight: 400,
+              fontSize: "clamp(1.75rem, 3.6vw, 2.75rem)",
+              letterSpacing: "0.03em",
             }}
           >
             Quem vende, sabe.
           </h3>
-          <p className="text-sm md:text-[15px] text-[#4A2C1A]/65">
+          <p
+            className="text-sm md:text-[15px] text-[#5A5228]/85"
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+          >
             Distribuidoras, mercados e bares que já botaram Bang Bang na geladeira.
           </p>
         </div>

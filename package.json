@@ -8,6 +8,7 @@
     "prebuild": "npm run pdvs:validate",
     "pdvs:refresh": "tsx scripts/build-pdvs.ts",
     "pdvs:validate": "tsx scripts/validate-pdvs.ts",
+    "seed:demo": "tsx scripts/seed-demo.ts",
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",

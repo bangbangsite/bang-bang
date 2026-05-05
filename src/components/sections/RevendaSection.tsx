@@ -9,13 +9,32 @@ import {
   Download,
   Boxes,
 } from "lucide-react"
-import { Button } from "@/components/shared/Button"
 import { Container } from "@/components/shared/Container"
 import { SectionWrapper } from "@/components/shared/SectionWrapper"
 import { SectionTitle } from "@/components/shared/SectionTitle"
 import { ParceirosBlock } from "./ParceirosSection"
 import { useContacts } from "@/lib/contacts/useContacts"
 import { trackClick } from "@/lib/contacts/clicks"
+
+// ============================================
+// DS validated tokens (Bang Bang Boom DS v0)
+// Source: https://design-system-bang.vercel.app/
+// ============================================
+const DS = {
+  brandDark: "#2C1505",
+  brandAmber: "#C07828",
+  brandWhite: "#FFFFFF",
+  brandCream: "#F5ECD7",
+  espresso: "#270C08",
+  oliveSmoke: "#5A5228",
+  copperDust: "#A06230",
+  creamLight: "#EEE0C4",
+  brandGradient:
+    "linear-gradient(135deg, #270C08 0%, #8C4515 50%, #C8902C 100%)",
+  fontDisplay: "var(--font-display-var)", // Bebas Neue
+  fontHeading: "var(--font-heading-var)", // Oswald
+  fontBody: "var(--font-heading-var)", // Oswald per DS body
+} as const
 
 interface FeatureCardProps {
   icon: React.ReactNode
@@ -25,25 +44,46 @@ interface FeatureCardProps {
 
 function FeatureCard({ icon, title, description }: FeatureCardProps) {
   return (
-    <article className="group relative flex flex-col gap-4 p-6 md:p-7 rounded-2xl bg-white border border-[#4A2C1A]/10 hover:border-[#E87A1E]/40 hover:shadow-[0_16px_40px_-18px_rgba(232,122,30,0.3)] hover:-translate-y-0.5 transition-all duration-300 h-full">
+    <article
+      className="group relative flex flex-col gap-4 p-6 md:p-8 transition-all duration-300 h-full"
+      style={{
+        background: DS.brandWhite,
+        border: `1px solid ${DS.brandDark}1A`,
+        borderRadius: "24px",
+      }}
+    >
       <div
-        className="w-11 h-11 rounded-xl flex items-center justify-center text-white shrink-0 shadow-[0_8px_18px_-6px_rgba(232,122,30,0.55)] transition-transform duration-300 group-hover:scale-105"
+        className="w-12 h-12 flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-105"
         style={{
-          background:
-            "linear-gradient(135deg, #E87A1E 0%, #C4650F 60%, #E85D10 100%)",
+          background: DS.brandGradient,
+          color: DS.brandWhite,
+          borderRadius: "12px",
+          boxShadow: `0 8px 18px -6px ${DS.espresso}66`,
         }}
       >
         {icon}
       </div>
 
       <h3
-        className="font-black uppercase text-[#1A1A1A] text-lg md:text-xl leading-tight tracking-tight"
-        style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+        className="uppercase text-xl md:text-2xl leading-none tracking-[0.02em]"
+        style={{
+          fontFamily: DS.fontDisplay,
+          color: DS.brandDark,
+          letterSpacing: "0.04em",
+        }}
       >
         {title}
       </h3>
 
-      <p className="text-sm md:text-[15px] text-[#4A2C1A]/70 leading-relaxed">
+      <p
+        className="text-sm md:text-[15px] leading-relaxed"
+        style={{
+          fontFamily: DS.fontBody,
+          color: `${DS.oliveSmoke}D9`,
+          fontWeight: 400,
+          lineHeight: 1.7,
+        }}
+      >
         {description}
       </p>
     </article>
@@ -100,14 +140,32 @@ const PALLET_SPECS: SpecProps[] = [
 
 function KpiCell({ label, value }: SpecProps) {
   return (
-    <div className="flex flex-col gap-1.5 p-5 md:p-6 rounded-xl bg-[#FAFAF8] border border-[#4A2C1A]/8">
+    <div
+      className="flex flex-col gap-2 p-5 md:p-6"
+      style={{
+        background: DS.creamLight,
+        border: `1px solid ${DS.brandDark}14`,
+        borderRadius: "12px",
+      }}
+    >
       <span
-        className="text-2xl md:text-3xl font-black text-[#1A1A1A] tracking-tight"
-        style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+        className="text-3xl md:text-4xl leading-none"
+        style={{
+          fontFamily: DS.fontDisplay,
+          color: DS.brandDark,
+          letterSpacing: "0.02em",
+        }}
       >
         {value}
       </span>
-      <span className="text-[11px] font-semibold tracking-[0.16em] uppercase text-[#4A2C1A]/60">
+      <span
+        className="text-[11px] tracking-[0.18em] uppercase"
+        style={{
+          fontFamily: DS.fontBody,
+          color: `${DS.oliveSmoke}B3`,
+          fontWeight: 600,
+        }}
+      >
         {label}
       </span>
     </div>
@@ -116,11 +174,28 @@ function KpiCell({ label, value }: SpecProps) {
 
 function SpecRow({ label, value }: SpecProps) {
   return (
-    <div className="flex items-baseline justify-between gap-4 py-2.5 border-b border-[#4A2C1A]/8 last:border-0">
-      <span className="text-[12px] font-semibold tracking-[0.14em] uppercase text-[#4A2C1A]/60">
+    <div
+      className="flex items-baseline justify-between gap-4 py-3"
+      style={{ borderBottom: `1px solid ${DS.brandDark}14` }}
+    >
+      <span
+        className="text-[12px] tracking-[0.16em] uppercase"
+        style={{
+          fontFamily: DS.fontBody,
+          color: `${DS.oliveSmoke}B3`,
+          fontWeight: 600,
+        }}
+      >
         {label}
       </span>
-      <span className="text-sm md:text-[15px] font-bold text-[#1A1A1A] text-right">
+      <span
+        className="text-sm md:text-[15px] text-right"
+        style={{
+          fontFamily: DS.fontBody,
+          color: DS.brandDark,
+          fontWeight: 700,
+        }}
+      >
         {value}
       </span>
     </div>
@@ -129,25 +204,46 @@ function SpecRow({ label, value }: SpecProps) {
 
 function LogisticaBlock() {
   return (
-    <div className="relative rounded-3xl bg-white border border-[#4A2C1A]/10 p-6 md:p-9 shadow-[0_24px_60px_-30px_rgba(74,44,26,0.25)]">
-      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-7">
+    <div
+      className="relative p-6 md:p-10"
+      style={{
+        background: DS.brandWhite,
+        border: `1px solid ${DS.brandDark}1A`,
+        borderRadius: "24px",
+        boxShadow: `0 24px 60px -30px ${DS.espresso}40`,
+      }}
+    >
+      <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div className="flex items-start gap-4">
           <div
-            className="w-11 h-11 rounded-xl flex items-center justify-center text-white shrink-0 shadow-[0_8px_18px_-6px_rgba(232,122,30,0.55)]"
+            className="w-12 h-12 flex items-center justify-center shrink-0"
             style={{
-              background:
-                "linear-gradient(135deg, #E87A1E 0%, #C4650F 60%, #E85D10 100%)",
+              background: DS.brandGradient,
+              color: DS.brandWhite,
+              borderRadius: "12px",
+              boxShadow: `0 8px 18px -6px ${DS.espresso}66`,
             }}
           >
             <Boxes size={22} strokeWidth={2.4} />
           </div>
           <div className="flex flex-col gap-1">
-            <span className="text-[11px] font-semibold tracking-[0.22em] uppercase text-[#E87A1E]">
+            <span
+              className="text-[11px] tracking-[0.24em] uppercase"
+              style={{
+                fontFamily: DS.fontBody,
+                color: DS.brandAmber,
+                fontWeight: 700,
+              }}
+            >
               Ficha técnica
             </span>
             <h3
-              className="font-black uppercase text-[#1A1A1A] text-xl md:text-2xl leading-tight tracking-tight"
-              style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+              className="uppercase text-2xl md:text-3xl leading-none"
+              style={{
+                fontFamily: DS.fontDisplay,
+                color: DS.brandDark,
+                letterSpacing: "0.03em",
+              }}
             >
               Logística e paletização
             </h3>
@@ -158,7 +254,23 @@ function LogisticaBlock() {
           href="/lamina-comercial.pdf"
           download
           onClick={() => trackClick("distribuidor")}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-xs font-bold tracking-[0.12em] uppercase text-[#1A1A1A] border border-[#4A2C1A]/20 bg-white hover:border-[#E87A1E] hover:text-[#E87A1E] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2 self-start md:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-3 text-xs tracking-[0.14em] uppercase transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 self-start md:self-auto"
+          style={{
+            fontFamily: DS.fontBody,
+            fontWeight: 700,
+            color: DS.brandDark,
+            background: DS.brandWhite,
+            border: `1px solid ${DS.brandDark}33`,
+            borderRadius: "12px",
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.borderColor = DS.brandAmber
+            e.currentTarget.style.color = DS.brandAmber
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.borderColor = `${DS.brandDark}33`
+            e.currentTarget.style.color = DS.brandDark
+          }}
         >
           <Download size={14} strokeWidth={2.4} />
           Baixar ficha completa (PDF)
@@ -177,7 +289,14 @@ function LogisticaBlock() {
         ))}
       </div>
 
-      <p className="mt-6 text-xs text-[#4A2C1A]/50 leading-relaxed">
+      <p
+        className="mt-6 text-xs leading-relaxed"
+        style={{
+          fontFamily: DS.fontBody,
+          color: `${DS.oliveSmoke}99`,
+          fontWeight: 400,
+        }}
+      >
         EAN, DUN e MAPA por SKU disponíveis na ficha por sabor (acima) e na lâmina comercial completa.
       </p>
     </div>
@@ -195,7 +314,7 @@ export function RevendaSection() {
           eyebrow="Pra distribuidores"
           title="Bang Bang"
           highlight="no seu portfólio."
-          subtitle="Categoria em alta, marca consolidada, território exclusivo. Não é só mais um SKU — é giro garantido."
+          subtitle="Categoria em alta, marca consolidada, território exclusivo. Não é só mais um SKU. É giro garantido."
           align="center"
         />
 
@@ -206,15 +325,19 @@ export function RevendaSection() {
         </div>
 
         <div className="mt-12 flex justify-center">
-          <Button
-            variant="whatsapp"
-            size="md"
+          <a
             href={distribuidorHref}
-            icon={<MessageCircle size={18} />}
             onClick={() => trackClick("distribuidor")}
+            className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm tracking-[0.12em] uppercase text-white shadow-[0_12px_32px_-8px_rgba(192,120,40,0.65)] hover:-translate-y-0.5 hover:bg-[#A06230] hover:shadow-[0_16px_40px_-10px_rgba(160,98,48,0.85)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F5ECD7]"
+            style={{
+              fontFamily: "var(--font-heading-var)",
+              fontWeight: 700,
+              background: "#C07828",
+            }}
           >
+            <MessageCircle size={18} />
             Quero distribuir
-          </Button>
+          </a>
         </div>
 
         <div className="mt-16 md:mt-20">
@@ -222,8 +345,11 @@ export function RevendaSection() {
         </div>
       </Container>
 
-      <div className="mt-16 md:mt-20 pt-12 md:pt-14 border-t border-[#4A2C1A]/10">
-        <ParceirosBlock fadeColor="#FAFAF8" />
+      <div
+        className="mt-16 md:mt-20 pt-12 md:pt-14"
+        style={{ borderTop: `1px solid ${DS.brandDark}1A` }}
+      >
+        <ParceirosBlock fadeColor={DS.brandCream} />
       </div>
     </SectionWrapper>
   )

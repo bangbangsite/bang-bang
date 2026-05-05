@@ -161,28 +161,36 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
         aria-labelledby="quero-bang-bang-title"
         className="scroll-mt-24"
       >
-        <div className="rounded-3xl p-8 md:p-12 bg-white border border-[#4A2C1A]/10 shadow-[0_20px_60px_-30px_rgba(45,24,16,0.18)]">
+        <div className="rounded-3xl p-8 md:p-12 bg-white border border-[#5A5228]/10 shadow-[0_20px_60px_-30px_rgba(45,24,16,0.18)]">
           <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">
-            <div className="w-16 h-16 rounded-full bg-[#E87A1E] text-white flex items-center justify-center shadow-[0_10px_24px_-8px_rgba(232,122,30,0.5)]">
+            <div className="w-16 h-16 rounded-full bg-[#C07828] text-white flex items-center justify-center shadow-[0_10px_24px_-8px_rgba(192,120,40,0.5)]">
               <Check size={32} strokeWidth={2.5} />
             </div>
             <h3
               id="quero-bang-bang-title"
-              className="font-black uppercase text-[#1A1A1A] text-2xl md:text-3xl leading-tight tracking-tight"
-              style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+              // DS H1 → Bebas Neue display
+              className="uppercase text-[#2C1505] text-3xl md:text-4xl leading-tight"
+              style={{
+                fontFamily: "var(--font-display-var)",
+                fontWeight: 400,
+                letterSpacing: "0.03em",
+              }}
             >
               Recebido! Obrigado.
             </h3>
-            <p className="text-[#4A2C1A]/80 leading-relaxed">
+            <p
+              className="text-[#5A5228]/85 leading-relaxed"
+              style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+            >
               Seu voto por Bang Bang em{" "}
-              <strong className="text-[#2D1810]">{submittedCity}</strong> foi
+              <strong className="text-[#2C1505]">{submittedCity}</strong> foi
               registrado. Quando a gente abrir PDV aí, você é um dos primeiros a
               saber — no WhatsApp que você cadastrou.
             </p>
             <button
               type="button"
               onClick={() => setSubmittedCity(null)}
-              className="mt-2 text-sm font-bold uppercase tracking-wider text-[#E87A1E] hover:text-[#C4650F] underline underline-offset-4"
+              className="mt-2 text-sm font-bold uppercase tracking-wider text-[#C07828] hover:text-[#A06230] underline underline-offset-4"
             >
               Indicar outra cidade
             </button>
@@ -201,41 +209,50 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
       className={cn(
         "scroll-mt-24 rounded-3xl bg-white overflow-hidden transition-all",
         highlighted
-          ? "border-2 border-[#E87A1E] shadow-[0_20px_60px_-20px_rgba(232,122,30,0.35)] ring-1 ring-[#E87A1E]/20"
-          : "border border-[#4A2C1A]/10 shadow-[0_12px_40px_-20px_rgba(45,24,16,0.12)]",
+          ? "border-2 border-[#C07828] shadow-[0_20px_60px_-20px_rgba(192,120,40,0.35)] ring-1 ring-[#C07828]/20"
+          : "border border-[#5A5228]/10 shadow-[0_12px_40px_-20px_rgba(45,24,16,0.12)]",
       )}
     >
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.4fr] items-stretch">
         {/* Left — pitch column. Trimmed: title + 1-line subtitle. */}
         <div
-          className="relative flex flex-col gap-4 p-6 md:p-9 lg:border-r border-[#4A2C1A]/8"
+          className="relative flex flex-col gap-4 p-6 md:p-9 lg:border-r border-[#5A5228]/8"
           style={{
+            // DS Cream Light glow + neutral white→cream surface
             background:
-              "radial-gradient(circle at 0% 0%, rgba(255,211,106,0.18), transparent 55%)," +
-              "linear-gradient(180deg, #FFFDF7 0%, #FAFAF8 100%)",
+              "radial-gradient(circle at 0% 0%, rgba(238,224,196,0.45), transparent 55%)," +
+              "linear-gradient(180deg, #FFFFFF 0%, #F5ECD7 100%)",
           }}
         >
-          <span className="inline-flex self-start items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#E87A1E] text-white text-[10px] font-black uppercase tracking-[0.22em] shadow-[0_6px_14px_-6px_rgba(232,122,30,0.6)]">
+          <span className="inline-flex self-start items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#C07828] text-white text-[10px] font-black uppercase tracking-[0.22em] shadow-[0_6px_14px_-6px_rgba(192,120,40,0.6)]">
             <MapPin size={12} strokeWidth={2.6} />
             Ajuda a mapear
           </span>
 
           <h3
             id="quero-bang-bang-title"
-            className="font-black uppercase text-[#1A1A1A] text-3xl md:text-4xl leading-[1.05] tracking-tight"
-            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+            // DS H1 → Bebas Neue display
+            className="uppercase text-[#2C1505] text-4xl md:text-5xl leading-[1.05]"
+            style={{
+              fontFamily: "var(--font-display-var)",
+              fontWeight: 400,
+              letterSpacing: "0.03em",
+            }}
           >
             Quero Bang Bang
             <br />
-            <span className="text-[#E87A1E]">na minha cidade</span>.
+            <span className="text-[#C07828]">na minha cidade</span>.
           </h3>
 
-          <p className="text-[#4A2C1A]/75 leading-relaxed text-[15px]">
+          <p
+            className="text-[#5A5228]/85 leading-relaxed text-[15px]"
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+          >
             Joga teu CEP — quando abrir PDV aí, a gente te avisa.
           </p>
 
           {highlighted && (
-            <div className="rounded-xl bg-[#E87A1E]/10 border border-[#E87A1E]/30 text-[#C4650F] px-3.5 py-2.5 text-sm font-semibold leading-snug">
+            <div className="rounded-xl bg-[#C07828]/10 border border-[#C07828]/30 text-[#A06230] px-3.5 py-2.5 text-sm font-semibold leading-snug">
               Sua busca não achou PDV. Deixa teus dados que a gente te avisa
               quando chegar.
             </div>
@@ -249,10 +266,10 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
               aria-controls="wishlist-form-panel"
               className={cn(
                 "lg:hidden mt-2 inline-flex w-full items-center justify-center gap-2 h-14 px-6 rounded-xl",
-                "bg-[#E87A1E] text-white font-black text-[13px] uppercase tracking-[0.16em]",
-                "shadow-[0_16px_40px_-10px_rgba(232,122,30,0.55)]",
-                "hover:bg-[#C4650F] active:translate-y-0 transition-all",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2",
+                "bg-[#C07828] text-white font-black text-[13px] uppercase tracking-[0.16em]",
+                "shadow-[0_16px_40px_-10px_rgba(192,120,40,0.55)]",
+                "hover:bg-[#A06230] active:translate-y-0 transition-all",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C07828] focus-visible:ring-offset-2",
               )}
             >
               Quero Bang Bang na minha cidade
@@ -267,12 +284,12 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
           id="wishlist-form-panel"
           action={formAction}
           className={cn(
-            "flex-col gap-4 p-6 md:p-9 bg-[#FAFAF8]",
+            "flex-col gap-4 p-6 md:p-9 bg-[#EEE0C4]",
             mobileExpanded ? "flex" : "hidden lg:flex",
           )}
         >
           <div className="flex items-center justify-between gap-2 mb-1">
-            <span className="text-[10px] font-black tracking-[0.22em] uppercase text-[#4A2C1A]/55">
+            <span className="text-[10px] font-black tracking-[0.22em] uppercase text-[#5A5228]/55">
               Cadastro · &lt;30s
             </span>
           </div>
@@ -364,7 +381,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
               {cepLoading && (
                 <Loader2
                   size={16}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#E87A1E] animate-spin"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#C07828] animate-spin"
                 />
               )}
             </div>
@@ -375,9 +392,9 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             disabled={!canSubmit || isPending}
             className={cn(
               "mt-3 inline-flex items-center justify-center gap-2 h-11 rounded-lg text-[12px] font-black uppercase tracking-[0.18em] transition-all",
-              "bg-[#E87A1E] text-white shadow-[0_10px_24px_-10px_rgba(232,122,30,0.55)]",
-              "hover:bg-[#C4650F] hover:-translate-y-0.5 active:translate-y-0",
-              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E] focus-visible:ring-offset-2",
+              "bg-[#C07828] text-white shadow-[0_10px_24px_-10px_rgba(192,120,40,0.55)]",
+              "hover:bg-[#A06230] hover:-translate-y-0.5 active:translate-y-0",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C07828] focus-visible:ring-offset-2",
               "disabled:opacity-40 disabled:cursor-not-allowed disabled:translate-y-0 disabled:shadow-none",
             )}
           >
@@ -385,7 +402,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
             {isPending ? "Enviando…" : "Quero Bang Bang aqui"}
           </button>
 
-          <p className="text-[11px] text-[#4A2C1A]/50 text-center">
+          <p className="text-[11px] text-[#5A5228]/50 text-center">
             A gente só usa pra te avisar quando abrir PDV na sua região.
           </p>
         </form>
@@ -397,7 +414,7 @@ export function WishlistForm({ highlighted, prefill }: WishlistFormProps) {
 // ----------------- small helpers -----------------
 
 const inputCls =
-  "w-full h-11 px-3.5 rounded-xl border border-[#4A2C1A]/15 bg-white text-[#2D1810] text-sm placeholder:text-[#4A2C1A]/40 focus:border-[#E87A1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#E87A1E]/40 transition-colors"
+  "w-full h-11 px-3.5 rounded-xl border border-[#5A5228]/15 bg-white text-[#2C1505] text-sm placeholder:text-[#5A5228]/40 focus:border-[#C07828] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#C07828]/40 transition-colors"
 
 function Field({
   id,
@@ -418,9 +435,9 @@ function Field({
     <div className="flex flex-col gap-1.5 min-w-0">
       <label
         htmlFor={id}
-        className="text-[10px] font-black tracking-[0.22em] uppercase text-[#4A2C1A]/60 flex items-center gap-1.5"
+        className="text-[10px] font-black tracking-[0.22em] uppercase text-[#5A5228]/60 flex items-center gap-1.5"
       >
-        {icon && <span className="text-[#E87A1E]">{icon}</span>}
+        {icon && <span className="text-[#C07828]">{icon}</span>}
         {label}
       </label>
       {children}
@@ -430,7 +447,7 @@ function Field({
             "text-[11px]",
             hintTone === "error"
               ? "text-[#D32F2F] font-semibold"
-              : "text-[#4A2C1A]/50",
+              : "text-[#5A5228]/50",
           )}
         >
           {hint}

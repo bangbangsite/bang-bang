@@ -94,7 +94,8 @@ function PhotoTile({
 }) {
   return (
     <div
-      className="relative overflow-hidden rounded-2xl border border-white/10 aspect-[4/5] shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:!rotate-0 hover:scale-[1.02]"
+      // DS radius lg = 24px (rounded-3xl)
+      className="relative overflow-hidden rounded-3xl border border-white/10 aspect-[4/5] shadow-[0_20px_40px_-20px_rgba(0,0,0,0.6)] transition-transform duration-300 hover:!rotate-0 hover:scale-[1.02]"
       style={{ transform: `rotate(${tilt}deg)` }}
     >
       <Image
@@ -117,12 +118,20 @@ function TextBlock({ title, description }: { title: string; description: string 
   return (
     <div className="flex flex-col justify-center gap-3 py-4 md:py-0">
       <h3
-        className="font-black uppercase text-white text-xl md:text-2xl leading-tight tracking-tight"
-        style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+        // DS H2 size → Bebas Neue display
+        className="uppercase text-white text-2xl md:text-3xl leading-tight"
+        style={{
+          fontFamily: "var(--font-display-var)",
+          fontWeight: 400,
+          letterSpacing: "0.03em",
+        }}
       >
         {title}
       </h3>
-      <p className="text-white/70 text-sm md:text-[15px] leading-relaxed max-w-[28ch]">
+      <p
+        className="text-white/75 text-sm md:text-[15px] leading-relaxed max-w-[28ch]"
+        style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+      >
         {description}
       </p>
     </div>
@@ -144,10 +153,12 @@ export function EventosSection() {
         aria-hidden="true"
         className="absolute inset-0 -z-10"
         style={{
+          // DS validated dark gradient: Espresso → Brand Dark → Mule BG → Chocolate
+          // Highlights use DS Brand Amber (rgb 192,120,40)
           background:
-            "radial-gradient(circle at 50% 0%, rgba(255,210,130,0.18), transparent 45%), " +
-            "radial-gradient(circle at 20% 85%, rgba(255,210,130,0.14), transparent 55%), " +
-            "linear-gradient(180deg, #14080a 0%, #1f0d08 30%, #2a1410 60%, #3d1f0a 100%)",
+            "radial-gradient(circle at 50% 0%, rgba(192,120,40,0.22), transparent 45%), " +
+            "radial-gradient(circle at 20% 85%, rgba(200,144,44,0.16), transparent 55%), " +
+            "linear-gradient(180deg, #270C08 0%, #2C1505 30%, #4A2008 60%, #8C4515 100%)",
         }}
       />
       <div
@@ -164,30 +175,39 @@ export function EventosSection() {
       <Container className="relative z-10">
         {/* Title — pivots B2B: ativação de marca em eventos */}
         <div className="flex flex-col items-center text-center gap-4">
-          <span className="inline-flex items-center gap-2.5 text-[11px] font-semibold tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-white/35 bg-white/5 backdrop-blur-md">
-            <span className="w-2 h-2 rounded-full bg-[#ffd36a] shadow-[0_0_10px_#ffd36a]" />
+          <span
+            className="inline-flex items-center gap-2.5 text-[11px] tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-white/35 bg-white/5 backdrop-blur-md"
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+          >
+            <span className="w-2 h-2 rounded-full bg-[#C8902C] shadow-[0_0_10px_#C8902C]" />
             Eventos · ativação de marca
           </span>
           <h2
-            className="font-black uppercase leading-[0.95] tracking-tight max-w-3xl"
+            // DS H1 → Bebas Neue display
+            className="uppercase leading-[0.95] max-w-3xl"
             style={{
-              fontFamily: "var(--font-heading-var)",
-              fontWeight: 700,
+              fontFamily: "var(--font-display-var)",
+              fontWeight: 400,
               fontSize: "clamp(2.25rem, 5vw, 4rem)",
+              letterSpacing: "0.03em",
             }}
           >
             <span className="text-white">Quer Bang Bang </span>
             <span
               className="bg-clip-text text-transparent"
               style={{
+                // DS Caramel → Cream → Caramel
                 backgroundImage:
-                  "linear-gradient(90deg, #ffd36a, #ff7a3a 55%, #ffd36a)",
+                  "linear-gradient(90deg, #C8902C, #F5ECD7 55%, #C8902C)",
               }}
             >
               no seu palco?
             </span>
           </h2>
-          <p className="text-white/75 text-base md:text-lg max-w-2xl leading-relaxed">
+          <p
+            className="text-white/80 text-base md:text-lg max-w-2xl leading-relaxed"
+            style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+          >
             Festivais, rooftops, festas privadas, ativações de marca. Onde a
             Bang Bang chega, a noite muda.
           </p>
@@ -224,15 +244,17 @@ export function EventosSection() {
         <div className="mt-12 md:mt-16 flex justify-center">
           <Link
             href="/eventos"
-            className="group inline-flex items-center gap-2.5 text-sm text-white/70 hover:text-[#ffd36a] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] rounded px-1 -mx-1"
+            // DS Caramel #C8902C as the warm accent on dark surfaces
+            className="group inline-flex items-center gap-2.5 text-sm text-white/75 hover:text-[#C8902C] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] rounded px-1 -mx-1"
+            style={{ fontFamily: "var(--font-heading-var)" }}
           >
             <CalendarDays
               size={14}
               strokeWidth={2.2}
-              className="text-[#ffd36a]/80 group-hover:text-[#ffd36a]"
+              className="text-[#C8902C]/85 group-hover:text-[#C8902C]"
             />
-            <span className="font-semibold underline underline-offset-4 decoration-[#ffd36a]/40 group-hover:decoration-[#ffd36a]">
-              Agenda completa & briefing de eventos
+            <span className="font-semibold underline underline-offset-4 decoration-[#C8902C]/40 group-hover:decoration-[#C8902C]">
+              Agenda completa &amp; briefing de eventos
             </span>
             <span aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
               →

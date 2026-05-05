@@ -21,10 +21,13 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
 
   return (
     <div
-      className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_18px_40px_-18px_rgba(45,24,16,0.4)]"
+      // DS lg radius (24) + Espresso shadow tint
+      className="relative rounded-3xl overflow-hidden border border-white/10 shadow-[0_18px_40px_-18px_rgba(39,12,8,0.45)]"
       style={{
+        // DS validated dark gradient: Espresso → Brand Dark → Mule BG → Chocolate
+        // Highlight uses DS Brand Amber (rgb 192,120,40)
         background:
-          "radial-gradient(circle at 50% 0%, rgba(255,210,130,0.2), transparent 55%), linear-gradient(160deg, #1f0d08 0%, #3d1f0a 55%, #6a3214 100%)",
+          "radial-gradient(circle at 50% 0%, rgba(192,120,40,0.22), transparent 55%), linear-gradient(160deg, #270C08 0%, #2C1505 30%, #4A2008 60%, #8C4515 100%)",
       }}
     >
       <div
@@ -51,12 +54,22 @@ export function FAQAccordion({ items }: FAQAccordionProps) {
                 }
               >
                 <AccordionTrigger
-                  className="w-full text-left px-4 md:px-5 py-5 text-base md:text-lg font-black uppercase tracking-tight text-white hover:text-[#ffd36a] hover:no-underline transition-colors [&_svg]:text-white/50 [&[aria-expanded=true]_svg]:text-[#ffd36a] data-[panel-open]:text-[#ffd36a]"
-                  style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
+                  // DS Caramel #C8902C as warm accent on dark surfaces
+                  className="w-full text-left px-4 md:px-5 py-5 text-base md:text-lg uppercase text-white hover:text-[#C8902C] hover:no-underline transition-colors [&_svg]:text-white/50 [&[aria-expanded=true]_svg]:text-[#C8902C] data-[panel-open]:text-[#C8902C]"
+                  // DS H3 Oswald Bold; small letter-spacing
+                  style={{
+                    fontFamily: "var(--font-heading-var)",
+                    fontWeight: 700,
+                    letterSpacing: "0.01em",
+                  }}
                 >
                   {question}
                 </AccordionTrigger>
-                <AccordionContent className="text-white/75 text-base px-4 md:px-5 leading-relaxed whitespace-pre-wrap">
+                <AccordionContent
+                  className="text-white/80 text-base px-4 md:px-5 leading-relaxed whitespace-pre-wrap"
+                  // DS body = Oswald, line-height 1.7
+                  style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+                >
                   {answer}
                 </AccordionContent>
               </AccordionItem>

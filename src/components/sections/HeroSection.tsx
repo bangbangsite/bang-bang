@@ -246,8 +246,9 @@ export function HeroSection() {
       className="hero relative w-full min-h-[85vh] md:min-h-[90vh] lg:min-h-screen overflow-hidden text-white"
       style={{
         fontFamily: "var(--font-heading-var), var(--font-body), sans-serif",
+        // DS validated brand gradient + amber radial highlight
         background:
-          "radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255,210,130,0.22), transparent 45%), linear-gradient(135deg, #2a1410 0%, #5a2a1a 35%, #a05a2a 65%, #e8a850 100%)",
+          "radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(192,120,40,0.28), transparent 45%), linear-gradient(135deg, #270C08 0%, #8C4515 50%, #C8902C 100%)",
       }}
     >
       {/* film grain overlay */}
@@ -291,18 +292,21 @@ export function HeroSection() {
       {/* Copy block */}
       <div className="relative z-[5] max-w-full lg:max-w-[46vw] px-6 sm:px-8 lg:px-12 pt-32 md:pt-36 lg:pt-0 lg:absolute lg:left-[6vw] lg:top-1/2 lg:-translate-y-1/2 pointer-events-none">
         <div
-          className="inline-flex items-center gap-2.5 text-[11px] sm:text-xs font-semibold tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-white/35 bg-white/5 backdrop-blur-md"
+          className="inline-flex items-center gap-2.5 text-[11px] sm:text-xs tracking-[0.28em] uppercase px-3.5 py-2 rounded-full border border-white/35 bg-white/5 backdrop-blur-md"
+          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
         >
-          <span className="w-2 h-2 rounded-full bg-[#ffd36a] shadow-[0_0_10px_#ffd36a]" />
+          <span className="w-2 h-2 rounded-full bg-[#C07828] shadow-[0_0_10px_#C07828]" />
           Beba gelado
         </div>
 
         <h1
-          className="font-black uppercase leading-[0.95] tracking-[-0.02em] mt-6 mb-5 drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)] lg:drop-shadow-[0_6px_40px_rgba(0,0,0,0.35)]"
+          className="uppercase leading-[0.95] mt-6 mb-5 drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)] lg:drop-shadow-[0_6px_40px_rgba(0,0,0,0.35)]"
           style={{
-            fontFamily: "var(--font-heading-var), sans-serif",
-            fontWeight: 700,
+            // DS display = Bebas Neue
+            fontFamily: "var(--font-display-var), sans-serif",
+            fontWeight: 400,
             fontSize: "clamp(44px, 7.2vw, 120px)",
+            letterSpacing: "0.02em",
           }}
         >
           <span className="block">Todo dia é</span>
@@ -310,15 +314,19 @@ export function HeroSection() {
           <span
             className="block bg-clip-text text-transparent"
             style={{
+              // DS amber → cream gradient
               backgroundImage:
-                "linear-gradient(90deg, #ffd36a, #ff7a3a 55%, #ffd36a)",
+                "linear-gradient(90deg, #C8902C, #F5ECD7 55%, #C8902C)",
             }}
           >
             Bang Bang.
           </span>
         </h1>
 
-        <p className="text-white text-base sm:text-lg max-w-[42ch] leading-relaxed mb-7 [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] lg:[text-shadow:none] lg:text-white/85">
+        <p
+          className="text-white text-base sm:text-lg max-w-[42ch] leading-relaxed mb-7 [text-shadow:0_2px_10px_rgba(0,0,0,0.45)] lg:[text-shadow:none] lg:text-white/85"
+          style={{ fontFamily: "var(--font-heading-var)", fontWeight: 400, lineHeight: 1.7 }}
+        >
           Quatro RTDs em lata de 473 ml. Categoria em alta no Brasil — e a Bang Bang não para de crescer.
         </p>
 
@@ -330,7 +338,12 @@ export function HeroSection() {
                 ? { target: "_blank", rel: "noopener noreferrer" as const }
                 : {})}
               onClick={() => trackClick("distribuidor")}
-              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-lg font-black text-sm tracking-[0.12em] uppercase bg-[#E87A1E] text-white shadow-[0_12px_32px_-8px_rgba(232,122,30,0.65)] hover:-translate-y-0.5 hover:bg-[#C4650F] hover:shadow-[0_16px_40px_-10px_rgba(232,122,30,0.85)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2a1410]"
+              className="inline-flex items-center gap-2.5 px-6 py-3.5 rounded-xl text-sm tracking-[0.12em] uppercase text-white shadow-[0_12px_32px_-8px_rgba(192,120,40,0.65)] hover:-translate-y-0.5 hover:bg-[#A06230] hover:shadow-[0_16px_40px_-10px_rgba(160,98,48,0.85)] transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#270C08]"
+              style={{
+                fontFamily: "var(--font-heading-var)",
+                fontWeight: 700,
+                background: "#C07828",
+              }}
             >
               Sou distribuidor
               <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
@@ -339,7 +352,8 @@ export function HeroSection() {
             </a>
             <a
               href="#sabores"
-              className="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-lg font-bold text-sm tracking-[0.08em] uppercase text-white border border-white/45 bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ffd36a] focus-visible:ring-offset-2 focus-visible:ring-offset-[#2a1410]"
+              className="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm tracking-[0.08em] uppercase text-white border border-white/45 bg-white/10 backdrop-blur-md hover:bg-white/20 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8902C] focus-visible:ring-offset-2 focus-visible:ring-offset-[#270C08]"
+              style={{ fontFamily: "var(--font-heading-var)", fontWeight: 700 }}
             >
               Ver sabores
             </a>
@@ -469,7 +483,10 @@ export function HeroSection() {
       {/* Ticker — lg+ only; on mobile these pills crowded the peek cans and
           added noise below the main CTAs. The spec info lives in Sabores
           anyway, which is the very next section. */}
-      <div className="hidden lg:flex absolute bottom-5 left-0 right-0 z-[6] px-5 md:px-8 flex-wrap justify-between items-center gap-3 text-[11px] font-semibold tracking-[0.22em] uppercase text-white/70">
+      <div
+        className="hidden lg:flex absolute bottom-5 left-0 right-0 z-[6] px-5 md:px-8 flex-wrap justify-between items-center gap-3 text-[11px] tracking-[0.22em] uppercase text-white/70"
+        style={{ fontFamily: "var(--font-heading-var)", fontWeight: 600 }}
+      >
         <span className="inline-flex gap-2 items-center px-3.5 py-2 rounded-full border border-white/25 bg-white/[0.05] backdrop-blur-md">
           473 ml · 5,5% vol
         </span>
